@@ -1,0 +1,127 @@
+﻿@using ReflectionIT.Mvc.Paging
+@using Domain._DTO.Category
+@model PagingList<CategoryDto>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .form a i {
+        color: #35ecff;
+        padding: 7px;
+    }
+
+    .table th {
+        height: 70px;
+        padding: 20px;
+        width: 250px;
+    }
+
+    .table .actions a {
+        padding: 12px;
+    }
+
+    .pagination {
+        margin-top: 33px;
+        text-align: center;
+        display: block;
+    }
+
+        .pagination a.current {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007bff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            margin-right: 5px;
+        }
+
+
+            .pagination a:hover {
+                background-color: #90c0f3;
+            }
+
+</style>
+@{
+    Layout = "~/Views/Shared/_Dependencies.cshtml";
+    ViewData["Title"] = "Category List";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 border p-3">
+            <form class="form" action="@Url.Action("Index", "Category")">
+                <div class ="row ms-5">
+                    <div class="col-4">
+                        <a href="@Url.Action("Index", "Category")" class="btn btn-outline-primary"><i class="bi bi-list-ul"></i>Category List</a>
+                    </div>
+                    <div class="col-4 me-5">
+                        <div class="input-group">
+                            <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        </div>
+                    </div>
+                    <div class="col-2 ms-5">
+                        <a href="@Url.Action("Create", "Category")" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i>Create Category</a>
+                    </div>
+                </div>
+            </form>
+            <hr />
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td class="actions">
+                                <a class="btn btn-primary" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
+                                <a class="btn btn-danger" onclick="confirmDelete('@category.EncryptedId')"><i class="bi bi-trash"></i>Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="container">
+                <div class="pagination col-12">
+                    @if (ViewBag.Page > 1)
+                    {
+                        <a href="@Url.Action("Index", "Category", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = ViewBag.Page - 1, sortExpression = ViewBag.SortExpression })">&lt; Previous</a>
+                    }
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <a href="@Url.Action("Index", "Category", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = i, sortExpression = ViewBag.SortExpression })" @(i == ViewBag.Page ? "class=current" : null)>@i</a>
+                    }
+
+                    @if (ViewBag.Page < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "Category", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = ViewBag.Page + 1, sortExpression = ViewBag.SortExpression })">Next &gt;</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    @{
+        //Client Site Validation
+        <partial name="_ValidationScriptsPartial" />
+        <script src="~/js/index.js"></script>
+    }
+}

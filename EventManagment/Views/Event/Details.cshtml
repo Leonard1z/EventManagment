@@ -1,0 +1,66 @@
+﻿@model EventDto
+@using Domain._DTO.Event
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<meta charset="ISO-8859-1">
+@{
+    Layout = "~/Views/Shared/_Dependencies.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-8 border p-3">
+            <h2>@Localizer["Event Details"]</h2>
+            <hr />
+            <div class="row">
+                <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
+                        <input asp-for="Name" class="form-control" readonly />
+                    </div>
+                </div>  
+
+                <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">@Localizer["Description"]</label>
+                        <textarea asp-for="Description" class="form-control" readonly ></textarea>
+                    </div>
+                </div>
+
+                <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">@Localizer["City"]</label>
+                        <input asp-for="City" class="form-control" readonly />
+                    </div>
+                </div>
+                    <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
+                        <input asp-for="StartDate" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
+                        <input asp-for="EndDate" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="col-12 pb-3">
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label">@Localizer["Category"]</label>
+                        <input asp-for="Category.Name" class="form-control" readonly/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
+            </div>
+        </div>
+        <div class="col-4 pb-3">
+            <div class="form-group">
+            <img src="@Model.Image" alt="Event Image" width="450" height="350" class="rounded"/>
+            </div>
+        </div>
+    </div>
+</div>

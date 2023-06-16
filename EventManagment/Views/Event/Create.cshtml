@@ -1,0 +1,154 @@
+﻿@using Domain._DTO.Event
+@model EventCreateDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<meta charset="ISO-8859-1">
+@{
+	Layout = "~/Views/Shared/_Dependencies.cshtml";
+}
+
+<div class="container mt-5">
+	<div class="col-12 border p-3">
+		<div class="col-12 pb-2">
+			<h2 class="text-primary">Create Event</h2>
+			<hr />
+		</div>
+		<form action="@Url.Action("Create", "Event")" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="Name" class="control-label">@Localizer["Name"]</label>
+						<input asp-for="Name" class="form-control" />
+						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="Description" class="control-label"></label>
+						<textarea asp-for="Description" class="form-control"></textarea>
+						<span asp-validation-for="Description" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-12 mb-3">
+					<label asp-for="Image"></label>
+					<input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg"/>
+				</div>
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="State" class="control-label">@Localizer["State"]</label>
+						<input asp-for="State" class="form-control" />
+						<span asp-validation-for="State" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="City" class="control-label">@Localizer["City"]</label>
+						<input asp-for="City" class="form-control" />
+						<span asp-validation-for="City" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-6 mb-3">
+					<div class="form-group">
+						<label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
+						<input asp-for="StartDate" class="form-control" id="startDate" />
+						<span asp-validation-for="StartDate" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-6 mb-3">
+					<div class="form-group">
+						<label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
+						<input asp-for="EndDate" class="form-control" id="endDate" />
+						<span asp-validation-for="EndDate" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-6 mb-3">
+					<div class="form-group">
+						<label asp-for="CategoryId" class="control-label">@Localizer["Category"]</label>
+						<select class="form-control search-select" asp-for="EncryptedCategoryId">
+							<option selected disabled>@Localizer["Zgjidhni Categorin"]</option>
+							@foreach (var vlera in Model.Category)
+							{
+								<option value="@vlera.EncryptedId">@vlera.Name</option>
+							}
+						</select>
+						<span asp-validation-for="EncryptedCategoryId" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-12 pt-2 ">
+					<div class="btn-display-flex">
+						<a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
+						<button type="submit" onclick="return ValidateInput() && ValidateInputDate()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@section Scripts{
+	@{
+	<partial name="_ValidationScriptsPartial" />
+	}
+
+	<script>
+
+		function ValidateInput() {
+			//looks if user has uploaded an image if not display message
+			if (document.getElementById("uploadBox").value == "") {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Please upload an Image!',
+				});
+				return false;
+			}
+			return true;
+		}
+
+		function ValidateInputDate() {
+			//Get elemnts by id
+			var startDate = new Date(document.getElementById("startDate").value);
+			var endDate = new Date(document.getElementById("endDate").value);
+			//Create a Date object
+			var currentDate = new Date();
+
+			// Set the hours, minutes, and seconds to zero for comparison
+			currentDate.setHours(0, 0, 0, 0);
+
+			//Compares if date displayed on input is lower than current date if true return false, display message
+			if (startDate.getTime() < currentDate.getTime()) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Start date cannot be earlier than the current date!',
+				});
+				return false;
+			}
+
+			//Compares if date displayed on input is lower than startdate if true return false, display message
+			if (endDate.getTime() < startDate.getTime()) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'End date cannot be earlier than the start date!',
+				});
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+
+
+}
+

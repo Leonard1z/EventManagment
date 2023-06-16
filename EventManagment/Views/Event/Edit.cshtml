@@ -1,0 +1,135 @@
+﻿@using Domain._DTO.Event
+@model EventEditDto
+
+@{
+	Layout = "~/Views/Shared/_Dependencies.cshtml";
+	ViewData["Title"] = "Event Update";
+}
+
+
+<div class="container mt-5">
+	<div class="row">
+		<div class="col-10 border p-3">
+			<form action="@Url.Action("Edit", "Event")" method="post" enctype="multipart/form-data">
+				<input asp-for="EncryptedId" hidden />
+				<input asp-for="Image" hidden />
+				<h2 class="text-primary">Update Event</h2>
+				<hr />
+				<div class="row">
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Name" class="control-label"></label>
+							<input asp-for="Name" class="form-control" />
+							<span asp-validation-for="Name" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Description" class="control-label"></label>
+							<input asp-for="Description" class="form-control" />
+							<span asp-validation-for="Description" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="City" class="control-label"></label>
+							<input asp-for="City" class="form-control" />
+							<span asp-validation-for="City" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="State" class="control-label"></label>
+							<input asp-for="State" class="form-control" />
+							<span asp-validation-for="State" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 mb-3">
+						<label asp-for="Image"></label>
+						<input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg" />
+					</div>
+					<div class="col-6 mb-3">
+						<div class="form-group">
+							<label asp-for="StartDate" class="control-label"></label>
+							<input asp-for="StartDate" class="form-control" id="startDate" />
+							<span asp-validation-for="StartDate" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-6 mb-3">
+						<div class="form-group">
+							<label asp-for="EndDate" class="control-label"></label>
+							<input asp-for="EndDate" class="form-control" id="endDate" />
+							<span asp-validation-for="EndDate" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-6 mb-3">
+						<div class="form-group">
+							<label asp-for="CategoryId" class="control-label"></label>
+							<select class="form-control search-select" asp-for="EncryptedCategoryId">
+								<option selected disabled>Zgjidhni Categorin</option>
+								@foreach (var vlera in Model.Category)
+								{
+									<option value="@vlera.EncryptedId">@vlera.Name</option>
+								}
+							</select>
+							<span asp-validation-for="EncryptedCategoryId" class="text-danger"></span>
+						</div>
+					</div>
+				   
+					<div class="col-12 pt-3">
+						<div class="btn-display-flex">
+							<input type="submit" onclick="return ValidateInputDate()" class="btn btn-primary" style="width:150px" value="Update" />
+							<a asp-controller="Event" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-2 pt-4">
+			<img src="@Model.Image"
+				 width="450px" style="border-radius:5px; border:1px solid #bbb9b9" />
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+@{
+	//Client Site Validation
+	<partial name="_ValidationScriptsPartial" />
+}
+	<script>
+		function ValidateInputDate() {
+			//Get elemnts by id
+			var startDate = new Date(document.getElementById("startDate").value);
+			var endDate = new Date(document.getElementById("endDate").value);
+			//Create a Date object
+			var currentDate = new Date();
+
+			// Set the hours, minutes, and seconds to zero for comparison
+			currentDate.setHours(0, 0, 0, 0);
+
+			//Compares if date displayed on input is lower than current date if true return false, display message
+			if (startDate.getTime() < currentDate.getTime()) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Start date cannot be earlier than the current date!',
+				});
+				return false;
+			}
+
+			//Compares if date displayed on input is lower than startdate if true return false, display message
+			if (endDate.getTime() < startDate.getTime()) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'End date cannot be earlier than the start date!',
+				});
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+}
