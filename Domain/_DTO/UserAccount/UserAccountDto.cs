@@ -1,5 +1,6 @@
 ﻿using Domain._DTO.Event;
 using Domain._DTO.Registration;
+using Domain._DTO.Role;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,8 @@ namespace Domain._DTO.UserAccount
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public char Gender { get; set; }
-        public bool IsAdmin { get; set; }
-
+        public int RoleId { get; set; }
+        public RoleDto Role { get; set; }
         public ICollection<EventDto> Events { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }
     }

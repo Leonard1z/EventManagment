@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(EventManagmentDb))]
-    partial class EventManagmentDbModelSnapshot : ModelSnapshot
+    [Migration("20230616202010_updateUserAccount")]
+    partial class updateUserAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,23 +117,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Registrations");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("Domain.Entities.UserAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -167,12 +153,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("UserAccounts");
                 });
@@ -211,17 +192,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("UserAccount");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserAccount", b =>
-                {
-                    b.HasOne("Domain.Entities.Role", "Role")
-                        .WithMany("UserAccounts")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.Navigation("Events");
@@ -230,11 +200,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
                     b.Navigation("Registrations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Navigation("UserAccounts");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserAccount", b =>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain._DTO.Role;
+using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace Domain._DTO.UserAccount
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public char Gender { get; set; }
-        public bool IsAdmin { get; set; } = false;
+        public int RoleId { get; set; }
+        public RoleDto Role { get; set; }
     }
 }

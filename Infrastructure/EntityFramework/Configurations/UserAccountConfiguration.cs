@@ -21,6 +21,11 @@ namespace Infrastructure.EntityFramework.Configurations
             .HasForeignKey(r => r.UserAccountId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(u => u.Role)
+                .WithMany(r => r.UserAccounts)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
