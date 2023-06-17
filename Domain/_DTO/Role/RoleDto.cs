@@ -12,8 +12,8 @@ namespace Domain._DTO.Role
     {
         public int Id { get; set; }
         [NotMapped]
-        public string EncryptedUserAccountId { get; set; }
+        public string? EncryptedId { get; set; }
         public string Name { get; set; }
-        public ICollection<UserAccountDto> UserAccounts { get; set; }
+        public ICollection<UserAccountDto>? UserAccounts { get; set; }
     }
 }

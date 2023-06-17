@@ -49,8 +49,8 @@ namespace Services.Mapping
 
 
             #region
-            CreateMap<Role, RoleDto>();
-            CreateMap<RoleDto, Role>();
+            CreateMap<Roles, RoleDto>();
+            CreateMap<RoleDto, Roles>();
             #endregion
         }
     }

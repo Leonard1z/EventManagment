@@ -19,7 +19,7 @@ namespace Infrastructure
         public DbSet<Event> Events { get; set; }
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<Roles> Roles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

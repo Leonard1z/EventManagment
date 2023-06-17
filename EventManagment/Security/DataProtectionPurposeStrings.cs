@@ -6,5 +6,6 @@
         public readonly string CategoryControllerPs = "EventManagment.CategoryController";
         public readonly string RegistartionControllerPs = "EventManagment.RegistrationController";
         public readonly string UserAccountControllerPs = "EventManagment.UseraccountController";
+        public readonly string RoleControllerPs = "EventManagment.RoleController";
     }
 }

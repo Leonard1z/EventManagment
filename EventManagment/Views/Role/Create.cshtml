@@ -1,0 +1,42 @@
+﻿@using Domain._DTO.Role
+@model RoleDto
+
+@{
+    Layout = "~/Views/Shared/_Dependencies.cshtml";
+    ViewData["Title"] = "Role Create";
+}
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 border p-3">
+            <form asp-action="Create">
+                <h2 class="text-primary">Create Role</h2>
+                <hr />
+                <div class="row">
+                    <div class="col-12 pb-3">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-3">
+                        <div class="btn-display-flex">
+                            <input type="submit" class="btn btn-primary" style="width:150px" value="Create" />
+                            <a asp-controller="Role" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        //Client Site Validation
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }
+

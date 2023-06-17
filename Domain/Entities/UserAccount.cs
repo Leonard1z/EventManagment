@@ -19,7 +19,7 @@ namespace Domain.Entities
         public string Address { get; set; }
         public char Gender { get; set; }
         public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public Roles Role { get; set; }
         public ICollection<Event> Events { get; set; }
         public ICollection<Registration> Registrations { get; set; }
     }
