@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
-using Domain._DTO.Category;
 using Domain._DTO.UserAccount;
-using Infrastructure.Repositories.Events;
 using Infrastructure.Repositories.UserAccounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Services.Security;
 
 namespace Services.UserAccount
 {
@@ -26,6 +20,24 @@ namespace Services.UserAccount
             var result = await _userAccountRepository.GetAll();
 
             return _mapper.Map<List<UserAccountDto>>(result.ToList());
+        }
+        public bool CheckIfUserExist(string username)
+        {
+            return _userAccountRepository.CheckIfUserExist(username);
+        }
+        public bool CheckIfEmailExist(string email)
+        {
+            return _userAccountRepository.CheckIfEmailExist(email);
+        }
+        public UserAccountCreateDto Create(UserAccountCreateDto userAccountCreateDto)
+        {
+            string salt;
+            userAccountCreateDto.Password = PasswordHasher.HashPassword(userAccountCreateDto.Password, out salt);
+            userAccountCreateDto.Salt = salt;
+
+            var result = _userAccountRepository.Create(_mapper.Map<Domain.Entities.UserAccount>(userAccountCreateDto));
+
+            return _mapper.Map<UserAccountCreateDto>(result);
         }
     }
 }

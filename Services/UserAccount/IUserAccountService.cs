@@ -12,5 +12,10 @@ namespace Services.UserAccount
     public interface IUserAccountService : IService
     {
         Task<IEnumerable<UserAccountDto>> GetAll();
+        bool CheckIfUserExist(string username);
+        bool CheckIfEmailExist(string email);
+        UserAccountCreateDto Create(UserAccountCreateDto userAccountCreateDto);
+
+
     }
 }

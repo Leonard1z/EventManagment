@@ -1,14 +1,8 @@
 ﻿using Domain._DTO.Event;
 using Domain._DTO.Registration;
 using Domain._DTO.Role;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain._DTO.UserAccount
 {

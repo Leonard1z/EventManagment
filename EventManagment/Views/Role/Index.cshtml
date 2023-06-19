@@ -24,6 +24,7 @@
         <thead>
             <tr>
                 <th>Role Name</th>
+                <th>Actions</th>
                 <th></th>
             </tr>
         </thead>
@@ -34,7 +35,7 @@
                     <td width="50%">
                         @obj.Name
                     </td>
-                    <td>
+                    <td width="30%">
                         <div class="w-75 btn-group" role="group">
                             <a asp-controller="Role" asp-action="Edit" asp-route-encryptedId="@obj.EncryptedId"
                            class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
