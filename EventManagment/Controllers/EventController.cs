@@ -1,10 +1,12 @@
 ﻿using Domain._DTO.Event;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Security;
 using Services.Categories;
 using Services.Events;
+using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {

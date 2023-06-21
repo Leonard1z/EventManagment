@@ -6,9 +6,6 @@ namespace Domain._DTO.UserAccount
 {
     public class UserAccountCreateDto
     {
-        [NotMapped]
-        [Required(ErrorMessage = "Role is required...")]
-        public string EncryptedRoleId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [DataType("Password")]
@@ -22,6 +19,6 @@ namespace Domain._DTO.UserAccount
         public string Address { get; set; }
         public char Gender { get; set; }
         public int RoleId { get; set; }
-        public ICollection<RoleDto>? Role { get; set; }
+        public RoleDto? Role { get; set; }
     }
 }

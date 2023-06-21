@@ -4,6 +4,8 @@ using AutoMapper;
 using Services.Mapping;
 using EventManagment.Extension;
 using Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Services.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,18 +30,32 @@ builder.Services.AddLocalization(opts => opts.ResourcesPath = "Resources");
 builder.Services.AddMvc()
         .AddViewLocalization()
         .AddDataAnnotationsLocalization();
-
 #endregion
 
 builder.Services.RegisterBusinessLayerDependencies();
 builder.Services.RegisterDataAccessLayerDependencies();
 
 #region DataProtection
-
 builder.Services.AddDataProtection();
 builder.Services.AddSingleton<DataProtectionPurposeStrings>();
-
 #endregion
+
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/AccessDenied";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+});
 
 var app = builder.Build();
 
@@ -55,6 +71,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

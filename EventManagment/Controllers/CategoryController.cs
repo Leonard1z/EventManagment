@@ -1,4 +1,6 @@
 ﻿using Domain._DTO.Category;
+using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,9 +8,11 @@ using Microsoft.Extensions.Localization;
 using ReflectionIT.Mvc.Paging;
 using Security;
 using Services.Categories;
+using System.Security.Claims;
 
 namespace Controllers
 {
+    [Authorize(Policy = "AdminOnly")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -38,6 +42,7 @@ namespace Controllers
         /// <param name="page"> Numri i faqes</param>
         /// <param name="sortExpression"> Parametri i cili ben sortimin</param>
         /// <returns> Index faqen </returns>
+
         [Route("CategoryData")]
         public async Task<ActionResult> Index(string filter, string encryptedId, int pageSize = 7, int page = 1, string sortExpression = "Name")
         {
@@ -130,6 +135,7 @@ namespace Controllers
         /// </summary>
         /// <param name="encryptedId"> Id e objektit me te cilin identifikohet </param>
         /// <returns>Faqen</returns>
+
         [Route("Category/Edit")]
         public async Task<ActionResult> Edit(string encryptedId)
         {
@@ -159,6 +165,7 @@ namespace Controllers
         /// </summary>
         /// <param name="categoryDto"> Permban fushat e te dhenave me te cilat behet krijimi </param>
         /// <returns>Index</returns>
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Category/Edit")]
@@ -193,6 +200,7 @@ namespace Controllers
         /// </summary>
         /// <param name="encryptedId"> Id e objektit me te cilin identifikohet </param>
         /// <returns>Index</returns>
+
         [Route("Category/Delete")]
         public ActionResult Delete(string encryptedId)
         {

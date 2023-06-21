@@ -10,5 +10,6 @@ namespace Services.Role
         bool Delete(int id);
         Task<RoleDto> GetById(int id);
         RoleDto Update(RoleDto roleDto);
+        RoleDto GetDefaultRole();
     }
 }

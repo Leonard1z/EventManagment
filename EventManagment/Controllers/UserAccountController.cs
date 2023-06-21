@@ -1,12 +1,15 @@
 ﻿using Domain._DTO.Event;
 using Domain._DTO.UserAccount;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Security;
 using Services.Role;
 using Services.UserAccount;
+using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
@@ -44,9 +47,7 @@ namespace EventManagment.Controllers
         {
             try
             {
-                var dto = UserAccountCreate();
-
-                return View(dto);
+                return View();
             }
             catch (Exception ex)
             {
@@ -67,7 +68,8 @@ namespace EventManagment.Controllers
         {
             try
             {
-                UserAccountCreateDescription(userDto);
+                var defaultRole = _roleService.GetDefaultRole();
+                userDto.RoleId = defaultRole.Id;
 
                 if (ModelState.IsValid)
                 {
@@ -87,15 +89,17 @@ namespace EventManagment.Controllers
 
                     }
 
+
+
                     _userAccountService.Create(userDto);
 
                     TempData["message"] = "Added";
                     TempData["entity"] = _localizer["User"].ToString();
 
-                    return RedirectToAction(nameof(LogIn));
+                    return RedirectToAction(nameof(Login));
                 }
 
-                return RedirectToAction(nameof(LogIn));
+                return RedirectToAction(nameof(Login));
 
             }
             catch (Exception ex)
@@ -109,32 +113,70 @@ namespace EventManagment.Controllers
             }
         }
 
-        public async Task<ActionResult> LogIn(UserAccount user)
+        [HttpGet]
+        [Route("Login")]
+        public ActionResult Login()
         {
-            return View();
-        }
-
-        private UserAccountCreateDto UserAccountCreateDescription(UserAccountCreateDto userAccountCreateDto)
-        {
-            userAccountCreateDto.FirstName = userAccountCreateDto.FirstName.Trim();
-            userAccountCreateDto.RoleId = userAccountCreateDto.EncryptedRoleId != null ? int.Parse(_protector.Unprotect(userAccountCreateDto.EncryptedRoleId)) : 0;
-
-            return userAccountCreateDto;
-        }
-
-        private UserAccountCreateDto UserAccountCreate()
-        {
-            return new UserAccountCreateDto()
+            try
             {
-                Role = _roleService.GetAll().Result.Select(x =>
-                {
-                    x.EncryptedId = _protector.Protect(x.Id.ToString());
-                    x.Id = 0;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
 
-                    return x;
-                }).ToList()
-            };
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
+
+
+                return RedirectToAction(nameof(Login));
+            }
 
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult> Login(LoginDto loginDto)
+        {
+            var userDto = _userAccountService.Authenticate(loginDto);
+
+            if (userDto == null)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["Invalid username or password"].ToString();
+                return RedirectToAction(nameof(Login));
+            }
+
+            TempData["message"] = "Success";
+            TempData["entity"] = _localizer["Logged in successfully"].ToString();
+
+            await SignInUserAsync(userDto);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        private async Task SignInUserAsync(UserAccountDto userDto)
+        {
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+            new Claim(ClaimTypes.Name, userDto.FirstName),
+            new Claim(ClaimTypes.Email, userDto.Email),
+            new Claim(ClaimTypes.Role, userDto.Role.Name),
+            // Add more claims as needed
+        };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = true, // Set to true if you want persistent authentication
+                    ExpiresUtc = DateTime.UtcNow.AddDays(7) // Set the expiration time for the cookie
+                });
+        }
+
+
     }
 }

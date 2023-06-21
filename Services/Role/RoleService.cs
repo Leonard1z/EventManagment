@@ -49,5 +49,11 @@ namespace Services.Role
 
             return _mapper.Map<RoleDto>(result);
         }
+        public RoleDto GetDefaultRole()
+        {
+            var result = _roleRepository.GetDefaultRole();
+
+            return _mapper.Map<RoleDto>(result);
+        }
     }
 }

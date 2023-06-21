@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain._DTO.UserAccount;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,11 @@ namespace Infrastructure.Repositories.UserAccounts
             return result;
         }
 
+        public UserAccount GetByEmail(string email)
+        {
+            var user = DbSet.FirstOrDefault(u => u.Email == email);
 
+            return user;
+        }
     }
 }

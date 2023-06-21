@@ -1,8 +1,9 @@
-﻿using Domain.Entities;
-
-namespace Infrastructure.Repositories.Roles
+﻿namespace Infrastructure.Repositories.Roles
 {
     public interface IRoleRepository : IGenericRepository<Domain.Entities.Roles>
     {
+        Domain.Entities.Roles GetDefaultRole();
+        Domain.Entities.Roles GetRoleById(int id);
+
     }
 }

@@ -1,9 +1,5 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain._DTO.UserAccount;
+using Domain.Entities;
 
 namespace Infrastructure.Repositories.UserAccounts
 {
@@ -12,5 +8,6 @@ namespace Infrastructure.Repositories.UserAccounts
         Task<IList<UserAccount>> GetAllUserAccounts();
         bool CheckIfEmailExist(string email);
         bool CheckIfUserExist(string username);
+        UserAccount GetByEmail(string email);
     }
 }

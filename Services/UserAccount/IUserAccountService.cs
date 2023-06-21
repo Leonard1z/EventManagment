@@ -15,6 +15,7 @@ namespace Services.UserAccount
         bool CheckIfUserExist(string username);
         bool CheckIfEmailExist(string email);
         UserAccountCreateDto Create(UserAccountCreateDto userAccountCreateDto);
+        UserAccountDto Authenticate(LoginDto loginDto);
 
 
     }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Domain._DTO.Role;
 using Domain._DTO.UserAccount;
+using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
 using Services.Security;
 
@@ -7,12 +9,15 @@ namespace Services.UserAccount
 {
     public class UserAccountService : IUserAccountService
     {
-        public readonly IUserAccountRepository _userAccountRepository;
-        public readonly IMapper _mapper;
+        private readonly IUserAccountRepository _userAccountRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IMapper _mapper;
 
-        public UserAccountService(IUserAccountRepository userAccountRepository, IMapper mapper)
+        public UserAccountService(IUserAccountRepository userAccountRepository,
+            IRoleRepository roleRepository, IMapper mapper)
         {
             _userAccountRepository = userAccountRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
         }
         public async Task<IEnumerable<UserAccountDto>> GetAll()
@@ -39,5 +44,25 @@ namespace Services.UserAccount
 
             return _mapper.Map<UserAccountCreateDto>(result);
         }
+
+        public UserAccountDto Authenticate(LoginDto loginDto)
+        {
+            var user = _userAccountRepository.GetByEmail(loginDto.Email);
+
+            var role = _roleRepository.GetRoleById(user.RoleId);
+            user.Role = role;
+
+            if (user != null && PasswordHasher.VerifyPassword(loginDto.Password, user.Password, user.Salt))
+            {
+                var userDto = _mapper.Map<UserAccountDto>(user);
+
+                return userDto;
+            }
+
+
+            return null;
+        }
+
+
     }
 }

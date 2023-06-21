@@ -1,0 +1,49 @@
+﻿@using Domain._DTO.UserAccount
+@model LoginDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+	Layout = "~/Views/Shared/_Dependencies.cshtml";
+}
+
+<div class="d-flex flex-column align-items-center justify-content-center container" style="margin-top:10rem;">
+	<div class="col-10 border p-3" style="background-color: #d6d6d6;">
+		<div class="col-12 pb-2">
+			<h2 class="text-primary">Login</h2>
+			<hr />
+		</div>
+		<form action="@Url.Action("Login", "UserAccount")" method="post">
+			<div class="row">
+				<div class="col-6 mb-3">
+					<div class="form-group">
+						<label asp-for="Email" class="control-label">@Localizer["Email"]</label>
+						<input asp-for="Email" class="form-control" />
+						<span asp-validation-for="Email" class="text-danger"></span>
+					</div>
+				</div>	
+
+				<div class="col-6 mb-3">
+					<div class="form-group">
+						<label asp-for="Password" class="control-label">@Localizer["Password"]</label>
+						<input asp-for="Password" class="form-control" />
+						<span asp-validation-for="Password" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="col-md-12 pt-2 ">
+					<div class="btn-display-flex">
+						<button type="submit" class="btn btn-primary" style="width:150px">@Localizer["Login"]</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	}
