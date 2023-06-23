@@ -49,8 +49,11 @@ namespace Services.UserAccount
         {
             var user = _userAccountRepository.GetByEmail(loginDto.Email);
 
-            var role = _roleRepository.GetRoleById(user.RoleId);
-            user.Role = role;
+            if (user != null)
+            {
+                var role = _roleRepository.GetRoleById(user.RoleId);
+                user.Role = role;
+            }
 
             if (user != null && PasswordHasher.VerifyPassword(loginDto.Password, user.Password, user.Salt))
             {

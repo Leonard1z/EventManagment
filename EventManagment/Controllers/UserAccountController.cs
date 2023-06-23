@@ -42,6 +42,14 @@ namespace EventManagment.Controllers
         }
 
         [HttpGet]
+        [Route("AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+
+        [HttpGet]
         [Route("UserRegistration")]
         public ActionResult Register()
         {
@@ -136,7 +144,7 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult> Login(LoginDto loginDto)
+        public async Task<ActionResult> Login(LoginDto loginDto, string returnUrl)
         {
             var userDto = _userAccountService.Authenticate(loginDto);
 
@@ -152,6 +160,11 @@ namespace EventManagment.Controllers
 
             await SignInUserAsync(userDto);
 
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -162,8 +175,7 @@ namespace EventManagment.Controllers
             new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
             new Claim(ClaimTypes.Name, userDto.FirstName),
             new Claim(ClaimTypes.Email, userDto.Email),
-            new Claim(ClaimTypes.Role, userDto.Role.Name),
-            // Add more claims as needed
+            new Claim(ClaimTypes.Role, userDto.Role.Name)
         };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -172,11 +184,20 @@ namespace EventManagment.Controllers
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties
                 {
-                    IsPersistent = true, // Set to true if you want persistent authentication
-                    ExpiresUtc = DateTime.UtcNow.AddDays(7) // Set the expiration time for the cookie
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddDays(7)
                 });
         }
 
+
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Index", "Home");
+        }
 
     }
 }
