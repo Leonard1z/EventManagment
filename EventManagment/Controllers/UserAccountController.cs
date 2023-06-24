@@ -194,9 +194,25 @@ namespace EventManagment.Controllers
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            try
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return RedirectToAction("Index", "Home");
+                TempData["message"] = "Success";
+                TempData["entity"] = _localizer["Logged out successfully"].ToString();
+
+                return RedirectToAction("Index", "Home");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
+
+                return RedirectToAction(nameof(Login));
+            }
         }
 
     }

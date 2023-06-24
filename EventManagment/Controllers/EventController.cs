@@ -71,35 +71,50 @@ namespace EventManagment.Controllers
         {
             try
             {
-                eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
-
-                if (file != null && file.Length > 0)
+                if (ModelState.IsValid)
                 {
+                    var claimsIdentity = (ClaimsIdentity)User.Identity;
+                    var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                    eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
+                    eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
 
-                    //retrieves the root path of the web application www.root
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    //generates a unique filename using Guid.NewGuid()
-                    string fileName = Guid.NewGuid().ToString();
-                    //path where the file will be saved by combining the web root path with the "images\events" folder.
-                    string uploads = Path.Combine(wwwRootPath, @"images\events");
-                    string extension = Path.GetExtension(file.FileName);
-                    string filePath = Path.Combine(uploads, fileName + extension);
 
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+
+                    if (file != null && file.Length > 0)
                     {
-                        file.CopyTo(fileStream);
+
+                        //retrieves the root path of the web application www.root
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        //generates a unique filename using Guid.NewGuid()
+                        string fileName = Guid.NewGuid().ToString();
+                        //path where the file will be saved by combining the web root path with the "images\events" folder.
+                        string uploads = Path.Combine(wwwRootPath, @"images\events");
+                        string extension = Path.GetExtension(file.FileName);
+                        string filePath = Path.Combine(uploads, fileName + extension);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        eventCreateDto.Image = @"\images\events\" + fileName + extension;
+
                     }
 
-                    eventCreateDto.Image = @"\images\events\" + fileName + extension;
+                    var result = _eventService.Create(eventCreateDto);
 
+                    TempData["message"] = "Added";
+                    TempData["entity"] = _localizer["Event"].ToString();
+
+                    return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = _localizer["Modeli nuk eshte valid"].ToString();
 
-                var result = _eventService.Create(eventCreateDto);
-
-                TempData["message"] = "Added";
-                TempData["entity"] = _localizer["Event"].ToString();
-
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
@@ -263,9 +278,12 @@ namespace EventManagment.Controllers
                 {
                     item.EncryptedId = _protector.Protect(item.Id.ToString());
                     item.EncryptedCategoryId = _protector.Protect(item.CategoryId.ToString());
-                    item.CategoryId = 0;
+                    item.EncryptedUserAccountId = _protector.Protect(item.UserAccountId.ToString());
                     item.Id = 0;
+                    item.CategoryId = 0;
                     item.Category.Id = 0;
+                    item.UserAccount.Id = 0;
+                    item.UserAccountId = 0;
                 }
                 // Return the data as JSON
                 return Json(new { data = result });

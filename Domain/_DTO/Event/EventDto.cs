@@ -12,6 +12,8 @@ namespace Domain._DTO.Event
         public string EncryptedId { get; set; }
         [NotMapped]
         public string EncryptedCategoryId { get; set; }
+        [NotMapped]
+        public string EncryptedUserAccountId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
@@ -19,6 +21,8 @@ namespace Domain._DTO.Event
         public string Image { get; set; }
         public string State { get; set; }
         public string City { get; set; }
+        public int UserAccountId { get; set; }
+        public UserAccountDto UserAccount { get; set; }
         public int CategoryId { get; set; }
         public CategoryDto Category { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }

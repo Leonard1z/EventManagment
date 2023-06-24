@@ -25,6 +25,11 @@ namespace Infrastructure.EntityFramework.Configurations
                 .HasForeignKey(x => x.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(x => x.UserAccount)
+              .WithMany(x => x.Events)
+              .HasForeignKey(x => x.UserAccountId)
+              .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

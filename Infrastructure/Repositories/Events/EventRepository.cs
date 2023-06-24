@@ -37,6 +37,7 @@ namespace Infrastructure.Repositories.Events
         public async Task<IList<Event>> GetAllEvents()
         {
             var result = DbSet.Include(x => x.Category)
+                .Include(u => u.UserAccount)
                 .Include(x => x.Registrations)
                 .AsNoTracking()
                 .AsQueryable();

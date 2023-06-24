@@ -16,6 +16,8 @@ namespace Domain.Entities
         public string Image { get; set; }
         public string State { get; set; }
         public string City { get; set; }
+        public int UserAccountId { get; set; }
+        public UserAccount UserAccount { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public ICollection<Registration> Registrations { get; set; }

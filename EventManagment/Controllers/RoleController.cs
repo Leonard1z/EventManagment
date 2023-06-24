@@ -1,4 +1,5 @@
 ﻿using Domain._DTO.Role;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -7,6 +8,7 @@ using Services.Role;
 
 namespace EventManagment.Controllers
 {
+    [Authorize(Policy = "AdminOnly")]
     public class RoleController : Controller
     {
 

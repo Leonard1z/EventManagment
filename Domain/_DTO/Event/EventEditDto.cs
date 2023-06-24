@@ -1,5 +1,6 @@
 ﻿using Domain._DTO.Category;
 using Domain._DTO.Registration;
+using Domain._DTO.UserAccount;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,6 +24,8 @@ namespace Domain._DTO.Event
         public string Image { get; set; }
         public string State { get; set; }
         public string City { get; set; }
+        public int UserAccountId { get; set; }
+        public UserAccountDto UserAccount { get; set; }
         public int CategoryId { get; set; }
         public IList<CategoryDto> Category { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }

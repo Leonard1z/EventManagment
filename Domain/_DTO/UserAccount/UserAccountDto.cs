@@ -21,7 +21,5 @@ namespace Domain._DTO.UserAccount
         public char Gender { get; set; }
         public int RoleId { get; set; }
         public RoleDto Role { get; set; }
-        public ICollection<EventDto> Events { get; set; }
-        public ICollection<RegistrationDto> Registrations { get; set; }
     }
 }

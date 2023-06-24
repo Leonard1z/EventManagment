@@ -17,6 +17,8 @@ namespace Domain._DTO.Event
         public string Image { get; set; }
         public string State { get; set; }
         public string City { get; set; }
+        public int UserAccountId { get; set; }
+        public UserAccountDto? UserAccount { get; set; }
         public int CategoryId { get; set; }
         public IList<CategoryDto> Category { get; set; }
     }
