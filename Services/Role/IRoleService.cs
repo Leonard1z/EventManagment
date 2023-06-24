@@ -11,5 +11,6 @@ namespace Services.Role
         Task<RoleDto> GetById(int id);
         RoleDto Update(RoleDto roleDto);
         RoleDto GetDefaultRole();
+        Task<RoleDto> GetRoleByName(string roleName);
     }
 }

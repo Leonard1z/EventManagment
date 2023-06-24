@@ -43,5 +43,9 @@ namespace Infrastructure.Repositories.UserAccounts
 
             return user;
         }
+        public async Task<UserAccount> GetAdminByEmail(string email)
+        {
+            return await DbSet.FirstOrDefaultAsync(u => u.Email == email);
+        }
     }
 }

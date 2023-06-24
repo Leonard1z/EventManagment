@@ -55,5 +55,11 @@ namespace Services.Role
 
             return _mapper.Map<RoleDto>(result);
         }
+        public async Task<RoleDto> GetRoleByName(string roleName)
+        {
+            var result = await _roleRepository.GetRoleByName(roleName);
+
+            return _mapper.Map<RoleDto>(result);
+        }
     }
 }

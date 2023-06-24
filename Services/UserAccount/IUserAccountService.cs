@@ -16,6 +16,7 @@ namespace Services.UserAccount
         bool CheckIfEmailExist(string email);
         UserAccountCreateDto Create(UserAccountCreateDto userAccountCreateDto);
         UserAccountDto Authenticate(LoginDto loginDto);
+        Task<UserAccountDto> GetAdminByEmail(string email);
 
 
     }

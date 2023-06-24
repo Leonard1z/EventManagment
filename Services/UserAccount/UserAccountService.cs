@@ -66,6 +66,11 @@ namespace Services.UserAccount
             return null;
         }
 
+        public async Task<UserAccountDto> GetAdminByEmail(string email)
+        {
+            var result = await _userAccountRepository.GetAdminByEmail(email);
 
+            return _mapper.Map<UserAccountDto>(result);
+        }
     }
 }

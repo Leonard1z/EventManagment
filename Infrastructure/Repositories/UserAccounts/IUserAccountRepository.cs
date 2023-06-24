@@ -9,5 +9,6 @@ namespace Infrastructure.Repositories.UserAccounts
         bool CheckIfEmailExist(string email);
         bool CheckIfUserExist(string username);
         UserAccount GetByEmail(string email);
+        Task<UserAccount> GetAdminByEmail(string email);
     }
 }

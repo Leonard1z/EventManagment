@@ -5,7 +5,11 @@ using Services.Mapping;
 using EventManagment.Extension;
 using Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Infrastructure.DbExecute;
+using Microsoft.AspNetCore.Identity;
 using Services.Common;
+using Services.Role;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("EventManagment")
     ));
+
+
+builder.Services.AddScoped<IDbInitialize, DbInitialize>();
+builder.Services.AddTransient<IRoleService, RoleService>();
 
 #region
 // Configure AutoMapper
@@ -70,6 +78,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -79,3 +88,17 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitialize = scope.ServiceProvider.GetRequiredService<IDbInitialize>();
+        dbInitialize.DbExecute();
+        dbInitialize.CreateAdmin().GetAwaiter().GetResult();
+    }
+}
+

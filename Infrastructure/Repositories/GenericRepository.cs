@@ -182,14 +182,12 @@ namespace Infrastructure.Repositories
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && Context != null)
             {
-                if (Context != null)
-                {
-                    Context.Dispose();
-                    Context = null;
-                }
+                Context.Dispose();
             }
+
+            Context = null;
         }
 
 
