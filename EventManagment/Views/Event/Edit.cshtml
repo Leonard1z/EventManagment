@@ -94,42 +94,8 @@
 </div>
 
 @section Scripts{
-@{
-	//Client Site Validation
-	<partial name="_ValidationScriptsPartial" />
-}
-	<script>
-		function ValidateInputDate() {
-			//Get elemnts by id
-			var startDate = new Date(document.getElementById("startDate").value);
-			var endDate = new Date(document.getElementById("endDate").value);
-			//Create a Date object
-			var currentDate = new Date();
-
-			// Set the hours, minutes, and seconds to zero for comparison
-			currentDate.setHours(0, 0, 0, 0);
-
-			//Compares if date displayed on input is lower than current date if true return false, display message
-			if (startDate.getTime() < currentDate.getTime()) {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: 'Start date cannot be earlier than the current date!',
-				});
-				return false;
-			}
-
-			//Compares if date displayed on input is lower than startdate if true return false, display message
-			if (endDate.getTime() < startDate.getTime()) {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: 'End date cannot be earlier than the start date!',
-				});
-				return false;
-			}
-
-			return true;
-		}
-	</script>
+	@{
+		//Client Site Validation
+		<partial name="_ValidationScriptsPartial" />
+	}
 }

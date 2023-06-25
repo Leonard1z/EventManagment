@@ -3,43 +3,34 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
+<link rel="stylesheet" href="~/css/login.css" />
+
 @{
 	Layout = "~/Views/Shared/_Dependencies.cshtml";
 }
 
-<div class="d-flex flex-column align-items-center justify-content-center container" style="margin-top:10rem;">
-	<div class="col-10 border p-3" style="background-color: #d6d6d6;">
-		<div class="col-12 pb-2">
-			<h2 class="text-primary">Login</h2>
-			<hr />
+<div class="login-container">
+	<form class="login-form" action="@Url.Action("Login", "UserAccount")" method="post">
+		<input type="hidden" name="returnUrl" value="@Context.Request.Query["ReturnUrl"]" />
+		<div class="logo">
+			<img src="~/images/logo.png" alt="">
 		</div>
-		<form action="@Url.Action("Login", "UserAccount")" method="post">
-			 <input type="hidden" name="returnUrl" value="@Context.Request.Query["ReturnUrl"]" />
-			<div class="row">
-				<div class="col-6 mb-3">
-					<div class="form-group">
-						<label asp-for="Email" class="control-label">@Localizer["Email"]</label>
-						<input asp-for="Email" class="form-control" />
-						<span asp-validation-for="Email" class="text-danger"></span>
-					</div>
-				</div>	
+		<div class="field">
+			<label asp-for="Email" class="control-label">@Localizer["Email"]</label>
+			<input asp-for="Email" class="form-control" placeholder="Enter Your Email"/>
+			<span asp-validation-for="Email" class="text-danger"></span>
 
-				<div class="col-6 mb-3">
-					<div class="form-group">
-						<label asp-for="Password" class="control-label">@Localizer["Password"]</label>
-						<input asp-for="Password" class="form-control" />
-						<span asp-validation-for="Password" class="text-danger"></span>
-					</div>
-				</div>
-
-				<div class="col-md-12 pt-2 ">
-					<div class="btn-display-flex">
-						<button type="submit" class="btn btn-primary" style="width:150px">@Localizer["Login"]</button>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
+			<label asp-for="Password" class="control-label">@Localizer["Password"]</label>
+			<input asp-for="Password" class="form-control" placeholder="Enter Your Password" />
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+		<div class="login-field">
+			<button type="submit" id="login-btn" class="btn">@Localizer["Login"]</button>
+		</div>
+		<div class="link">
+			<p>Don't have account?<a asp-controller="UserAccount" asp-action="Register"> Sign Up Now</a></p>
+		</div>
+	</form>
 </div>
 
 

@@ -201,7 +201,7 @@ namespace EventManagment.Controllers
                 TempData["message"] = "Success";
                 TempData["entity"] = _localizer["Logged out successfully"].ToString();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Login));
 
             }
             catch (Exception ex)

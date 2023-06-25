@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
+    [Authorize]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
@@ -65,56 +66,44 @@ namespace EventManagment.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(100_000_000)]
         [Route("Event/Create")]
-        [RequestSizeLimit(5_000_000)]
         public ActionResult Create(EventCreateDto eventCreateDto, IFormFile file)
         {
             try
             {
-                if (ModelState.IsValid)
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
+                eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
+
+                if (file != null && file.Length > 0)
                 {
-                    var claimsIdentity = (ClaimsIdentity)User.Identity;
-                    var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                    eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
-                    eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
+                    //retrieves the root path of the web application www.root
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    //generates a unique filename using Guid.NewGuid()
+                    string fileName = Guid.NewGuid().ToString();
+                    //path where the file will be saved by combining the web root path with the "images\events" folder.
+                    string uploads = Path.Combine(wwwRootPath, @"images\events");
+                    string extension = Path.GetExtension(file.FileName);
+                    string filePath = Path.Combine(uploads, fileName + extension);
 
-
-
-                    if (file != null && file.Length > 0)
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-
-                        //retrieves the root path of the web application www.root
-                        string wwwRootPath = _hostEnvironment.WebRootPath;
-                        //generates a unique filename using Guid.NewGuid()
-                        string fileName = Guid.NewGuid().ToString();
-                        //path where the file will be saved by combining the web root path with the "images\events" folder.
-                        string uploads = Path.Combine(wwwRootPath, @"images\events");
-                        string extension = Path.GetExtension(file.FileName);
-                        string filePath = Path.Combine(uploads, fileName + extension);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-
-                        eventCreateDto.Image = @"\images\events\" + fileName + extension;
-
+                        file.CopyTo(fileStream);
                     }
 
-                    var result = _eventService.Create(eventCreateDto);
+                    eventCreateDto.Image = @"\images\events\" + fileName + extension;
 
-                    TempData["message"] = "Added";
-                    TempData["entity"] = _localizer["Event"].ToString();
-
-                    return RedirectToAction(nameof(Index));
                 }
-                else
-                {
-                    TempData["message"] = "Error";
-                    TempData["entity"] = _localizer["Modeli nuk eshte valid"].ToString();
 
-                    return RedirectToAction(nameof(Index));
-                }
+                var result = _eventService.Create(eventCreateDto);
+
+                TempData["message"] = "Added";
+                TempData["entity"] = _localizer["Event"].ToString();
+
+                return RedirectToAction(nameof(Index));
+
             }
             catch (Exception ex)
             {
@@ -183,9 +172,10 @@ namespace EventManagment.Controllers
         {
             try
             {
-
+                var claimIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                eventEditDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
                 eventEditDto.CategoryId = eventEditDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventEditDto.EncryptedCategoryId)) : 0;
-
                 eventEditDto.Id = int.Parse(_protector.Unprotect(eventEditDto.EncryptedId));
 
                 string wwwRootPath = _hostEnvironment.WebRootPath;
