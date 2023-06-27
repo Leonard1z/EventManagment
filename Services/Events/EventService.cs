@@ -77,5 +77,12 @@ namespace Services.Events
 
             return _mapper.Map<List<EventDto>>(result.ToList());
         }
+
+        public IEnumerable<EventDto> GetExpiredEvents()
+        {
+            var result = _eventRepository.GetExpiredEvents();
+
+            return _mapper.Map<IEnumerable<EventDto>>(result);
+        }
     }
 }

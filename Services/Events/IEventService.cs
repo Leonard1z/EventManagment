@@ -15,5 +15,6 @@ namespace Services.Events
         Task<IEnumerable<EventDto>> GetAllEvents();
         Task<IEnumerable<EventDto>> GetUserEvents(int useId);
         EventEditDto Update(EventEditDto eventEditDto);
+        IEnumerable<EventDto> GetExpiredEvents();
     }
 }

@@ -4,6 +4,8 @@ using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Services.Events;
 using Services.Role;
 using Services.UserAccount;
 using System;
@@ -20,15 +22,21 @@ namespace Infrastructure.DbExecute
         private readonly IServiceProvider _serviceProvider;
         private readonly IRoleService _roleService;
         private readonly IUserAccountService _userAccountService;
+        public readonly IEventService _eventService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
-            IUserAccountService userAccountService
+            IUserAccountService userAccountService,
+            IEventService eventService,
+            IWebHostEnvironment webHostEnvironment
         )
         {
             _serviceProvider = serviceProvider;
             _userAccountService = userAccountService;
             _roleService = roleService;
+            _eventService = eventService;
+            _webHostEnvironment = webHostEnvironment;
         }
         public void DbExecute()
         {
@@ -68,6 +76,22 @@ namespace Infrastructure.DbExecute
 
                 _userAccountService.Create(user);
 
+            }
+        }
+
+        public void DeleteExpiredEvents()
+        {
+            var expiredEvents = _eventService.GetExpiredEvents();
+
+            foreach (var expiredEvent in expiredEvents)
+            {
+
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, expiredEvent.Image.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                _eventService.Delete(expiredEvent.Id);
             }
         }
     }

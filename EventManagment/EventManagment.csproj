@@ -1,34 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\images\events\61a3b21b-b55c-431a-8254-0a7c58c5bc21.jpg" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="wwwroot\images\events\61a3b21b-b55c-431a-8254-0a7c58c5bc21.jpg" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="ReflectionIT.Mvc.Paging" Version="7.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="12.0.1" />
+		<PackageReference Include="Hangfire" Version="1.8.3" />
+		<PackageReference Include="Hangfire.Core" Version="1.8.3" />
+		<PackageReference Include="Hangfire.SqlServer" Version="1.8.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="ReflectionIT.Mvc.Paging" Version="7.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+		<ProjectReference Include="..\Services\Services.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\events\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\images\events\" />
+	</ItemGroup>
 
 </Project>

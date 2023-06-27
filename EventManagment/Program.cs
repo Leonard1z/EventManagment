@@ -10,14 +10,21 @@ using Microsoft.AspNetCore.Identity;
 using Services.Common;
 using Services.Role;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("EventManagment")
     ));
 
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("EventManagment")));
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
@@ -86,6 +93,14 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.UseHangfireDashboard();
+//Add's The Schedule To HangFireServer
+RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Daily);
+//Executes the Background Schedule
+app.UseHangfireServer();
+
 
 app.Run();
 
