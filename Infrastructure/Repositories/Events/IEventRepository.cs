@@ -8,5 +8,6 @@ namespace Infrastructure.Repositories.Events
         Task<IList<Event>> GetAllEvents();
         Task<Event> GetByIdWithCategory(int id);
         IEnumerable<Event> GetExpiredEvents();
+        Task<IEnumerable<Event>> GetUserEvents(int userId);
     }
 }

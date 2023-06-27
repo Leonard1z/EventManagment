@@ -7,5 +7,6 @@
         public readonly string RegistartionControllerPs = "EventManagment.RegistrationController";
         public readonly string UserAccountControllerPs = "EventManagment.UseraccountController";
         public readonly string RoleControllerPs = "EventManagment.RoleController";
+        public readonly string HomeControllerPs = "EventManagment.HomeController";
     }
 }

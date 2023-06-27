@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Security;
 using Services.Categories;
 using Services.Events;
+using Services.UserAccount;
 using System.Security.Claims;
 
 namespace EventManagment.Controllers
@@ -15,6 +16,7 @@ namespace EventManagment.Controllers
     {
         private readonly IEventService _eventService;
         private readonly ICategoryService _categoryService;
+        private readonly IUserAccountService _userAccountService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<EventController> _localizer;
         private readonly ILogger<EventController> _logger;
@@ -22,6 +24,7 @@ namespace EventManagment.Controllers
 
         public EventController(IEventService eventService,
             ICategoryService categoryService,
+            IUserAccountService userAccountService,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<EventController> localizer,
@@ -30,6 +33,7 @@ namespace EventManagment.Controllers
         {
             _eventService = eventService;
             _categoryService = categoryService;
+            _userAccountService = userAccountService;
             _protector = provider.CreateProtector(purpose: purposeStrings.EventControllerPs);
             _localizer = localizer;
             _logger = logger;
@@ -38,7 +42,7 @@ namespace EventManagment.Controllers
 
 
         [Route("EventData")]
-        public IActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }
@@ -262,21 +266,47 @@ namespace EventManagment.Controllers
         {
             try
             {
-                var result = await _eventService.GetAllEvents();
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(claim.Value);
+                var isAdmin = User.IsInRole("Admin");
 
-                foreach (var item in result)
+                if (isAdmin)
                 {
-                    item.EncryptedId = _protector.Protect(item.Id.ToString());
-                    item.EncryptedCategoryId = _protector.Protect(item.CategoryId.ToString());
-                    item.EncryptedUserAccountId = _protector.Protect(item.UserAccountId.ToString());
-                    item.Id = 0;
-                    item.CategoryId = 0;
-                    item.Category.Id = 0;
-                    item.UserAccount.Id = 0;
-                    item.UserAccountId = 0;
+                    var result = await _eventService.GetAllEvents();
+
+                    foreach (var item in result)
+                    {
+                        item.EncryptedId = _protector.Protect(item.Id.ToString());
+                        item.EncryptedCategoryId = _protector.Protect(item.CategoryId.ToString());
+                        item.EncryptedUserAccountId = _protector.Protect(item.UserAccountId.ToString());
+                        item.Id = 0;
+                        item.CategoryId = 0;
+                        item.Category.Id = 0;
+                        item.UserAccount.Id = 0;
+                        item.UserAccountId = 0;
+                    }
+
+                    return Json(new { data = result });
                 }
-                // Return the data as JSON
-                return Json(new { data = result });
+                else
+                {
+                    var result = await _eventService.GetUserEvents(userId);
+
+                    foreach (var item in result)
+                    {
+                        item.EncryptedId = _protector.Protect(item.Id.ToString());
+                        item.EncryptedCategoryId = _protector.Protect(item.CategoryId.ToString());
+                        item.EncryptedUserAccountId = _protector.Protect(item.UserAccountId.ToString());
+                        item.Id = 0;
+                        item.CategoryId = 0;
+                        item.Category.Id = 0;
+                        item.UserAccount.Id = 0;
+                        item.UserAccountId = 0;
+                    }
+
+                    return Json(new { data = result });
+                }
             }
             catch (Exception ex)
             {

@@ -58,5 +58,17 @@ namespace Infrastructure.Repositories.Events
             var currentDate = DateTime.Now;
             return DbSet.Where(x => x.EndDate < currentDate).ToList();
         }
+
+        public async Task<IEnumerable<Event>> GetUserEvents(int userId)
+        {
+            var result = DbSet.Include(x => x.Category)
+                .Include(x => x.UserAccount)
+                .Include(x => x.Registrations)
+                .Where(x => x.UserAccountId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return await result;
+        }
     }
 }

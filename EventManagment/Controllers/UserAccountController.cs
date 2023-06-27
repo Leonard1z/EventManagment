@@ -171,12 +171,12 @@ namespace EventManagment.Controllers
         private async Task SignInUserAsync(UserAccountDto userDto)
         {
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
-            new Claim(ClaimTypes.Name, userDto.FirstName),
-            new Claim(ClaimTypes.Email, userDto.Email),
-            new Claim(ClaimTypes.Role, userDto.Role.Name)
-        };
+            {
+                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                new Claim(ClaimTypes.Name, userDto.FirstName),
+                new Claim(ClaimTypes.Email, userDto.Email),
+                new Claim(ClaimTypes.Role, userDto.Role.Name)
+            };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

@@ -13,6 +13,7 @@ namespace Services.Events
         Task<EventDto> GetById(int id);
         Task<EventEditDto> GetByIdEdit(int id);
         Task<IEnumerable<EventDto>> GetAllEvents();
+        Task<IEnumerable<EventDto>> GetUserEvents(int useId);
         EventEditDto Update(EventEditDto eventEditDto);
     }
 }

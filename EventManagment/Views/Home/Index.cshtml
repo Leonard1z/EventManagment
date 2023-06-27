@@ -1,4 +1,28 @@
-﻿@{
+﻿@using Domain._DTO.Event
+@model IEnumerable<EventDto>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+
+<h2>Events</h2>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@item.Image" class="card-img-top" alt="Event Image">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Description</p>
+                    <p class="card-text">Date: @item.StartDate</p>
+                    <p class="card-text">Location: @item.EndDate</p>
+                    <p class="card-text">Location: @item.City</p>
+                    <a href="#" class="btn btn-primary">Register</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -71,5 +71,11 @@ namespace Services.Events
             return true;
         }
 
+        public async Task<IEnumerable<EventDto>> GetUserEvents(int useId)
+        {
+            var result = await _eventRepository.GetUserEvents(useId);
+
+            return _mapper.Map<List<EventDto>>(result.ToList());
+        }
     }
 }
