@@ -32,11 +32,11 @@ namespace Services.Mapping
             #endregion
 
             #region
-            CreateMap<Registration, RegistrationDto>();
-            CreateMap<RegistrationDto, Registration>();
+            CreateMap<Domain.Entities.Registration, RegistrationDto>();
+            CreateMap<RegistrationDto, Domain.Entities.Registration>();
 
-            CreateMap<Registration, RegistrationCreateDto>();
-            CreateMap<RegistrationCreateDto, Registration>();
+            CreateMap<Domain.Entities.Registration, RegistrationCreateDto>();
+            CreateMap<RegistrationCreateDto, Domain.Entities.Registration>();
             #endregion
 
             #region

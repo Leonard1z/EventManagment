@@ -12,29 +12,16 @@ namespace Infrastructure.Repositories.Registrations
     {
         public RegistrationRepository(EventManagmentDb context) : base(context)
         {
+
         }
 
-        public IQueryable<Registration> GetAllForPagination(string filter)
+        public async Task<Registration> GetUserAndEvent(int userId, int eventId)
         {
-            var result = DbSet.Include(x => x.UserAccount)
-                .Include(x => x.Event)
-                .AsNoTracking()
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                result = result.Where(x => x.Id.ToString().Contains(filter));
-            }
-            return result;
+            return await DbSet.FirstOrDefaultAsync(r => r.UserAccountId == userId && r.EventId == eventId);
         }
-        public async Task<IList<Registration>> GetAllRegistration()
+        public IEnumerable<Registration> GetRegistrationByEventId(int eventId)
         {
-            var result = DbSet.Include(x => x.UserAccount)
-                .Include(x => x.Event)
-                .AsNoTracking()
-                .AsQueryable();
-
-            return await result.ToListAsync();
+            return DbSet.Where(r => r.EventId == eventId).ToList();
         }
 
     }

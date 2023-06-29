@@ -83,7 +83,11 @@
                     "closeButton": true,
                     "timeOut": "7000"
                 });
-
+            } else if ('@TempData["message"]' == "Error") {
+                toastr.error('', '@TempData["entity"] ', {
+                    "closeButton": true,
+                    "timeOut": "7000"
+                });
             }
           
         });

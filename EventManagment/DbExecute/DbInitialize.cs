@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services.Events;
+using Services.Registration;
 using Services.Role;
 using Services.UserAccount;
 using System;
@@ -23,12 +24,14 @@ namespace Infrastructure.DbExecute
         private readonly IRoleService _roleService;
         private readonly IUserAccountService _userAccountService;
         public readonly IEventService _eventService;
+        private readonly IRegistrationService _registrationService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
             IUserAccountService userAccountService,
             IEventService eventService,
+            IRegistrationService registrationService,
             IWebHostEnvironment webHostEnvironment
         )
         {
@@ -36,6 +39,7 @@ namespace Infrastructure.DbExecute
             _userAccountService = userAccountService;
             _roleService = roleService;
             _eventService = eventService;
+            _registrationService = registrationService;
             _webHostEnvironment = webHostEnvironment;
         }
         public void DbExecute()
@@ -85,6 +89,11 @@ namespace Infrastructure.DbExecute
 
             foreach (var expiredEvent in expiredEvents)
             {
+                var registrations = _registrationService.GetRegistrationByEventId(expiredEvent.Id);
+                foreach (var registration in registrations)
+                {
+                    _registrationService.Delete(registration.Id);
+                }
 
                 var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, expiredEvent.Image.TrimStart('\\'));
                 if (System.IO.File.Exists(oldImagePath))

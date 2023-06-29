@@ -46,7 +46,7 @@ namespace Services.Events
             return _mapper.Map<List<EventDto>>(result.ToList());
         }
 
-        public async Task<EventDto> GetById(int id)
+        public async Task<EventDto> GetByIdWithCategory(int id)
         {
             return _mapper.Map<EventDto>(await _eventRepository.GetByIdWithCategory(id));
         }
@@ -83,6 +83,19 @@ namespace Services.Events
             var result = _eventRepository.GetExpiredEvents();
 
             return _mapper.Map<IEnumerable<EventDto>>(result);
+        }
+
+        public async Task<EventDto> GetById(int eventId)
+        {
+            var eventEntity = await _eventRepository.GetById(eventId);
+            if (eventEntity == null)
+            {
+                return null;
+            }
+
+            var eventDto = _mapper.Map<EventDto>(eventEntity);
+
+            return eventDto;
         }
     }
 }

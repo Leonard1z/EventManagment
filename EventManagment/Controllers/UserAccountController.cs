@@ -201,6 +201,8 @@ namespace EventManagment.Controllers
                 TempData["message"] = "Success";
                 TempData["entity"] = _localizer["Logged out successfully"].ToString();
 
+                Response.Cookies.Delete(".AspNetCore.Cookies");
+
                 return RedirectToAction(nameof(Login));
 
             }

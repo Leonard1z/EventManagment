@@ -127,7 +127,7 @@ namespace EventManagment.Controllers
             try
             {
                 var id = int.Parse(_protector.Unprotect(encryptedId));
-                var result = await _eventService.GetById(id);
+                var result = await _eventService.GetByIdWithCategory(id);
 
                 result.EncryptedId = _protector.Protect(id.ToString());
                 result.Id = 0;
@@ -327,7 +327,7 @@ namespace EventManagment.Controllers
             {
                 var id = int.Parse(_protector.Unprotect(encryptedId.ToString()));
 
-                var obj = _eventService.GetById(id);
+                var obj = _eventService.GetByIdWithCategory(id);
 
                 // Check if the event has expired
                 if (obj != null && obj.Result.EndDate < DateTime.Now)

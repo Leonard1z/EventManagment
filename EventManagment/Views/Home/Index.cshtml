@@ -20,7 +20,7 @@
                     <p class="card-text">Date: @item.StartDate</p>
                     <p class="card-text">EndDate: @item.EndDate</p>
                     <p class="card-text">Location: @item.City</p>
-                    <a href="#" class="btn btn-primary">Register</a>
+                    <a href="@Url.Action("RegisterToEvent", "Registration", new { encryptedEventId = item.EncryptedId })" class="btn btn-primary">Register</a>
                 </div>
             </div>
         </div>
