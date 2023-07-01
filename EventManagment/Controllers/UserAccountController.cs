@@ -10,6 +10,8 @@ using Security;
 using Services.Role;
 using Services.UserAccount;
 using System.Security.Claims;
+using Services.SendEmail;
+using System.Net.Mail;
 
 namespace EventManagment.Controllers
 {
@@ -18,12 +20,14 @@ namespace EventManagment.Controllers
 
         private readonly IUserAccountService _userAccountService;
         private readonly IRoleService _roleService;
+        private readonly IEmailService _emailService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<UserAccountController> _localizer;
         private readonly ILogger<UserAccountController> _logger;
 
         public UserAccountController(IUserAccountService userAccountService,
             IRoleService roleService,
+            IEmailService emailService,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<UserAccountController> localizer,
@@ -31,6 +35,7 @@ namespace EventManagment.Controllers
         {
             _userAccountService = userAccountService;
             _roleService = roleService;
+            _emailService = emailService;
             _protector = provider.CreateProtector(purpose: purposeStrings.UserAccountControllerPs);
             _localizer = localizer;
             _logger = logger;
@@ -72,42 +77,42 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("UserRegistration")]
-        public ActionResult Register(UserAccountCreateDto userDto)
+        public async Task<ActionResult> Register(UserAccountCreateDto userDto)
         {
             try
             {
                 var defaultRole = _roleService.GetDefaultRole();
                 userDto.RoleId = defaultRole.Id;
 
-                if (ModelState.IsValid)
+                if (_userAccountService.CheckIfUserExist(userDto.FirstName))
+                {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = _localizer["This username is already taken. Username must be unique!"].ToString();
+                    return RedirectToAction(nameof(Register));
+                }
+                else if (_userAccountService.CheckIfEmailExist(userDto.Email))
                 {
 
-                    if (_userAccountService.CheckIfUserExist(userDto.FirstName))
-                    {
-                        TempData["message"] = "Error";
-                        TempData["entity"] = _localizer["Ky emër përdoruesi është marrë tashmë, emri i përdoruesit duhet të jetë unik!"].ToString();
-                        return RedirectToAction(nameof(Register));
-                    }
-                    else if (_userAccountService.CheckIfEmailExist(userDto.Email))
-                    {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = _localizer["This email is already taken. Emails must be unique!"].ToString();
+                    return RedirectToAction(nameof(Register));
 
-                        TempData["message"] = "Error";
-                        TempData["entity"] = _localizer["Ky email është marrë tashmë, emaili duhet të jetë unike!"].ToString();
-                        return RedirectToAction(nameof(Register));
-
-                    }
-
-
-
-                    _userAccountService.Create(userDto);
-
-                    TempData["message"] = "Added";
-                    TempData["entity"] = _localizer["User"].ToString();
-
-                    return RedirectToAction(nameof(Login));
                 }
 
+                userDto.IsEmailVerified = false;
+                userDto.EmailVerificationToken = _userAccountService.GenerateVerificationToken();
+
+                var userAccountCreateDto = _userAccountService.Create(userDto);
+
+
+                var verificationUrl = Url.Action("VerifyEmail", "UserAccount", new { token = userAccountCreateDto.EmailVerificationToken }, Request.Scheme);
+                await _userAccountService.SendEmailVerificationAsync(userDto.Email, verificationUrl);
+
+                TempData["message"] = "Message";
+                TempData["entity"] = _localizer["Please confirm your email before logging in."].ToString();
+
                 return RedirectToAction(nameof(Login));
+
 
             }
             catch (Exception ex)
@@ -119,6 +124,39 @@ namespace EventManagment.Controllers
 
                 return RedirectToAction(nameof(Register));
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            try
+            {
+                var userAccount = await _userAccountService.GetUserByVerificationToken(token);
+
+                if (userAccount != null)
+                {
+                    userAccount.IsEmailVerified = true;
+                    userAccount.EmailVerificationToken = null;
+                    _userAccountService.Update(userAccount);
+
+                    TempData["message"] = "Success";
+                    TempData["entity"] = "Email verified successfully! You can now log in.";
+                }
+                else
+                {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = "Invalid verification, Please contact our support Team.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                TempData["message"] = "Error";
+                TempData["entity"] = "An error occurred while verifying the email. Please try again.";
+            }
+
+            return RedirectToAction(nameof(Login));
         }
 
         [HttpGet]
@@ -155,6 +193,13 @@ namespace EventManagment.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
+            if (!userDto.IsEmailVerified)
+            {
+                TempData["message"] = "Warning";
+                TempData["entity"] = _localizer[$"We've sent an email verification to your registered email address ({userDto.Email}). Please check your inbox and follow the instructions to complete the email verification process before logging in."].ToString();
+                return RedirectToAction(nameof(Login));
+            }
+
             TempData["message"] = "Success";
             TempData["entity"] = _localizer["Logged in successfully"].ToString();
 
@@ -178,6 +223,7 @@ namespace EventManagment.Controllers
                 new Claim(ClaimTypes.Role, userDto.Role.Name)
             };
 
+            //Represents the user
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,

@@ -56,16 +56,16 @@
 				});
 			}
 			else if ('@TempData["message"]' == "Warning") {
-				toastr.warning('', '@TempData["entity"] @Localizer["Warning."]', {
+				toastr.warning('', '@TempData["entity"] @Localizer[""]', {
 					"closeButton": true,
 					"timeOut": "10000"
 				});
-			} else if ('@TempData["message"]' == "Success") {
+			} 
+			else if ('@TempData["message"]' == "Success") {
 				toastr.success('', '@TempData["entity"] @Localizer[""] ', {
 					"closeButton": true,
 					"timeOut": "7000"
 				});
-
 			}
 		});
 	</script>

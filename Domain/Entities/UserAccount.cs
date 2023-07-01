@@ -19,6 +19,8 @@ namespace Domain.Entities
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public char Gender { get; set; }
+        public bool IsEmailVerified { get; set; }
+        public string? EmailVerificationToken { get; set; }
         public int RoleId { get; set; }
         public Roles Role { get; set; }
         public ICollection<Event> Events { get; set; }

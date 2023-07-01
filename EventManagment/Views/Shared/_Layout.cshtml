@@ -42,6 +42,7 @@
                      <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <p class="text-white">Welcome @User.Identity.Name</p>
                             <li class="nav-item">
                                 <form id="logoutForm" asp-controller="UserAccount" asp-action="Logout" method="post" class="d-inline">
                                     <button type="submit" class="nav-link btn btn-link text-white">

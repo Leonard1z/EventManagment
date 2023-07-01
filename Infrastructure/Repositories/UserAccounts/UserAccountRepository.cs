@@ -47,5 +47,12 @@ namespace Infrastructure.Repositories.UserAccounts
         {
             return await DbSet.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<UserAccount> GetUserByVerificationToken(string token)
+        {
+            var user = await DbSet.SingleOrDefaultAsync(u => u.EmailVerificationToken == token);
+
+            return user;
+        }
     }
 }

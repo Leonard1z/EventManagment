@@ -17,7 +17,9 @@ namespace Services.UserAccount
         UserAccountCreateDto Create(UserAccountCreateDto userAccountCreateDto);
         UserAccountDto Authenticate(LoginDto loginDto);
         Task<UserAccountDto> GetAdminByEmail(string email);
-
-
+        Task<Domain.Entities.UserAccount> GetUserByVerificationToken(string token);
+        Domain.Entities.UserAccount Update(Domain.Entities.UserAccount userAccount);
+        string GenerateVerificationToken();
+        Task SendEmailVerificationAsync(string email, string verificationUrl);
     }
 }

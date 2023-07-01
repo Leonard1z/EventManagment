@@ -73,7 +73,8 @@ namespace Infrastructure.DbExecute
                     PhoneNumber = "044475749",
                     Address = "Prishtina",
                     Gender = 'M',
-                    RoleId = adminRole.Id
+                    RoleId = adminRole.Id,
+                    IsEmailVerified = true       
 
                 };
 

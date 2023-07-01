@@ -11,6 +11,8 @@ using Services.Common;
 using Services.Role;
 using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
+using Services.SendEmail;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ builder.Services.AddHangfire(configuration => configuration
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 
 #region
 // Configure AutoMapper

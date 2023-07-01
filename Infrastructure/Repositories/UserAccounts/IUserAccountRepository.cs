@@ -10,5 +10,6 @@ namespace Infrastructure.Repositories.UserAccounts
         bool CheckIfUserExist(string username);
         UserAccount GetByEmail(string email);
         Task<UserAccount> GetAdminByEmail(string email);
+        Task<UserAccount> GetUserByVerificationToken(string token);
     }
 }
