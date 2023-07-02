@@ -23,6 +23,7 @@ namespace Services.SendEmail
         {
             var mailMessage = new MailMessage(_email, email, subject, body);
             mailMessage.IsBodyHtml = true;
+
             await _smtpClient.SendMailAsync(mailMessage);
         }
     }

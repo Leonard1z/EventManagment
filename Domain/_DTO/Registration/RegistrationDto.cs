@@ -14,13 +14,7 @@ namespace Domain._DTO.Registration
         public int Id { get; set; }
         [NotMapped]
         public string EncryptedId { get; set; }
-        [NotMapped]
-        public string EncryptedUserAccountId { get; set; }
-        [NotMapped]
-        public string EncryptedEventId { get; set; }
         public DateTime RegistrationDate { get; set; }
-        public int EventId { get; set; }
-        public EventDto Event { get; set; }
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }
     }

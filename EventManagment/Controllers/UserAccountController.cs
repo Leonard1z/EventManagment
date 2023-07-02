@@ -1,6 +1,4 @@
-﻿using Domain._DTO.Event;
-using Domain._DTO.UserAccount;
-using Domain.Entities;
+﻿using Domain._DTO.UserAccount;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
@@ -11,7 +9,6 @@ using Services.Role;
 using Services.UserAccount;
 using System.Security.Claims;
 using Services.SendEmail;
-using System.Net.Mail;
 
 namespace EventManagment.Controllers
 {

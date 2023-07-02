@@ -285,6 +285,7 @@ namespace EventManagment.Controllers
                         item.Category.Id = 0;
                         item.UserAccount.Id = 0;
                         item.UserAccountId = 0;
+                        item.CountRegistration = item.Registrations.Count;
                     }
 
                     return Json(new { data = result });
@@ -303,6 +304,7 @@ namespace EventManagment.Controllers
                         item.Category.Id = 0;
                         item.UserAccount.Id = 0;
                         item.UserAccountId = 0;
+                        item.CountRegistration = item.Registrations.Count;
                     }
 
                     return Json(new { data = result });
