@@ -1,15 +1,7 @@
 ﻿using AutoMapper;
 using Domain._DTO.UserAccount;
-using Domain.Entities;
-using Infrastructure;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing.Template;
-using RazorEngine.Templating;
 using Services.Security;
 using Services.SendEmail;
 
