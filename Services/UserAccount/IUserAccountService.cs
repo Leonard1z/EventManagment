@@ -20,6 +20,6 @@ namespace Services.UserAccount
         Task<Domain.Entities.UserAccount> GetUserByVerificationToken(string token);
         Domain.Entities.UserAccount Update(Domain.Entities.UserAccount userAccount);
         string GenerateVerificationToken();
-        Task SendEmailVerificationAsync(string email, string verificationUrl);
+        Task SendEmailVerificationAsync(string email, string firstName, string verificationUrl);
     }
 }

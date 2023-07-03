@@ -2,6 +2,7 @@
 using Domain._DTO.UserAccount;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
+using Microsoft.AspNetCore.Hosting;
 using Services.Security;
 using Services.SendEmail;
 
@@ -13,17 +14,20 @@ namespace Services.UserAccount
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UserAccountService(IUserAccountRepository userAccountRepository,
             IRoleRepository roleRepository,
             IEmailService emailService,
-            IMapper mapper
+            IMapper mapper,
+            IWebHostEnvironment webHostEnvironment
             )
         {
             _userAccountRepository = userAccountRepository;
             _roleRepository = roleRepository;
             _emailService = emailService;
             _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IEnumerable<UserAccountDto>> GetAll()
         {
@@ -99,14 +103,28 @@ namespace Services.UserAccount
               .Select(s => s[random.Next(s.Length)]).ToArray());
             return token;
         }
-        public async Task SendEmailVerificationAsync(string email, string verificationUrl)
+        public async Task SendEmailVerificationAsync(string email, string firstName, string verificationUrl)
         {
-            string subject = "Email Verification";
-            string body = $"<p>Plese click the link to verify the email <a href={verificationUrl}>Verify Email</a></p>";
+            var pathToFile = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+            + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+            + Path.DirectorySeparatorChar.ToString() + "EmailVerification.html";
+
+            //string body = $"<p>Plese click the link to verify the email <a href={verificationUrl}>Verify Email</a></p>";
+            string subject = "Confirm Your Emaiil";
+            string tittle = "Confirm Account Registration";
+            string message = "Thanks for Registering to our website were thankfoul to you for visiting our web";
+            string body = "";
+            using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
+            {
+                body = streamReader.ReadToEnd();
+            }
+
+
+            string messageBody = string.Format(body, tittle, string.Format("{0:dddd, d MMMM yyyy}", DateTime.Now),firstName, message, verificationUrl);
 
             try
             {
-                await _emailService.SendEmailAsync(email, subject, body);
+                await _emailService.SendEmailAsync(email, subject, messageBody);
             }
             catch
             {

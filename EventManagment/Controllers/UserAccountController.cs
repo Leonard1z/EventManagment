@@ -103,7 +103,7 @@ namespace EventManagment.Controllers
 
 
                 var verificationUrl = Url.Action("VerifyEmail", "UserAccount", new { token = userAccountCreateDto.EmailVerificationToken }, Request.Scheme);
-                await _userAccountService.SendEmailVerificationAsync(userDto.Email, verificationUrl);
+                await _userAccountService.SendEmailVerificationAsync(userDto.Email, userDto.FirstName, verificationUrl);
 
                 TempData["message"] = "Message";
                 TempData["entity"] = _localizer["Please confirm your email before logging in."].ToString();
