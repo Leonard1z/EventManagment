@@ -5,62 +5,89 @@
 
 <meta charset="ISO-8859-1">
 @{
-    Layout = "~/Views/Shared/_Dependencies.cshtml";
+	Layout = "~/Views/Shared/_Dependencies.cshtml";
 }
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-8 border p-3">
-            <h2>@Localizer["Event Details"]</h2>
-            <hr />
-            <div class="row">
-                <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
-                        <input asp-for="Name" class="form-control" readonly />
-                    </div>
-                </div>  
+	<div class="row">
+		<div class="col-8 border p-3">
+			<h2>@Localizer["Event Details"]</h2>
+			<hr />
+			<div class="row">
+				<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="Name" class="control-label">@Localizer["Name"]</label>
+						<input asp-for="Name" class="form-control" readonly />
+					</div>
+				</div>  
 
-                <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="Description" class="control-label">@Localizer["Description"]</label>
-                        <textarea asp-for="Description" class="form-control" readonly ></textarea>
-                    </div>
-                </div>
+				<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="Description" class="control-label">@Localizer["Description"]</label>
+						<textarea asp-for="Description" class="form-control" readonly ></textarea>
+					</div>
+				</div>
 
-                <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="City" class="control-label">@Localizer["City"]</label>
-                        <input asp-for="City" class="form-control" readonly />
-                    </div>
-                </div>
-                    <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
-                        <input asp-for="StartDate" class="form-control" readonly />
-                    </div>
-                </div>
-                <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
-                        <input asp-for="EndDate" class="form-control" readonly />
-                    </div>
-                </div>
-                <div class="col-12 pb-3">
-                    <div class="form-group">
-                        <label asp-for="Category" class="control-label">@Localizer["Category"]</label>
-                        <input asp-for="Category.Name" class="form-control" readonly/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
-            </div>
-        </div>
-        <div class="col-4 pb-3">
-            <div class="form-group">
-            <img src="@Model.Image" alt="Event Image" width="450" height="350" class="rounded"/>
-            </div>
-        </div>
-    </div>
+				<div class="col-12 pb-3">
+					<div id="map" style="height: 300px;"></div>
+				</div>
+
+				<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="City" class="control-label">@Localizer["City"]</label>
+						<input asp-for="City" class="form-control" readonly />
+					</div>
+				</div>
+					<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
+						<input asp-for="StartDate" class="form-control" readonly />
+					</div>
+				</div>
+				<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
+						<input asp-for="EndDate" class="form-control" readonly />
+					</div>
+				</div>
+				<div class="col-12 pb-3">
+					<div class="form-group">
+						<label asp-for="Category" class="control-label">@Localizer["Category"]</label>
+						<input asp-for="Category.Name" class="form-control" readonly/>
+					</div>
+				</div>
+			</div>
+			<div class="col-12">
+				<a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
+			</div>
+		</div>
+		<div class="col-4 pb-3">
+			<div class="form-group">
+			<img src="@Model.Image" alt="Event Image" width="450" height="350" class="rounded"/>
+			</div>
+		</div>
+	</div>
 </div>
+
+@section Scripts{
+	@{
+	<partial name="_ValidationScriptsPartial" />
+	}
+		
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmFyZHoxIiwiYSI6ImNsazM0bDdvYTBua3IzZHAybm02azNwM3gifQ.tiaCEyPec5_jLghxMVQk2g';
+
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [0, 0],
+			zoom: 9
+		});
+		var eventLocation = [@Model.Longitude, @Model.Latitude];
+		new mapboxgl.Marker()
+			.setLngLat(eventLocation)
+			.addTo(map);
+
+		map.setCenter(eventLocation);
+	</script>
+}

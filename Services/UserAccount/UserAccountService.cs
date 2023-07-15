@@ -120,7 +120,7 @@ namespace Services.UserAccount
             }
 
 
-            string messageBody = string.Format(body, tittle, string.Format("{0:dddd, d MMMM yyyy}", DateTime.Now),firstName, message, verificationUrl);
+            string messageBody = string.Format(body, tittle, string.Format("{0:dddd, d MMMM yyyy}", DateTime.Now), firstName, message, verificationUrl);
 
             try
             {

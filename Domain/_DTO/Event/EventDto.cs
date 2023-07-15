@@ -20,7 +20,10 @@ namespace Domain._DTO.Event
         public DateTime EndDate { get; set; }
         public string Image { get; set; }
         public string State { get; set; }
-        public string City { get; set; }
+        public string? City { get; set; }
+        public string? StreetName { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public int CountRegistration { get; set; } = 0;
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }

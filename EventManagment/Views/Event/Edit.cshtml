@@ -13,6 +13,8 @@
 			<form action="@Url.Action("Edit", "Event")" method="post" enctype="multipart/form-data">
 				<input asp-for="EncryptedId" hidden />
 				<input asp-for="Image" hidden />
+				<input type="hidden" id="OriginalLatitude" value="@Model.Latitude" />
+				<input type="hidden" id="OriginalLongitude" value="@Model.Longitude" />
 				<h2 class="text-primary">Update Event</h2>
 				<hr />
 				<div class="row">
@@ -30,20 +32,51 @@
 							<span asp-validation-for="Description" class="text-danger"></span>
 						</div>
 					</div>
+
 					<div class="col-12 pb-3">
-						<div class="form-group">
-							<label asp-for="City" class="control-label"></label>
-							<input asp-for="City" class="form-control" />
-							<span asp-validation-for="City" class="text-danger"></span>
-						</div>
+						<div id="map" style="height: 300px;"></div>
 					</div>
+
 					<div class="col-12 pb-3">
 						<div class="form-group">
 							<label asp-for="State" class="control-label"></label>
-							<input asp-for="State" class="form-control" />
+							<input asp-for="State" class="form-control" readonly />
 							<span asp-validation-for="State" class="text-danger"></span>
 						</div>
 					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="City" class="control-label"></label>
+							<input asp-for="City" class="form-control" readonly/>
+							<span asp-validation-for="City" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="StreetName" class="control-label"></label>
+							<input asp-for="StreetName" class="form-control" readonly />
+							<span asp-validation-for="StreetName" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Latitude" class="control-label"></label>
+							<input asp-for="Latitude" class="form-control" id="Latitude" readonly />
+							<span asp-validation-for="Latitude" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Longitude" class="control-label"></label>
+							<input asp-for="Longitude" class="form-control" id="Longitude" readonly />
+							<span asp-validation-for="Longitude" class="text-danger"></span>
+						</div>
+					</div>
+
 					<div class="col-12 mb-3">
 						<label asp-for="Image"></label>
 						<input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg" />
@@ -63,6 +96,7 @@
 							<span asp-validation-for="EndDate" class="text-danger"></span>
 						</div>
 					</div>
+
 					<div class="col-6 mb-3">
 						<div class="form-group">
 							<label asp-for="CategoryId" class="control-label"></label>
@@ -79,7 +113,7 @@
 				   
 					<div class="col-12 pt-3">
 						<div class="btn-display-flex">
-							<input type="submit" onclick="return ValidateInputDate()" class="btn btn-primary" style="width:150px" value="Update" />
+							<input type="submit" class="btn btn-primary" style="width:150px" value="Update" />
 							<a asp-controller="Event" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
 						</div>
 					</div>
@@ -96,6 +130,50 @@
 @section Scripts{
 	@{
 		//Client Site Validation
-		<partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 	}
+
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmFyZHoxIiwiYSI6ImNsazM0bDdvYTBua3IzZHAybm02azNwM3gifQ.tiaCEyPec5_jLghxMVQk2g';
+
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [@Model.Longitude, @Model.Latitude],
+			zoom: 9
+		});
+
+		var marker = new mapboxgl.Marker({
+			draggable: true
+		})
+			.setLngLat([@Model.Longitude, @Model.Latitude])
+			.addTo(map);
+
+		map.on('click', function (e) {
+			marker.setLngLat(e.lngLat);
+			var lngLat = e.lngLat;
+
+			fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lngLat.lat}&lon=${lngLat.lng}`)
+				.then(response => response.json())
+				.then(data => {
+					var address = data.address;
+					console.log('Address:', address);
+
+					var streetName = address.road || address.street || address.footway || '';
+					var city = address.city || address.municipality || address.county || '';
+					var state = address.country || address.postcode || '';
+
+					var selectedCity = city.replace('Municipality of ', '');
+
+					document.getElementById('StreetName').value = streetName;
+					document.getElementById('City').value = selectedCity;
+					document.getElementById('State').value = state;
+					document.getElementById('Latitude').value = lngLat.lat.toFixed(6);
+					document.getElementById('Longitude').value = lngLat.lng.toFixed(6);
+				})
+				.catch(error => {
+					console.log('Error:', error);
+				});
+		});
+	</script>
 }

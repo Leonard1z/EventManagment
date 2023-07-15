@@ -16,6 +16,35 @@
 		</div>
 		<form action="@Url.Action("Create", "Event")" method="post" enctype="multipart/form-data">
 			<div class="row">
+
+				<div class="col-12 mb-3">
+					<div id="map" style="height: 300px;"></div>
+				</div>
+
+				<input type="hidden" asp-for="Latitude" />
+				<input type="hidden" asp-for="Longitude" />
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="State" class="control-label">@Localizer["State"]</label>
+						<input asp-for="State" class="form-control" readonly />
+					</div>
+				</div>
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="City" class="control-label">@Localizer["City"]</label>
+						<input asp-for="City" class="form-control" readonly />
+					</div>
+				</div>
+
+				<div class="col-12 mb-3">
+					<div class="form-group">
+						<label asp-for="StreetName" class="control-label">Street Name</label>
+						<input asp-for="StreetName" class="form-control" readonly />
+					</div>
+				</div>
+
 				<div class="col-12 mb-3">
 					<div class="form-group">
 						<label asp-for="Name" class="control-label">@Localizer["Name"]</label>
@@ -35,22 +64,6 @@
 				<div class="col-12 mb-3">
 					<label asp-for="Image"></label>
 					<input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg"/>
-				</div>
-
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="State" class="control-label">@Localizer["State"]</label>
-						<input asp-for="State" class="form-control" />
-						<span asp-validation-for="State" class="text-danger"></span>
-					</div>
-				</div>
-
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="City" class="control-label">@Localizer["City"]</label>
-						<input asp-for="City" class="form-control" />
-						<span asp-validation-for="City" class="text-danger"></span>
-					</div>
 				</div>
 
 				<div class="col-6 mb-3">
@@ -86,7 +99,7 @@
 				<div class="col-md-12 pt-2 ">
 					<div class="btn-display-flex">
 						<a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
-						<button type="submit" onclick="return ValidateInput() && ValidateInputDate()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
+						<button type="submit" onclick="return ValidateInput() && ValidateInputDate() && ValidateMap()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
 					</div>
 				</div>
 			</div>
@@ -100,53 +113,55 @@
 	<partial name="_ValidationScriptsPartial" />
 	}
 
+	<script src="~/js/eventLocation.js"></script>
+
 	<script>
 
-		function ValidateInput() {
-			//looks if user has uploaded an image if not display message
-			if (document.getElementById("uploadBox").value == "") {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: 'Please upload an Image!',
-				});
-				return false;
-			}
-			return true;
-		}
-
-		function ValidateInputDate() {
-			//Get elemnts by id
-			var startDate = new Date(document.getElementById("startDate").value);
-			var endDate = new Date(document.getElementById("endDate").value);
-			//Create a Date object
-			var currentDate = new Date();
-
-			// Set the hours, minutes, and seconds to zero for comparison
-			currentDate.setHours(0, 0, 0, 0);
-
-			//Compares if date displayed on input is lower than current date if true return false, display message
-			if (startDate.getTime() < currentDate.getTime()) {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: 'Start date cannot be earlier than the current date!',
-				});
-				return false;
+			function ValidateInput() {
+				//looks if user has uploaded an image if not display message
+				if (document.getElementById("uploadBox").value == "") {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Please upload an Image!',
+					});
+					return false;
+				}
+				return true;
 			}
 
-			//Compares if date displayed on input is lower than startdate if true return false, display message
-			if (endDate.getTime() < startDate.getTime()) {
-				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					text: 'End date cannot be earlier than the start date!',
-				});
-				return false;
-			}
+			function ValidateInputDate() {
 
-			return true;
-		}
+				var startDate = new Date(document.getElementById("startDate").value);
+				var endDate = new Date(document.getElementById("endDate").value);
+
+				var currentDate = new Date();
+
+				// Set the hours, minutes, and seconds to zero for comparison
+				currentDate.setHours(0, 0, 0, 0);
+
+				//Compares if date displayed on input is lower than current date if true return false, display message
+				if (startDate.getTime() < currentDate.getTime()) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Start date cannot be earlier than the current date!',
+					});
+					return false;
+				}
+
+				//Compares if date displayed on input is lower than startdate if true return false, display message
+				if (endDate.getTime() < startDate.getTime()) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'End date cannot be earlier than the start date!',
+					});
+					return false;
+				}
+
+				return true;
+			}
 	</script>
 
 
