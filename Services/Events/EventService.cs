@@ -25,6 +25,7 @@ namespace Services.Events
         public EventCreateDto Create(EventCreateDto eventCreateDto)
         {
 
+            eventCreateDto.IsActive = true;
             var result = _eventRepository.Create(_mapper.Map<Event>(eventCreateDto));
 
             return _mapper.Map<EventCreateDto>(result);
@@ -96,6 +97,13 @@ namespace Services.Events
             var eventDto = _mapper.Map<EventDto>(eventEntity);
 
             return eventDto;
+        }
+
+        public async Task<EventDto> UpdateByIsActive(EventDto eventDto)
+        {
+            var result = _eventRepository.Update(_mapper.Map<Event>(eventDto));
+
+            return _mapper.Map<EventDto>(result);
         }
     }
 }

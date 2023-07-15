@@ -19,6 +19,7 @@ namespace Domain.Entities
         public string? StreetName { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public bool IsActive { get; set; }
         public int UserAccountId { get; set; }
         public UserAccount UserAccount { get; set; }
         public int CategoryId { get; set; }

@@ -330,20 +330,32 @@ namespace EventManagment.Controllers
                 var id = int.Parse(_protector.Unprotect(encryptedId.ToString()));
 
                 var obj = _eventService.GetByIdWithCategory(id);
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(claim.Value);
+                var isAdmin = User.IsInRole("Admin");
 
                 // Check if the event has expired
                 if (obj != null && obj.Result.EndDate < DateTime.Now)
                 {
-
-                    var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.Result.Image.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldImagePath))
+                    if (isAdmin)
                     {
-                        System.IO.File.Delete(oldImagePath);
+                        var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.Result.Image.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+
+                        var result = _eventService.Delete(id);
+
+                        return Json(new { success = true, message = "Event Deleted Successfully" });
                     }
-
-                    var result = _eventService.Delete(id);
-
-                    return Json(new { success = true, message = "Event Deleted Successfully" });
+                    else
+                    {
+                        obj.Result.IsActive = false;
+                        var updateEvent = _eventService.UpdateByIsActive(obj.Result);
+                        return Json(new { success = true, message = "Event Deleted Successfully" });
+                    }
                 }
                 else
                 {

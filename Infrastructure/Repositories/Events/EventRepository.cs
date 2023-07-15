@@ -48,6 +48,7 @@ namespace Infrastructure.Repositories.Events
         public async Task<Event> GetByIdWithCategory(int id)
         {
             var result = DbSet.Include(x => x.Category)
+                .AsNoTracking()
                  .FirstOrDefault(x => x.Id == id);
 
             return result;
@@ -56,7 +57,7 @@ namespace Infrastructure.Repositories.Events
         public IEnumerable<Event> GetExpiredEvents()
         {
             var currentDate = DateTime.Now;
-            return DbSet.Where(x => x.EndDate < currentDate).ToList();
+            return DbSet.Where(x => x.EndDate < currentDate).AsNoTracking().ToList();
         }
 
         public async Task<IEnumerable<Event>> GetUserEvents(int userId)
@@ -64,7 +65,7 @@ namespace Infrastructure.Repositories.Events
             var result = DbSet.Include(x => x.Category)
                 .Include(x => x.UserAccount)
                 .Include(x => x.Registrations)
-                .Where(x => x.UserAccountId == userId)
+                .Where(x => x.UserAccountId == userId && x.IsActive)
                 .AsNoTracking()
                 .ToListAsync();
 

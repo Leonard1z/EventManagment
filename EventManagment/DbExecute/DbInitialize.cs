@@ -74,7 +74,7 @@ namespace Infrastructure.DbExecute
                     Address = "Prishtina",
                     Gender = 'M',
                     RoleId = adminRole.Id,
-                    IsEmailVerified = true       
+                    IsEmailVerified = true
 
                 };
 
@@ -90,18 +90,8 @@ namespace Infrastructure.DbExecute
 
             foreach (var expiredEvent in expiredEvents)
             {
-                var registrations = _registrationService.GetRegistrationByEventId(expiredEvent.Id);
-                foreach (var registration in registrations)
-                {
-                    _registrationService.Delete(registration.Id);
-                }
-
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, expiredEvent.Image.TrimStart('\\'));
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
-                _eventService.Delete(expiredEvent.Id);
+                expiredEvent.IsActive = false;
+                _eventService.UpdateByIsActive(expiredEvent).GetAwaiter().GetResult();
             }
         }
     }

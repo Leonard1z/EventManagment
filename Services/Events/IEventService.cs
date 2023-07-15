@@ -1,5 +1,4 @@
-﻿using Domain._DTO.Category;
-using Domain._DTO.Event;
+﻿using Domain._DTO.Event;
 using Services.Common;
 
 namespace Services.Events
@@ -16,6 +15,7 @@ namespace Services.Events
         Task<IEnumerable<EventDto>> GetAllEvents();
         Task<IEnumerable<EventDto>> GetUserEvents(int useId);
         EventEditDto Update(EventEditDto eventEditDto);
+        Task<EventDto> UpdateByIsActive(EventDto eventDto);
         IEnumerable<EventDto> GetExpiredEvents();
     }
 }
