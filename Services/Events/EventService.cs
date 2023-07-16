@@ -105,5 +105,11 @@ namespace Services.Events
 
             return _mapper.Map<EventDto>(result);
         }
+
+        public async Task<IEnumerable<EventDto>> GetAllByIsActive()
+        {
+            var result = await _eventRepository.GetAllByIsActive();
+            return _mapper.Map<List<EventDto>>(result.ToList());
+        }
     }
 }

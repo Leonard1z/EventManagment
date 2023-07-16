@@ -13,6 +13,7 @@
 			<form action="@Url.Action("Edit", "Event")" method="post" enctype="multipart/form-data">
 				<input asp-for="EncryptedId" hidden />
 				<input asp-for="Image" hidden />
+				<input asp-for="IsActive" hidden />
 				<input type="hidden" id="OriginalLatitude" value="@Model.Latitude" />
 				<input type="hidden" id="OriginalLongitude" value="@Model.Longitude" />
 				<h2 class="text-primary">Update Event</h2>

@@ -9,6 +9,7 @@ namespace Services.Events
         EventCreateDto Create(EventCreateDto eventCreateDto);
         bool Delete(int id);
         Task<IEnumerable<EventDto>> GetAll();
+        Task<IEnumerable<EventDto>> GetAllByIsActive();
         Task<EventDto> GetByIdWithCategory(int id);
         Task<EventDto> GetById(int id);
         Task<EventEditDto> GetByIdEdit(int id);

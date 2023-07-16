@@ -71,5 +71,15 @@ namespace Infrastructure.Repositories.Events
 
             return await result;
         }
+
+        public async Task<IEnumerable<Event>> GetAllByIsActive()
+        {
+            return await DbSet.Include(x => x.Category)
+                .Include(x => x.UserAccount)
+                .Include(x => x.Registrations)
+                .Where(x => x.IsActive == true)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }

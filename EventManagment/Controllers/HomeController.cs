@@ -32,7 +32,7 @@ namespace EventManagment.Controllers
         {
             try
             {
-                var events = await _eventService.GetAll();
+                var events = await _eventService.GetAllByIsActive();
 
                 foreach (var item in events)
                 {
