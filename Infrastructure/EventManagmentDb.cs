@@ -20,10 +20,12 @@ namespace Infrastructure
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Roles> Roles { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventManagmentDb).Assembly);
+
+            base.OnModelCreating(modelBuilder);
         }
 
     }

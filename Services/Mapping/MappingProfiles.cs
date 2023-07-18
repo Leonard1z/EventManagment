@@ -3,6 +3,7 @@ using Domain._DTO.Category;
 using Domain._DTO.Event;
 using Domain._DTO.Registration;
 using Domain._DTO.Role;
+using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
 using Domain.Entities;
 
@@ -52,6 +53,12 @@ namespace Services.Mapping
             CreateMap<Roles, RoleDto>();
             CreateMap<RoleDto, Roles>();
             #endregion
+
+            #region
+            CreateMap<TicketType, TicketTypeDto>();
+            CreateMap<TicketTypeDto, TicketType>();
+            #endregion
+
         }
     }
 }

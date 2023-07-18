@@ -1,4 +1,5 @@
 ﻿using Domain._DTO.Category;
+using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,5 +26,6 @@ namespace Domain._DTO.Event
         public UserAccountDto? UserAccount { get; set; }
         public int CategoryId { get; set; }
         public IList<CategoryDto> Category { get; set; }
+        public ICollection<TicketTypeDto> TicketTypes { get; set; }
     }
 }
