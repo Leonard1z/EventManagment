@@ -4,8 +4,42 @@
     const price = parseFloat(document.getElementById('Price').value);
     const quantity = parseInt(document.getElementById('Quantity').value);
     const isAvailable = document.getElementById('IsAvailable').value === 'true';
-    const saleStartDate = document.getElementById('SaleStartDate').value;
-    const saleEndDate = document.getElementById('SaleEndDate').value;
+    const saleStartDateInput = document.getElementById('SaleStartDate').value;
+    const saleEndDateInput = document.getElementById('SaleEndDate').value;
+
+    if (!name || !description || isNaN(price) || price < 0 || isNaN(quantity) || quantity < 0 || !saleStartDateInput || !saleEndDateInput) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please fill out all required fields and ensure Price and Quantity are non-negative numbers!',
+        });
+        return;
+    }
+
+    const saleStartDate = new Date(saleStartDateInput)
+    const saleEndDate = new Date(saleEndDateInput)
+
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    if (saleStartDate.getTime() < currentDate.getTime()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Sale start date cannot be earlier than the current date. Please select a valid date.',
+        });
+        return;
+    }
+
+    if (saleEndDate.getTime() < saleStartDate.getTime()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Sale end date cannot be earlier than the sale start date. Please select a valid date.',
+        });
+        return;
+    }
 
     const newTicketType = {
         Name: name,
@@ -30,6 +64,8 @@ function updateTicketList() {
 
     ticketTypes.forEach(ticketType => {
         const isAvailableText = ticketType.IsAvailable ? 'Yes' : 'No';
+        const saleStartDate = new Date(ticketType.SaleStartDate).toLocaleDateString('en-CA');
+        const saleEndDate = new Date(ticketType.SaleEndDate).toLocaleDateString('en-CA');
         const ticketRow = `
                     <tr>
                         <td>${ticketType.Name}</td>
@@ -37,8 +73,8 @@ function updateTicketList() {
                         <td>${ticketType.Price}</td>
                         <td>${ticketType.Quantity}</td>
                         <td>${isAvailableText}</td>
-                        <td>${ticketType.SaleStartDate}</td>
-                        <td>${ticketType.SaleEndDate}</td>
+                        <td>${saleStartDate}</td>
+                        <td>${saleEndDate}</td>
                     </tr>
                 `;
 

@@ -1,5 +1,6 @@
 ﻿using Domain._DTO.Event;
 using Domain._DTO.Ticket;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
@@ -90,7 +91,20 @@ namespace EventManagment.Controllers
                 else
                 {
                     // Converts the JSON string containing ticket data into a list of TicketTypeDto objects.
-                    eventCreateDto.TicketTypes = JsonConvert.DeserializeObject<List<TicketTypeDto>>(ticketData);
+                    var ticketTypes = eventCreateDto.TicketTypes = JsonConvert.DeserializeObject<List<TicketTypeDto>>(ticketData);
+
+                    foreach (var ticket in ticketTypes)
+                    {
+                        if (string.IsNullOrEmpty(ticket.Name) || ticket.Price < 0 || ticket.Quantity < 0)
+                        {
+                            TempData["message"] = "Error";
+                            TempData["entity"] = "Invalid ticket data.";
+
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+
+                    eventCreateDto.TicketTypes = ticketTypes;
                 }
 
                 if (file != null && file.Length > 0)
