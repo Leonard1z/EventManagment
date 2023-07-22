@@ -1,4 +1,5 @@
 ﻿using Domain._DTO.Event;
+using Domain._DTO.Ticket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
@@ -237,7 +238,9 @@ namespace EventManagment.Controllers
                     x.EncryptedId = _protector.Protect(x.Id.ToString());
                     x.Id = 0;
                     return x;
-                }).ToList()
+                }).ToList(),
+
+                TicketTypes = new List<TicketTypeDto>()
 
             };
         }
@@ -330,6 +333,7 @@ namespace EventManagment.Controllers
                 var id = int.Parse(_protector.Unprotect(encryptedId.ToString()));
 
                 var obj = _eventService.GetByIdWithCategory(id);
+
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = int.Parse(claim.Value);

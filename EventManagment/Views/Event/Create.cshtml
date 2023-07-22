@@ -5,164 +5,237 @@
 
 <meta charset="ISO-8859-1">
 @{
-	Layout = "~/Views/Shared/_Dependencies.cshtml";
+    Layout = "~/Views/Shared/_Dependencies.cshtml";
 }
 
 <div class="container mt-5">
-	<div class="col-12 border p-3">
-		<div class="col-12 pb-2">
-			<h2 class="text-primary">Create Event</h2>
-			<hr />
-		</div>
-		<form action="@Url.Action("Create", "Event")" method="post" enctype="multipart/form-data">
-			<div class="row">
+    <div class="col-12 border p-3">
+        <div class="col-12 pb-2">
+            <h2 class="text-primary">Create Event</h2>
+            <hr />
+        </div>
+        <form action="@Url.Action("Create", "Event")" method="post" enctype="multipart/form-data">
+            <div class="row">
 
-				<div class="col-12 mb-3">
-					<div id="map" style="height: 300px;"></div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div id="map" style="height: 300px;"></div>
+                </div>
 
-				<input type="hidden" asp-for="Latitude" />
-				<input type="hidden" asp-for="Longitude" />
+                <input type="hidden" asp-for="Latitude" />
+                <input type="hidden" asp-for="Longitude" />
 
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="State" class="control-label">@Localizer["State"]</label>
-						<input asp-for="State" class="form-control" readonly />
-					</div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label asp-for="State" class="control-label">@Localizer["State"]</label>
+                        <input asp-for="State" class="form-control" readonly />
+                    </div>
+                </div>
 
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="City" class="control-label">@Localizer["City"]</label>
-						<input asp-for="City" class="form-control" readonly />
-					</div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">@Localizer["City"]</label>
+                        <input asp-for="City" class="form-control" readonly />
+                    </div>
+                </div>
 
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="StreetName" class="control-label">Street Name</label>
-						<input asp-for="StreetName" class="form-control" readonly />
-					</div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label asp-for="StreetName" class="control-label">Street Name</label>
+                        <input asp-for="StreetName" class="form-control" readonly />
+                    </div>
+                </div>
 
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="Name" class="control-label">@Localizer["Name"]</label>
-						<input asp-for="Name" class="form-control" />
-						<span asp-validation-for="Name" class="text-danger"></span>
-					</div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
 
-				<div class="col-12 mb-3">
-					<div class="form-group">
-						<label asp-for="Description" class="control-label"></label>
-						<textarea asp-for="Description" class="form-control"></textarea>
-						<span asp-validation-for="Description" class="text-danger"></span>
-					</div>
-				</div>
+                <div class="col-12 mb-3">
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
 
-				<div class="col-12 mb-3">
-					<label asp-for="Image"></label>
-					<input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg"/>
-				</div>
+                <div class="col-12 mb-3">
+                    <label asp-for="Image"></label>
+                    <input asp-for="Image" type="file" id="uploadBox" name="file" class="form-control" accept="image/png, image/jpeg, image/jpg"/>
+                </div>
 
-				<div class="col-6 mb-3">
-					<div class="form-group">
-						<label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
-						<input asp-for="StartDate" class="form-control" id="startDate" />
-						<span asp-validation-for="StartDate" class="text-danger"></span>
-					</div>
-				</div>
+                <div class="col-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label">@Localizer["StartDate"]</label>
+                        <input asp-for="StartDate" class="form-control" id="startDate" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                </div>
 
-				<div class="col-6 mb-3">
-					<div class="form-group">
-						<label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
-						<input asp-for="EndDate" class="form-control" id="endDate" />
-						<span asp-validation-for="EndDate" class="text-danger"></span>
-					</div>
-				</div>
+                <div class="col-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label">@Localizer["EndDate"]</label>
+                        <input asp-for="EndDate" class="form-control" id="endDate" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+                </div>
 
-				<div class="col-6 mb-3">
-					<div class="form-group">
-						<label asp-for="CategoryId" class="control-label">@Localizer["Category"]</label>
-						<select class="form-control search-select" asp-for="EncryptedCategoryId">
-							<option selected disabled>@Localizer["Zgjidhni Categorin"]</option>
-							@foreach (var vlera in Model.Category)
-							{
-								<option value="@vlera.EncryptedId">@vlera.Name</option>
-							}
-						</select>
-						<span asp-validation-for="EncryptedCategoryId" class="text-danger"></span>
-					</div>
-				</div>
+                <div class="col-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="CategoryId" class="control-label">@Localizer["Category"]</label>
+                        <select class="form-control search-select" asp-for="EncryptedCategoryId">
+                            <option selected disabled>@Localizer["Zgjidhni Categorin"]</option>
+                            @foreach (var vlera in Model.Category)
+                            {
+                                <option value="@vlera.EncryptedId">@vlera.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="EncryptedCategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <h4>Ticket Types</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Is Available</th>
+                                <th>Sale Start Date</th>
+                                <th>Sale End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketListContainer">
 
-				<div class="col-md-12 pt-2 ">
-					<div class="btn-display-flex">
-						<a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
-						<button type="submit" onclick="return ValidateInput() && ValidateInputDate() && ValidateMap()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 pt-2 ">
+                    <div class="btn-display-flex">
+                        <a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTicketModal">Add Ticket Option</button>
+                        <button type="submit" onclick="return ValidateInput() && ValidateInputDate() && ValidateMap()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
+<!-- Modal for Adding Ticket Options -->
+<div class="modal fade" id="addTicketModal" tabindex="-1" aria-labelledby="addTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTicketModalLabel">Add Ticket Option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addTicketForm">
+                    <div class="form-group">
+                        <label for="TicketName">TicketName</label>
+                        <input type="text" class="form-control" id="TicketName" name="TicketName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="TicketDescription">Description</label>
+                        <input type="text" class="form-control" id="TicketDescription" name="TicketDescription" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Price">Price</label>
+                        <input type="number" class="form-control" id="Price" name="Price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Quantity">Quantity</label>
+                        <input type="number" class="form-control" id="Quantity" name="Quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsAvailable">Is Available</label>
+                        <select class="form-control" id="IsAvailable" name="IsAvailable" required>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="SaleStartDate">Sale Start Date</label>
+                        <input type="date" class="form-control" id="SaleStartDate" name="SaleStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="SaleEndDate">Sale End Date</label>
+                        <input type="date" class="form-control" id="SaleEndDate" name="SaleEndDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveTicketType()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
-	@{
-	<partial name="_ValidationScriptsPartial" />
-	}
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
 
-	<script src="~/js/eventLocation.js"></script>
+    <script src="~/js/eventLocation.js"></script>
+    <script>
+        var ticketTypes = @Html.Raw(Json.Serialize(Model.TicketTypes));
+    </script>
+    <script src="~/js/addTicket.js"></script>
 
-	<script>
+    <script>
 
-			function ValidateInput() {
-				//looks if user has uploaded an image if not display message
-				if (document.getElementById("uploadBox").value == "") {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: 'Please upload an Image!',
-					});
-					return false;
-				}
-				return true;
-			}
+        function ValidateInput() {
+            //looks if user has uploaded an image if not display message
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please upload an Image!',
+                });
+                return false;
+            }
+            return true;
+        }
 
-			function ValidateInputDate() {
+        function ValidateInputDate() {
 
-				var startDate = new Date(document.getElementById("startDate").value);
-				var endDate = new Date(document.getElementById("endDate").value);
+            var startDate = new Date(document.getElementById("startDate").value);
+            var endDate = new Date(document.getElementById("endDate").value);
 
-				var currentDate = new Date();
+            var currentDate = new Date();
 
-				// Set the hours, minutes, and seconds to zero for comparison
-				currentDate.setHours(0, 0, 0, 0);
+            // Set the hours, minutes, and seconds to zero for comparison
+            currentDate.setHours(0, 0, 0, 0);
 
-				//Compares if date displayed on input is lower than current date if true return false, display message
-				if (startDate.getTime() < currentDate.getTime()) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: 'Start date cannot be earlier than the current date!',
-					});
-					return false;
-				}
+            //Compares if date displayed on input is lower than current date if true return false, display message
+            if (startDate.getTime() < currentDate.getTime()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Start date cannot be earlier than the current date!',
+                });
+                return false;
+            }
 
-				//Compares if date displayed on input is lower than startdate if true return false, display message
-				if (endDate.getTime() < startDate.getTime()) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
-						text: 'End date cannot be earlier than the start date!',
-					});
-					return false;
-				}
+            //Compares if date displayed on input is lower than startdate if true return false, display message
+            if (endDate.getTime() < startDate.getTime()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'End date cannot be earlier than the start date!',
+                });
+                return false;
+            }
 
-				return true;
-			}
-	</script>
+            return true;
+        }
+    </script>
 
 
 }
