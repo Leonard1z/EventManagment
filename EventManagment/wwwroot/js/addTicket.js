@@ -7,8 +7,6 @@
     const saleStartDate = document.getElementById('SaleStartDate').value;
     const saleEndDate = document.getElementById('SaleEndDate').value;
 
-    console.log("Name:", name);
-
     const newTicketType = {
         Name: name,
         Description: description,
@@ -20,9 +18,10 @@
     };
 
     ticketTypes.push(newTicketType);
+    document.getElementById('ticketData').value = JSON.stringify(ticketTypes);
     updateTicketList();
     $('#addTicketModal').modal('hide');
-    console.log(ticketTypes);
+    //console.log(ticketTypes);
 }
 
 function updateTicketList() {
@@ -43,7 +42,7 @@ function updateTicketList() {
                     </tr>
                 `;
 
-        console.log(ticketRow);
         ticketListContainer.insertAdjacentHTML('beforeend', ticketRow);
     });
 }
+

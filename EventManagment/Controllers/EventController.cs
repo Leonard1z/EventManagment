@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 using Security;
 using Services.Categories;
 using Services.Events;
@@ -73,7 +74,7 @@ namespace EventManagment.Controllers
         [HttpPost]
         [RequestSizeLimit(100_000_000)]
         [Route("Event/Create")]
-        public ActionResult Create(EventCreateDto eventCreateDto, IFormFile file)
+        public ActionResult Create(EventCreateDto eventCreateDto, IFormFile file, string ticketData)
         {
             try
             {
@@ -81,6 +82,16 @@ namespace EventManagment.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
                 eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
+
+                if (string.IsNullOrEmpty(ticketData))
+                {
+                    eventCreateDto.TicketTypes = new List<TicketTypeDto>();
+                }
+                else
+                {
+                    // Converts the JSON string containing ticket data into a list of TicketTypeDto objects.
+                    eventCreateDto.TicketTypes = JsonConvert.DeserializeObject<List<TicketTypeDto>>(ticketData);
+                }
 
                 if (file != null && file.Length > 0)
                 {
