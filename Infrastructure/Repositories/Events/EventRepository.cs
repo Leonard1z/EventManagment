@@ -48,6 +48,7 @@ namespace Infrastructure.Repositories.Events
         public async Task<Event> GetByIdWithCategory(int id)
         {
             var result = DbSet.Include(x => x.Category)
+                .Include(x=>x.TicketTypes)
                 .AsNoTracking()
                  .FirstOrDefault(x => x.Id == id);
 

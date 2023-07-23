@@ -33,7 +33,7 @@ namespace Infrastructure.EntityFramework.Configurations
             builder.HasMany(x => x.TicketTypes)
                 .WithOne(x => x.Event)
                 .HasForeignKey(x => x.EventId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
