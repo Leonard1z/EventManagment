@@ -1,6 +1,8 @@
 ﻿using Domain._DTO.UserAccount;
 using Domain.Entities;
+using Hangfire;
 using Infrastructure.Repositories.Roles;
+using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Services.Events;
 using Services.Registration;
 using Services.Role;
+using Services.Tickets;
 using Services.UserAccount;
 using System;
 using System.Collections.Generic;
@@ -25,6 +28,7 @@ namespace Infrastructure.DbExecute
         private readonly IUserAccountService _userAccountService;
         public readonly IEventService _eventService;
         private readonly IRegistrationService _registrationService;
+        private readonly ITicketTypeRepository _ticketTypeRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public DbInitialize(IServiceProvider serviceProvider,
@@ -32,6 +36,7 @@ namespace Infrastructure.DbExecute
             IUserAccountService userAccountService,
             IEventService eventService,
             IRegistrationService registrationService,
+            ITicketTypeRepository ticketTypeRepository,
             IWebHostEnvironment webHostEnvironment
         )
         {
@@ -40,6 +45,7 @@ namespace Infrastructure.DbExecute
             _roleService = roleService;
             _eventService = eventService;
             _registrationService = registrationService;
+            _ticketTypeRepository = ticketTypeRepository;
             _webHostEnvironment = webHostEnvironment;
         }
         public void DbExecute()
@@ -92,6 +98,22 @@ namespace Infrastructure.DbExecute
             {
                 expiredEvent.IsActive = false;
                 _eventService.UpdateByIsActive(expiredEvent).GetAwaiter().GetResult();
+            }
+        }
+
+        public async Task UpdateTicketAvailability()
+        {
+            var currentDate = DateTime.Now;
+
+            var ticketTypes = await _ticketTypeRepository.GetAll();
+
+            foreach (var ticket in ticketTypes)
+            {
+
+                var isAvailable = ticket.SaleStartDate <= currentDate && ticket.SaleEndDate >= currentDate;
+                ticket.IsAvailable = isAvailable;
+
+                _ticketTypeRepository.Update(ticket);
             }
         }
     }

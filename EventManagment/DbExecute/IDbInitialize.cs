@@ -11,5 +11,6 @@ namespace Infrastructure.DbExecute
         void DbExecute();
         Task CreateAdmin();
         void DeleteExpiredEvents();
+        Task UpdateTicketAvailability();
     }
 }

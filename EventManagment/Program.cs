@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
 using Services.SendEmail;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Services.Tickets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,7 +101,8 @@ app.MapControllerRoute(
 
 app.UseHangfireDashboard();
 //Add's The Schedule To HangFireServer
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Daily);
+RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Hourly);
+RecurringJob.AddOrUpdate<IDbInitialize>(x => x.UpdateTicketAvailability(), Cron.Minutely);
 //Executes the Background Schedule
 app.UseHangfireServer();
 
