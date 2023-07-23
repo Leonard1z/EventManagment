@@ -73,7 +73,7 @@ function reverseGeocode(longitude, latitude) {
                 };
                 // Find the street name, city, country in address
                 for (var i = 0; i < features.length; i++) {
-                    console.log(features[i]);
+                    //console.log(features[i]);
                     var componentTypes = features[i].place_type;
 
                     if (componentTypes.includes('address')) {

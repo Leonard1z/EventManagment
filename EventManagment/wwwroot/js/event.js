@@ -47,6 +47,10 @@ function getTickets(encryptedId) {
                 var ticketHtml = '';
 
                 response.data.forEach(function (ticket) {
+
+                    var saleStartDate = new Date(ticket.saleStartDate).toLocaleDateString('en-Ca');
+                    var saleEndDate = new Date(ticket.saleEndDate).toLocaleDateString('en-Ca');
+
                     ticketHtml += `
                       <div class="col-6 border ticket-info">
                         <p><strong>Name:</strong> ${ticket.name}</p>
@@ -54,8 +58,8 @@ function getTickets(encryptedId) {
                         <p><strong>Price:</strong> ${ticket.price}</p>
                         <p><strong>Quantity:</strong> ${ticket.quantity}</p>
                         <p><strong>Available:</strong> ${ticket.isAvailable ? 'Yes' : 'No'}</p>
-                        <p><strong>Sale Start Date:</strong> ${ticket.saleStartDate}</p>
-                        <p><strong>Sale End Date:</strong> ${ticket.saleEndDate}</p>
+                        <p><strong>Sale Start Date:</strong> ${saleStartDate}</p>
+                        <p><strong>Sale End Date:</strong> ${saleEndDate}</p>
                       </div>
                     `;
                 });
@@ -63,7 +67,7 @@ function getTickets(encryptedId) {
                 $('#ticketDetails').html(ticketHtml);
 
                 $('#ticketModal').modal('show');
-                console.log(ticketHtml)
+                //console.log(ticketHtml)
 
             } else {
                 var noTicketMessageHtml = `

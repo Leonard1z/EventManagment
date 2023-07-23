@@ -3,11 +3,10 @@
     const description = document.getElementById('TicketDescription').value;
     const price = parseFloat(document.getElementById('Price').value);
     const quantity = parseInt(document.getElementById('Quantity').value);
-    const isAvailable = document.getElementById('IsAvailable').value === 'true';
-    const saleStartDateInput = document.getElementById('SaleStartDate').value;
-    const saleEndDateInput = document.getElementById('SaleEndDate').value;
+    const saleStartDate = document.getElementById('SaleStartDate').value;
+    const saleEndDate = document.getElementById('SaleEndDate').value;
 
-    if (!name || !description || isNaN(price) || price < 0 || isNaN(quantity) || quantity < 0 || !saleStartDateInput || !saleEndDateInput) {
+    if (!name || !description || isNaN(price) || price < 0 || isNaN(quantity) || quantity < 0 || !saleStartDate || !saleEndDate) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -16,14 +15,13 @@
         return;
     }
 
-    const saleStartDate = new Date(saleStartDateInput)
-    const saleEndDate = new Date(saleEndDateInput)
+    const currentDate = new Date().toISOString();
 
+    //console.log('Current Date:', currentDate);
+    //console.log('Sale Start Date:', saleStartDate);
+    //console.log('Sale End Date:', saleEndDate);
 
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-
-    if (saleStartDate.getTime() < currentDate.getTime()) {
+    if (saleStartDate < currentDate) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -32,7 +30,7 @@
         return;
     }
 
-    if (saleEndDate.getTime() < saleStartDate.getTime()) {
+    if (saleEndDate < saleStartDate) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -41,14 +39,17 @@
         return;
     }
 
+    const isAvailable = saleStartDate <= currentDate && saleEndDate >= currentDate;
+    //console.log('Is Available:', isAvailable);
+
     const newTicketType = {
         Name: name,
         Description: description,
         Price: price,
         Quantity: quantity,
-        IsAvailable: isAvailable,
         SaleStartDate: saleStartDate,
-        SaleEndDate: saleEndDate
+        SaleEndDate: saleEndDate,
+        IsAvailable: isAvailable
     };
 
     ticketTypes.push(newTicketType);
@@ -63,18 +64,16 @@ function updateTicketList() {
     ticketListContainer.innerHTML = '';
 
     ticketTypes.forEach(ticketType => {
-        const isAvailableText = ticketType.IsAvailable ? 'Yes' : 'No';
-        const saleStartDate = new Date(ticketType.SaleStartDate).toLocaleDateString('en-CA');
-        const saleEndDate = new Date(ticketType.SaleEndDate).toLocaleDateString('en-CA');
+        const isAvailable = ticketType.IsAvailable ? 'Yes' : 'No';
         const ticketRow = `
                     <tr>
                         <td>${ticketType.Name}</td>
                         <td>${ticketType.Description}</td>
                         <td>${ticketType.Price}</td>
                         <td>${ticketType.Quantity}</td>
-                        <td>${isAvailableText}</td>
-                        <td>${saleStartDate}</td>
-                        <td>${saleEndDate}</td>
+                        <td>${isAvailable}</td>
+                        <td>${ticketType.SaleStartDate}</td>
+                        <td>${ticketType.SaleEndDate}</td>
                     </tr>
                 `;
 
