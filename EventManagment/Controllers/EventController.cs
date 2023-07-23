@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Security;
 using Services.Categories;
 using Services.Events;
+using Services.Tickets;
 using Services.UserAccount;
 using System.Security.Claims;
 
@@ -20,6 +21,7 @@ namespace EventManagment.Controllers
         private readonly IEventService _eventService;
         private readonly ICategoryService _categoryService;
         private readonly IUserAccountService _userAccountService;
+        private readonly ITicketTypeService _ticketTypesService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<EventController> _localizer;
         private readonly ILogger<EventController> _logger;
@@ -28,6 +30,7 @@ namespace EventManagment.Controllers
         public EventController(IEventService eventService,
             ICategoryService categoryService,
             IUserAccountService userAccountService,
+            ITicketTypeService ticketTypesService,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<EventController> localizer,
@@ -37,6 +40,7 @@ namespace EventManagment.Controllers
             _eventService = eventService;
             _categoryService = categoryService;
             _userAccountService = userAccountService;
+            _ticketTypesService = ticketTypesService;
             _protector = provider.CreateProtector(purpose: purposeStrings.EventControllerPs);
             _localizer = localizer;
             _logger = logger;
@@ -284,6 +288,24 @@ namespace EventManagment.Controllers
             eventEditDto.Id = 0;
 
             return eventEditDto;
+        }
+
+        [HttpGet]
+        [Route("Event/GetTickets")]
+        public async Task<ActionResult> GetTickets(string encryptedId)
+        {
+            try
+            {
+                var eventId = int.Parse(_protector.Unprotect(encryptedId));
+                var tickets = await _ticketTypesService.GetTicketsByEventId(eventId);
+                return Json(new { data = tickets });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return Json(new { data = new List<TicketTypeDto>() });
+            }
         }
 
 

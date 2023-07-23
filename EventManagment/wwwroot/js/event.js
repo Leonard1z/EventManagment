@@ -24,7 +24,8 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
             <a href="/Event/Edit?encryptedId=${data}" class="btn btn-primary"> <i class="bi bi-pencil-square"></i>Edit</a> 
-            <a href="/EventDetails?encryptedId=${data}" class="btn btn-info"><i class="bi bi-eye"></i> Details</a> 
+            <a href="/EventDetails?encryptedId=${data}" class="btn btn-info"><i class="bi bi-eye"></i> Details</a>
+            <a onclick="getTickets('${data}')" class="btn btn-success"><i class="bi bi-ticket"></i> Tickets</a>
             <a onclick="DeleteEvent('${data}')" class="btn btn-danger"><i class="bi bi-trash-fill"></i>Delete</a>
             `;
                 },
@@ -34,6 +35,50 @@ function loadDataTable() {
     });
 }
 
+function getTickets(encryptedId) {
+    var url = '/Event/GetTickets?encryptedId=' + encryptedId;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            if (response.data.length > 0) {
+                var ticketHtml = '';
+
+                response.data.forEach(function (ticket) {
+                    ticketHtml += `
+                      <div class="col-6 border ticket-info">
+                        <p><strong>Name:</strong> ${ticket.name}</p>
+                        <p><strong>Quantity:</strong> ${ticket.description}</p>
+                        <p><strong>Price:</strong> ${ticket.price}</p>
+                        <p><strong>Quantity:</strong> ${ticket.quantity}</p>
+                        <p><strong>Available:</strong> ${ticket.isAvailable ? 'Yes' : 'No'}</p>
+                        <p><strong>Sale Start Date:</strong> ${ticket.saleStartDate}</p>
+                        <p><strong>Sale End Date:</strong> ${ticket.saleEndDate}</p>
+                      </div>
+                    `;
+                });
+
+                $('#ticketDetails').html(ticketHtml);
+
+                $('#ticketModal').modal('show');
+                console.log(ticketHtml)
+
+            } else {
+                var noTicketMessageHtml = `
+                <h1 style="text-align: center; font-size: 20px;">No tickets found for this event.</h1>
+                `;
+                $('#ticketDetails').html(noTicketMessageHtml);
+                $('#ticketModal').modal('show');
+
+            }
+        },
+        error: function () {
+            toastr.error("Error occurred while retrieving tickets.");
+        }
+    });
+}
 
 
 

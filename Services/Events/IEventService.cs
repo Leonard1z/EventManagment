@@ -1,4 +1,5 @@
 ﻿using Domain._DTO.Event;
+using Domain._DTO.Ticket;
 using Services.Common;
 
 namespace Services.Events
