@@ -74,6 +74,7 @@ namespace Infrastructure.DbExecute
                 {
                     FirstName = "Admin",
                     LastName = "Admin",
+                    Username = "Admin",
                     Email = "admin@admin.com",
                     Password = "admin123*",
                     PhoneNumber = "044475749",

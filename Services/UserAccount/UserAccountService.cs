@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Domain._DTO.UserAccount;
+using Domain.Entities;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.AspNetCore.Hosting;
 using Services.Security;
 using Services.SendEmail;
+using System.Security.Policy;
 
 namespace Services.UserAccount
 {
@@ -119,7 +121,6 @@ namespace Services.UserAccount
                 body = streamReader.ReadToEnd();
             }
 
-
             string messageBody = string.Format(body, tittle, string.Format("{0:dddd, d MMMM yyyy}", DateTime.Now), firstName, message, verificationUrl);
 
             try
@@ -132,6 +133,84 @@ namespace Services.UserAccount
             }
         }
 
+        public async Task<UserAccountDto> GetByEmail(string email)
+        {
+            var user = _userAccountRepository.GetByEmail(email);
+            return _mapper.Map<UserAccountDto>(user);
+        }
 
+        public string GeneratePasswordResetToken(string email)
+        {
+            var userAccount = _userAccountRepository.GetByEmail(email);
+            if (userAccount == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            string resetToken = Guid.NewGuid().ToString();
+            DateTime tokenExpiry = DateTime.Now.AddHours(1);
+
+            userAccount.PasswordResetToken = resetToken;
+            userAccount.PasswordResetTokenExpiry = tokenExpiry;
+            _userAccountRepository.Update(userAccount);
+
+            return resetToken;
+        }
+
+        public async Task SendPasswordResetEmail(string email, string resetUrl)
+        {
+            var user = _userAccountRepository.GetByEmail(email);
+            if (user != null)
+            {
+                var pathToFile = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                    + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates" +
+                    Path.DirectorySeparatorChar.ToString() + "PasswordReset.html";
+
+                string subject = "Password Reset Request";
+                string tittle = "Password Reset";
+                string message = "You are receiving this email because we received a password reset request for your account.";
+                string body = "";
+
+                using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
+                {
+                    body = streamReader.ReadToEnd();
+                }
+
+                //tittle{0}
+                //DateTime{1}
+                //name{2}
+                //message{3}
+                //resetUrl{4}
+
+                string messageBody = string.Format(body, tittle, string.Format("{0:dddd, d MMMM yyyy}", DateTime.Now), user.FirstName, message, resetUrl);
+
+                try
+                {
+                    await _emailService.SendEmailAsync(email, subject, messageBody);
+                }
+                catch
+                {
+                    throw new Exception("Failed to send verification email. Please try again later.");
+                }
+            }
+        }
+
+        public async Task<Domain.Entities.UserAccount> GetUserByPasswordResetToken(string token)
+        {
+            var user = await _userAccountRepository.GetUserByPasswordResetToken(token);
+
+            return user;
+        }
+
+        public void ResetPasword(Domain.Entities.UserAccount userAccount, string newPassword)
+        {
+            string salt;
+            userAccount.Password = PasswordHasher.HashPassword(newPassword, out salt);
+            userAccount.Salt = salt;
+            userAccount.PasswordResetToken = null;
+            userAccount.PasswordResetTokenExpiry = null;
+
+            _userAccountRepository.Update(userAccount);
+        }
     }
 }

@@ -81,7 +81,7 @@ namespace EventManagment.Controllers
                 var defaultRole = _roleService.GetDefaultRole();
                 userDto.RoleId = defaultRole.Id;
 
-                if (_userAccountService.CheckIfUserExist(userDto.FirstName))
+                if (_userAccountService.CheckIfUserExist(userDto.Username))
                 {
                     TempData["message"] = "Error";
                     TempData["entity"] = _localizer["This username is already taken. Username must be unique!"].ToString();
@@ -230,6 +230,115 @@ namespace EventManagment.Controllers
                     IsPersistent = true,
                     ExpiresUtc = DateTime.UtcNow.AddDays(7)
                 });
+        }
+
+        [HttpGet]
+        [Route("ForgotPassword")]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            try
+            {
+                var userAccount = await _userAccountService.GetByEmail(email);
+                if (userAccount == null)
+                {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = _localizer["The provided email does not exist."].ToString();
+
+                    return View();
+                }
+
+                var resetToken = _userAccountService.GeneratePasswordResetToken(userAccount.Email);
+
+                var resetUrl = Url.Action("ResetPassword", "UserAccount", new { token = resetToken }, Request.Scheme);
+                await _userAccountService.SendPasswordResetEmail(userAccount.Email, resetUrl);
+
+                TempData["message"] = "Success";
+                TempData["entity"] = "Password reset instructions have been sent to your email.";
+
+                return RedirectToAction(nameof(Login));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the forgot password process.");
+
+                TempData["message"] = "Error";
+                TempData["entity"] = "An error occurred while processing your request. Please try again.";
+
+                return View();
+            }
+        }
+
+        [HttpGet]
+        [Route("ResetPassword")]
+        public IActionResult ResetPassword(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["Invalid password reset token."].ToString();
+                return RedirectToAction(nameof(Login));
+            }
+
+            var resetToken = new ResetPasswordDto { Token = token };
+            return View(resetToken);
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userAccount = await _userAccountService.GetUserByPasswordResetToken(resetPasswordDto.Token);
+
+                    if (userAccount == null)
+                    {
+                        TempData["message"] = "Error";
+                        TempData["entity"] = _localizer["Invalid Token!"].ToString();
+
+                        return RedirectToAction(nameof(Login));
+                    }
+
+                    if (userAccount.PasswordResetTokenExpiry < DateTime.Now)
+                    {
+                        TempData["message"] = "Error";
+                        TempData["entity"] = _localizer["Your token has expired."].ToString();
+
+                        return RedirectToAction(nameof(Login));
+                    }
+
+                    _userAccountService.ResetPasword(userAccount, resetPasswordDto.Password);
+
+                    _userAccountService.Update(userAccount);
+
+                    TempData["message"] = "Success";
+                    TempData["entity"] = "Password reset Successfully.";
+
+                    return RedirectToAction(nameof(Login));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred during the password reset process.");
+
+                    TempData["message"] = "Error";
+                    TempData["entity"] = "An error occurred while processing your request. Please try again.";
+
+                    return RedirectToAction(nameof(Login));
+                }
+
+                return View(resetPasswordDto);
+            }
+
+            return RedirectToAction(nameof(Login));
         }
 
 

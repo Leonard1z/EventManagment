@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories.UserAccounts
 
         public bool CheckIfUserExist(string username)
         {
-            var result = DbSet.Any(x => x.FirstName == username);
+            var result = DbSet.Any(x => x.Username == username);
 
             return result;
         }
@@ -53,6 +53,11 @@ namespace Infrastructure.Repositories.UserAccounts
             var user = await DbSet.SingleOrDefaultAsync(u => u.EmailVerificationToken == token);
 
             return user;
+        }
+
+        public async Task<UserAccount> GetUserByPasswordResetToken(string token)
+        {
+            return await DbSet.FirstOrDefaultAsync(x => x.PasswordResetToken == token);
         }
     }
 }

@@ -21,5 +21,11 @@ namespace Services.UserAccount
         Domain.Entities.UserAccount Update(Domain.Entities.UserAccount userAccount);
         string GenerateVerificationToken();
         Task SendEmailVerificationAsync(string email, string firstName, string verificationUrl);
+        Task<UserAccountDto> GetByEmail(string email);
+        string GeneratePasswordResetToken(string email);
+        Task SendPasswordResetEmail(string email, string resetUrl);
+        Task<Domain.Entities.UserAccount> GetUserByPasswordResetToken(string token);
+        void ResetPasword(Domain.Entities.UserAccount userAccount, string newPassword);
+
     }
 }

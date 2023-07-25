@@ -7,6 +7,7 @@ namespace Domain._DTO.UserAccount
     public class UserAccountCreateDto
     {
         public string FirstName { get; set; }
+        public string Username { get; set; }
         public string LastName { get; set; }
         [DataType("Password")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

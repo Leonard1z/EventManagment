@@ -11,6 +11,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
+        public string Username { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         [DataType("Password")]
@@ -21,6 +22,8 @@ namespace Domain.Entities
         public char Gender { get; set; }
         public bool IsEmailVerified { get; set; }
         public string? EmailVerificationToken { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
         public int RoleId { get; set; }
         public Roles Role { get; set; }
         public ICollection<Event> Events { get; set; }

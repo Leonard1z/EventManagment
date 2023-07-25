@@ -11,5 +11,6 @@ namespace Infrastructure.Repositories.UserAccounts
         UserAccount GetByEmail(string email);
         Task<UserAccount> GetAdminByEmail(string email);
         Task<UserAccount> GetUserByVerificationToken(string token);
+        Task<UserAccount> GetUserByPasswordResetToken(string token);
     }
 }
