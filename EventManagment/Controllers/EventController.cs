@@ -352,7 +352,6 @@ namespace EventManagment.Controllers
                         item.Id = 0;
                         item.CategoryId = 0;
                         item.Category.Id = 0;
-                        item.UserAccount.Id = 0;
                         item.UserAccountId = 0;
                         item.CountRegistration = item.Registrations.Count;
                     }

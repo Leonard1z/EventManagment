@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories.Events
         public async Task<Event> GetByIdWithCategory(int id)
         {
             var result = DbSet.Include(x => x.Category)
-                .Include(x=>x.TicketTypes)
+                .Include(x => x.TicketTypes)
                 .AsNoTracking()
                  .FirstOrDefault(x => x.Id == id);
 
@@ -64,7 +64,7 @@ namespace Infrastructure.Repositories.Events
         public async Task<IEnumerable<Event>> GetUserEvents(int userId)
         {
             var result = DbSet.Include(x => x.Category)
-                .Include(x => x.UserAccount)
+                //.Include(x => x.UserAccount)
                 .Include(x => x.Registrations)
                 .Where(x => x.UserAccountId == userId && x.IsActive)
                 .AsNoTracking()
