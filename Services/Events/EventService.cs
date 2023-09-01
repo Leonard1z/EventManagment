@@ -45,7 +45,23 @@ namespace Services.Events
 
             var result = await _eventRepository.GetAllEvents();
 
-            return _mapper.Map<List<EventDto>>(result.ToList());
+            return _mapper.Map<List<EventDto>>(result.ToList(), opt =>
+            {
+                opt.AfterMap((src, dest) =>
+                {
+                    foreach (var item in dest)
+                    {
+                        item.UserAccount = new Domain._DTO.UserAccount.UserAccountDto
+                        {
+                            FirstName = item.UserAccount.FirstName,
+                            Username = item.UserAccount.Username,
+                            Email = item.UserAccount.Email
+                        };
+
+                        item.UserAccount = null;
+                    }
+                });
+            });
         }
 
         public async Task<EventDto> GetByIdWithCategory(int id)

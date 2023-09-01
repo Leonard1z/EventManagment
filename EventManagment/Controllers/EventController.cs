@@ -117,17 +117,28 @@ namespace EventManagment.Controllers
                     string wwwRootPath = _hostEnvironment.WebRootPath;
                     //generates a unique filename using Guid.NewGuid()
                     string fileName = Guid.NewGuid().ToString();
-                    //path where the file will be saved by combining the web root path with the "images\events" folder.
-                    string uploads = Path.Combine(wwwRootPath, @"images\events");
-                    string extension = Path.GetExtension(file.FileName);
-                    string filePath = Path.Combine(uploads, fileName + extension);
+                    string extension = Path.GetExtension(file.FileName).ToLower();
 
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
                     {
-                        file.CopyTo(fileStream);
-                    }
+                        //path where the file will be saved by combining the web root path with the "images\events" folder.
+                        string uploads = Path.Combine(wwwRootPath, @"images\events");
+                        string filePath = Path.Combine(uploads, fileName + extension);
 
-                    eventCreateDto.Image = @"\images\events\" + fileName + extension;
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        eventCreateDto.Image = @"\images\events\" + fileName + extension;
+                    }
+                    else
+                    {
+                        TempData["message"] = "Error";
+                        TempData["entity"] = "Invalid image format. Please upload a valid image format: .jpg,.jpeg,.png";
+
+                        return RedirectToAction(nameof(Index));
+                    }
 
                 }
 

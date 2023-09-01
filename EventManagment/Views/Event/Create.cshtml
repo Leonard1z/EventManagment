@@ -96,7 +96,16 @@
                         <span asp-validation-for="EncryptedCategoryId" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-12 mt-3">
+
+                <div class="col-6 mt-3">
+                    <div class="form-group">
+                        <label asp-for="IsFree" class="control-label">@Localizer["IsFree"]</label>
+                        <input asp-for="IsFree" type="checkbox" class="form-check-input" />
+                        <span asp-validation-for="IsFree" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div id="ticketTypes" class="col-md-12 mt-3">
                     <h4>Ticket Types</h4>
                     <table class="table table-striped">
                         <thead>
@@ -119,7 +128,7 @@
                 <div class="col-md-12 pt-2 ">
                     <div class="btn-display-flex">
                         <a asp-action="Index" class="btn btn-secondary" style="width:150px">@Localizer["Back to List"]</a>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTicketModal">Add Ticket Option</button>
+                        <button type="button" id="addTicketBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTicketModal">Add Ticket Option</button>
                         <button type="submit" onclick="return ValidateInput() && ValidateInputDate() && ValidateMap()" class="btn btn-primary" style="width:150px">@Localizer["Create"]</button>
                     </div>
                 </div>
@@ -182,8 +191,25 @@
         var ticketTypes = @Html.Raw(Json.Serialize(Model.TicketTypes));
     </script>
     <script src="~/js/addTicket.js"></script>
-
     <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var isFreeCheckBox = document.getElementById("IsFree");
+            var addTicketButton = document.getElementById("addTicketBtn");
+            var ticketTypeTable = document.getElementById("ticketTypes");
+
+            isFreeCheckBox.addEventListener('change', function(){
+                if(isFreeCheckBox.checked){
+                    addTicketButton.style.display='none';
+                    ticketTypeTable.style.display='none';
+                   
+                }else{
+                    addTicketButton.style.display='inline';
+                    ticketTypeTable.style.display='block';
+                }
+            })
+
+        })
 
         function ValidateInput() {
             //looks if user has uploaded an image if not display message
