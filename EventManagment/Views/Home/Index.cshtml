@@ -11,14 +11,14 @@
     {
         <div class="col-md-4">
             <div class="card">
-                <img src="@item.Image" class="card-img-top" alt="Event Image">
+                <img src="@item.Image" class="card-img-top" style="width:100px; height:100px;" alt="Event Image">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
                     <p class="card-text">@item.Description</p>
                     <p class="card-text">Date: @item.StartDate</p>
                     <p class="card-text">EndDate: @item.EndDate</p>
                     <p class="card-text">Location: @item.City</p>
-                    <a href="@Url.Action("EventDetails", "Event", new { encryptedEventId = item.EncryptedId })" class="btn btn-primary">Details</a>
+                    <a href="@Url.Action("EventDetails", "Home", new {encryptedId = item.EncryptedId })" class="btn btn-primary">Details</a>
                 </div>
             </div>
         </div>

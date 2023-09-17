@@ -46,7 +46,7 @@ namespace EventManagment.Controllers
             catch (Exception ex)
             {
                 TempData["message"] = "Error";
-                TempData["entity"] = _localizer["An error occurred, try again"].ToString(); ;
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
 
                 _logger.LogError(ex.Message);
                 return RedirectToAction(nameof(Index));

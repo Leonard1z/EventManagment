@@ -57,8 +57,6 @@ namespace Services.Events
                             Username = item.UserAccount.Username,
                             Email = item.UserAccount.Email
                         };
-
-                        item.UserAccount = null;
                     }
                 });
             });

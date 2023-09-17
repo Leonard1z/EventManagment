@@ -91,6 +91,7 @@ namespace EventManagment.Controllers
                 if (string.IsNullOrEmpty(ticketData))
                 {
                     eventCreateDto.TicketTypes = new List<TicketTypeDto>();
+                    eventCreateDto.IsFree = true;
                 }
                 else
                 {
