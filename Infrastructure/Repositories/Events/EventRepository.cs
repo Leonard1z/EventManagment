@@ -82,5 +82,11 @@ namespace Infrastructure.Repositories.Events
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<Event> GetEventDetails(int eventId)
+        {
+            return await DbSet.Include(x => x.Category)
+                               .FirstOrDefaultAsync(x => x.Id == eventId);
+        }
     }
 }

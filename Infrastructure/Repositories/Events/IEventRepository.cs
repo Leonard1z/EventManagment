@@ -10,5 +10,6 @@ namespace Infrastructure.Repositories.Events
         Task<Event> GetByIdWithCategory(int id);
         IEnumerable<Event> GetExpiredEvents();
         Task<IEnumerable<Event>> GetUserEvents(int userId);
+        Task<Event> GetEventDetails(int eventId);
     }
 }

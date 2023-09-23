@@ -1,0 +1,39 @@
+﻿*{
+    margin:0;
+    padding:0;
+}
+
+.event-img{
+    object-fit:fill;
+    width:950px;
+    height:350px;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.countdown-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: gray; /* Gray color for the numbers */
+    background-color: lightgray; /* Gray background color for the squares */
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.countdown-label {
+    font-size: 14px;
+    margin-top: 5px;
+    color: gray;
+}

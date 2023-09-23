@@ -126,5 +126,12 @@ namespace Services.Events
             var result = await _eventRepository.GetAllByIsActive();
             return _mapper.Map<List<EventDto>>(result.ToList());
         }
+
+        public async Task<EventDto> GetEventDetails(int eventId)
+        {
+            var result = await _eventRepository.GetEventDetails(eventId);
+
+            return _mapper.Map<EventDto>(result);
+        }
     }
 }
