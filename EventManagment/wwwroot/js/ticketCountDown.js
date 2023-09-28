@@ -1,15 +1,15 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     function updateCountdown() {
 
-        for (var i = 0; i < ticketSaleEndDates.length; i++) {
-            var saleEndDate = new Date(ticketSaleEndDates[i].saleEndDate);
+        for (var i = 0; i < tickets.length; i++) {
+            var saleEndDate = new Date(tickets[i].saleEndDate);
             // Calculate the timeremaining for each ticket
             var currentTime = new Date();
             var timeRemaining = saleEndDate - currentTime;
             //console.log("SaleEnd Date:" + saleEndDate);
             //console.log("Time reamining:" + timeRemaining);
 
-            var ticketId = ticketSaleEndDates[i].ticketId;
+            var ticketId = tickets[i].ticketId;
 
             //console.log("Ticket ID: "+ticketId);
 

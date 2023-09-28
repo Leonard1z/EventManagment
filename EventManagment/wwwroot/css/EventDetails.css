@@ -25,8 +25,8 @@
 .countdown-number {
     font-size: 24px;
     font-weight: bold;
-    color: gray; /* Gray color for the numbers */
-    background-color: lightgray; /* Gray background color for the squares */
+    color: gray; 
+    background-color: lightgray; 
     padding: 10px 15px;
     border-radius: 5px;
     text-align: center;
