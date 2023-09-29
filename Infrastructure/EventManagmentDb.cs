@@ -21,6 +21,7 @@ namespace Infrastructure
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventManagmentDb).Assembly);
