@@ -18,5 +18,6 @@ namespace Domain.Entities
         public DateTime SaleEndDate { get; set; }
         public Event Event { get; set; }
         public int EventId { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

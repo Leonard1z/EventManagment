@@ -78,7 +78,8 @@
                                                 <span class="countdown-label">Seconds</span>
                                             </div>
                                         </div>
-                                        <button id="buy-btn-@ticket.Id" class="btn btn-success">@Localizer["Buy Now"]</button>
+                                        <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" 
+                                        data-quantity="0">@Localizer["Buy Now"]</button>
                                     }else{
                                         <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
                                     }

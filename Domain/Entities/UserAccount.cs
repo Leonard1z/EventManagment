@@ -28,5 +28,6 @@ namespace Domain.Entities
         public Roles Role { get; set; }
         public ICollection<Event> Events { get; set; }
         public ICollection<Registration> Registrations { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

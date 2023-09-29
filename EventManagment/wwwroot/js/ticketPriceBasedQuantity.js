@@ -1,6 +1,39 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     var plusButtons = document.querySelectorAll('.plus-button');
     var minusButtons = document.querySelectorAll('.minus-button');
+    var buyButtons = document.querySelectorAll('.buy-button');
+
+
+
+    buyButtons.forEach(function (buyButton) {
+        buyButton.addEventListener('click', function () {
+            var ticketId = this.getAttribute('data-ticket-id');
+            var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
+            var currentQuantity = parseInt(quantityInput.value);
+
+            sendReservationRequest(ticketId, currentQuantity);
+
+        });
+    });
+
+
+    function sendReservationRequest(ticketId, quantity) {
+        fetch('/Reservation/Reserve', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ticketId, quantity }),
+            
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
     plusButtons.forEach(function (plusButton) {
         plusButton.addEventListener('click', function () {
