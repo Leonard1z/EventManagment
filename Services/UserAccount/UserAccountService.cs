@@ -114,7 +114,7 @@ namespace Services.UserAccount
             //string body = $"<p>Plese click the link to verify the email <a href={verificationUrl}>Verify Email</a></p>";
             string subject = "Confirm Your Emaiil";
             string tittle = "Confirm Account Registration";
-            string message = "Thanks for Registering to our website were thankfoul to you for visiting our web";
+            string message = "Thank you for showing your interest in our website. All you need to do is click the button below, to verify your account.";
             string body = "";
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
             {

@@ -1,4 +1,5 @@
-﻿using Services.Common;
+﻿using Domain.Entities;
+using Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Services.Reservation
 {
     public interface IReservationService:IService
     {
-
+        Task<Domain.Entities.Reservation> Create(int ticketId,int userId,int quantity);
+        Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation);
     }
 }

@@ -14,6 +14,11 @@ namespace Infrastructure.Repositories.Tickets
         {
         }
 
+        public async Task<TicketType> GetTicketByIdAsync(int ticketId)
+        {
+            return await DbSet.FirstOrDefaultAsync(t => t.Id == ticketId);
+        }
+
         public async Task<List<TicketType>> GetTicketsByEventId(int eventId)
         {
             return await DbSet.Where(x => x.EventId == eventId).ToListAsync();

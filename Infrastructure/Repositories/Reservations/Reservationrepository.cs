@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Reservations
 {
-    public class Reservationrepository:GenericRepository<Reservation>, IReservationRepository
+    public class ReservationRepository:GenericRepository<Reservation>, IReservationRepository
     {
 
-        public Reservationrepository(EventManagmentDb context) : base(context)
+        public ReservationRepository(EventManagmentDb context) : base(context)
         {
 
         }

@@ -29,6 +29,11 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+
+                if (data && data.success) {
+                } else {
+                    console.error('Reservation failed:', data.message);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);

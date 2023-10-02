@@ -15,6 +15,7 @@ namespace Domain._DTO.Reservation
         public string TicketTypesEncryptedId { get; set; }
         public int Quantity { get; set; }
         public DateTime ReservationTime { get; set; }
+        public DateTime ExpirationTime { get; set; }
         public bool IsExpired { get; set; }
         public int TicketTypeId { get; set; }
         public TicketTypeDto TicketTypes { get; set; }

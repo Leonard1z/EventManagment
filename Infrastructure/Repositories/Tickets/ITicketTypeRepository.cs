@@ -10,5 +10,6 @@ namespace Infrastructure.Repositories.Tickets
     public interface ITicketTypeRepository : IGenericRepository<TicketType>
     {
         Task<List<TicketType>> GetTicketsByEventId(int eventId);
+        Task<TicketType> GetTicketByIdAsync(int ticketId);
     }
 }
