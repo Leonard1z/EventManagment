@@ -77,7 +77,7 @@ namespace Services.Reservation
 
             string subject = "Reservation Reminder";
             string tittle = "Confirm Payment";
-            string message = "Dear User, you have 10 minutes to complete your payment.Click <a href='https://yourpaymentlink.com'>here</a> to complete the payment.";
+            string message = "To ensure you don't miss out, click the button below and complete your payment before your reservation expires: ";
             string body = "";
 
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
