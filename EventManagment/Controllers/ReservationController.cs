@@ -1,11 +1,13 @@
-﻿using Domain.ViewModels;
+﻿using Domain.Entities;
+using Domain.ViewModels;
+using EventManagment.Hubs;
+using Infrastructure.Repositories.Notifications;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Localization;
 using Security;
-using Services.Events;
-using Services.Registration;
+using Services.Notification;
 using Services.Reservation;
 using Services.Tickets;
 using System.Security.Claims;
@@ -17,23 +19,29 @@ namespace EventManagment.Controllers
 
         private readonly IReservationService _reservationService;
         private readonly ITicketTypeService _ticketTypeService;
+        private readonly INotificationService _notificationService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<ReservationController> _localizer;
         private readonly ILogger<ReservationController> _logger;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         public ReservationController(IReservationService reservationService,
             ITicketTypeService ticketTypeService,
-             IDataProtectionProvider provider,
+            INotificationService notificationService,
+            IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<ReservationController> localizer,
-            ILogger<ReservationController> logger
+            ILogger<ReservationController> logger,
+            IHubContext<NotificationHub> hubContext
             )
         { 
             _reservationService = reservationService;
             _ticketTypeService = ticketTypeService;
+            _notificationService = notificationService;
             _protector = provider.CreateProtector(purpose: purposeStrings.ReservationControllerPs);
             _localizer = localizer;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
 
@@ -60,6 +68,20 @@ namespace EventManagment.Controllers
                 }
 
                 await _reservationService.Create(request.TicketId, userId, request.Quantity);
+
+                var message = $"Reservation made for ticket {request.TicketId}";
+
+                await _notificationService.Create(new Notification
+                {
+                    UserId = userId,
+                    Message = message,
+                    CreatedAt = DateTime.UtcNow,
+                    IsRead = false
+                });
+
+                var notificationCount = await _notificationService.GetNotificationCountByUserId(userId);
+
+                await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCount",notificationCount);
 
                 return Ok(new { success = true, Message = "Reservation successful" });
             }

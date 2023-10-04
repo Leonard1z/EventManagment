@@ -29,5 +29,6 @@ namespace Domain.Entities
         public ICollection<Event> Events { get; set; }
         public ICollection<Registration> Registrations { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
     }
 }

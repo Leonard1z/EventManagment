@@ -6,14 +6,10 @@ using EventManagment.Extension;
 using Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Infrastructure.DbExecute;
-using Microsoft.AspNetCore.Identity;
-using Services.Common;
 using Services.Role;
-using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
 using Services.SendEmail;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Services.Tickets;
+using EventManagment.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +28,7 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IEmailService, SmtpEmailService>();
+builder.Services.AddSignalR();
 
 #region
 // Configure AutoMapper
@@ -94,9 +91,13 @@ SeedDatabase();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<NotificationHub>("/notificationHub");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 
 app.UseHangfireDashboard();

@@ -10,6 +10,8 @@
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="Hangfire.Core" Version="1.8.5" />
 		<PackageReference Include="Hangfire.SqlServer" Version="1.8.5" />
+		<PackageReference Include="Microsoft.AspNet.SignalR" Version="2.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.11" />
 		<PackageReference Include="ReflectionIT.Mvc.Paging" Version="7.0.0" />
 	</ItemGroup>
 
