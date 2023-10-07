@@ -27,26 +27,20 @@ namespace Infrastructure.DbExecute
         private readonly IRoleService _roleService;
         private readonly IUserAccountService _userAccountService;
         public readonly IEventService _eventService;
-        private readonly IRegistrationService _registrationService;
         private readonly ITicketTypeRepository _ticketTypeRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
             IUserAccountService userAccountService,
             IEventService eventService,
-            IRegistrationService registrationService,
-            ITicketTypeRepository ticketTypeRepository,
-            IWebHostEnvironment webHostEnvironment
+            ITicketTypeRepository ticketTypeRepository
         )
         {
             _serviceProvider = serviceProvider;
             _userAccountService = userAccountService;
             _roleService = roleService;
             _eventService = eventService;
-            _registrationService = registrationService;
             _ticketTypeRepository = ticketTypeRepository;
-            _webHostEnvironment = webHostEnvironment;
         }
         public void DbExecute()
         {

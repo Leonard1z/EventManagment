@@ -28,9 +28,10 @@ function fetchNotificationCount() {
 
 function updateNotificationCount(count) {
     const notificationCountElement = document.getElementById('notification-count');
-        notificationCountElement.innerText = count;
-}
-
-function checkIfUserIsAuthenticated() {
-    return isAuthenticated === 'true';
+        if (count == 0) {
+            notificationCountElement.style.display = 'none';
+        } else {
+            notificationCountElement.innerText = count;
+            notificationCountElement.style.display = 'block';
+        }
 }
