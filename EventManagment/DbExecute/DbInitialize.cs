@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services.Events;
 using Services.Registration;
+using Services.Reservation;
 using Services.Role;
 using Services.Tickets;
 using Services.UserAccount;
@@ -28,12 +29,14 @@ namespace Infrastructure.DbExecute
         private readonly IUserAccountService _userAccountService;
         public readonly IEventService _eventService;
         private readonly ITicketTypeRepository _ticketTypeRepository;
+        private readonly IReservationService _reservationService;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
             IUserAccountService userAccountService,
             IEventService eventService,
-            ITicketTypeRepository ticketTypeRepository
+            ITicketTypeRepository ticketTypeRepository,
+            IReservationService reservationService
         )
         {
             _serviceProvider = serviceProvider;
@@ -41,6 +44,7 @@ namespace Infrastructure.DbExecute
             _roleService = roleService;
             _eventService = eventService;
             _ticketTypeRepository = ticketTypeRepository;
+            _reservationService = reservationService;
         }
         public void DbExecute()
         {
@@ -109,6 +113,24 @@ namespace Infrastructure.DbExecute
                 ticket.IsAvailable = isAvailable;
 
                 _ticketTypeRepository.Update(ticket);
+            }
+        }
+
+        public async Task CheckAndUpdateExpiredReservation()
+        {
+            try
+            {
+                var expiredReservations = await _reservationService.GetExpiredReservationsAsync(DateTime.Now);
+
+                foreach (var reservation in expiredReservations)
+                {
+                    reservation.IsExpired = true;
+                    await _reservationService.UpdateAsync(reservation);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
             }
         }
     }

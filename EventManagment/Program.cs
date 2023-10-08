@@ -104,6 +104,7 @@ app.UseHangfireDashboard();
 //Add's The Schedule To HangFireServer
 RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Hourly);
 RecurringJob.AddOrUpdate<IDbInitialize>(x => x.UpdateTicketAvailability(), Cron.Minutely);
+RecurringJob.AddOrUpdate<IDbInitialize>(x => x.CheckAndUpdateExpiredReservation(), Cron.Minutely);
 //Executes the Background Schedule
 app.UseHangfireServer();
 

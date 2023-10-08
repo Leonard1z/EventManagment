@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain._DTO.Reservation;
 using Domain.Entities;
 using Infrastructure.Repositories.Events;
 using Infrastructure.Repositories.Reservations;
@@ -66,6 +67,13 @@ namespace Services.Reservation
             return reservation;
         }
 
+        public async Task<IList<ReservationDto>> GetExpiredReservationsAsync(DateTime currentDate)
+        {
+            var expiredReservations = await _reservationRepository.GetExpiredReservationsAsync(currentDate);
+
+            return _mapper.Map<List<ReservationDto>>(expiredReservations);
+        }
+
         public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation)
         {
             var user = await _userAccountRepository.GetById(userId);
@@ -95,6 +103,13 @@ namespace Services.Reservation
             {
                 throw new Exception(ex.ToString());
             }
+        }
+
+        public async Task<ReservationDto> UpdateAsync(ReservationDto reservationDto)
+        {
+            var result = await _reservationRepository.UpdateAsync(_mapper.Map<Domain.Entities.Reservation>(reservationDto));
+
+            return _mapper.Map<ReservationDto>(result);
         }
     }
 }
