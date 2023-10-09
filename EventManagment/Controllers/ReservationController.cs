@@ -69,7 +69,7 @@ namespace EventManagment.Controllers
 
                 await _reservationService.Create(request.TicketId, userId, request.Quantity);
 
-                var message = $"Reservation made for ticket {request.TicketId}";
+                var message = $"Reservation created. Please review and complete payment within the next 10 minutes to secure your tickets.";
 
                 await _notificationService.Create(new Notification
                 {

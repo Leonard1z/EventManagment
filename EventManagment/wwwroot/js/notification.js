@@ -62,7 +62,7 @@ function updateNotificationCountAndData(notificationData) {
     //console.log(notificationData)
     data.forEach(notification => {
         const listItem = document.createElement('li');
-        listItem.innerText = `${notification.message} - ${notification.createdAt}`;
+        listItem.innerText = `${notification.message}`;
         listItem.id = `notification-${notification.id}`;
         if (notification.isRead) {
             listItem.classList.add('read-notification');

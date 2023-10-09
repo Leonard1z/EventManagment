@@ -19,11 +19,11 @@ body {
 
 #notification-icon {
     position: relative;
-    margin-right: 27px;
+    margin-right: 20px;
 }
 
 #notification-icon i {
-    font-size: 27px;
+    font-size: 24px;
     color: #eaeaea; 
     cursor:pointer;
 }
@@ -31,12 +31,12 @@ body {
 .notification-count {
     position: absolute;
     top: -4px;
-    right: -16px;
+    right: -11px;
     background-color: #ff1c1c;
     color: white;
     border-radius: 50%;
     padding: 4px 8px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
 }
 
