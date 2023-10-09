@@ -10,6 +10,7 @@ using Services.Role;
 using Hangfire;
 using Services.SendEmail;
 using EventManagment.Hubs;
+using Services.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,10 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IEmailService, SmtpEmailService>();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
 
 #region
 // Configure AutoMapper

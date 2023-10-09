@@ -79,9 +79,10 @@ namespace EventManagment.Controllers
                     IsRead = false
                 });
 
-                var notificationCount = await _notificationService.GetNotificationCountByUserId(userId);
+                var notificationsData = await _notificationService.GetNotificationCountAndDataByUserId(userId);
+                var notificationCount = notificationsData.Count();
 
-                await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCount",notificationCount);
+                await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCountAndData", notificationCount, notificationsData);
 
                 return Ok(new { success = true, Message = "Reservation successful" });
             }

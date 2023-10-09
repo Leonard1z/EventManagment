@@ -27,9 +27,10 @@ namespace EventManagment.Controllers
                     var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                     var userId = int.Parse(claim.Value);
 
-                    var notificationCount = await _notificationService.GetNotificationCountByUserId(userId);
+                    var notificationsData = await _notificationService.GetNotificationCountAndDataByUserId(userId);
+                    var notificationCount = notificationsData.Count();
 
-                    return Ok( new { count = notificationCount } );
+                    return Ok( new {data = notificationsData, count = notificationCount } );
                 }
                 else
                 {

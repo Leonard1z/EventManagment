@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,15 @@ namespace Infrastructure.Repositories.Notifications
 
         }
 
-        public async Task<int> GetNotificationCountByUserId(int userId)
+        public async Task<IList<Notification>> GetNotificationCountAndDataByUserId(int userId)
         {
-            var count = DbSet.Count(n => n.UserId == userId);
-
-            return count;
+            return await DbSet.Where(n => n.UserId == userId).Select(n=> new Notification
+            {
+                Id = n.Id,
+                Message = n.Message,
+                CreatedAt = n.CreatedAt,
+                IsRead = n.IsRead,
+            }).ToListAsync();
         }
     }
 }

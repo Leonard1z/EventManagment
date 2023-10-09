@@ -11,6 +11,6 @@ namespace Services.Notification
     public interface INotificationService :IService
     {
         Task<Domain.Entities.Notification> Create(Domain.Entities.Notification notification);
-        Task<int> GetNotificationCountByUserId(int userId);
+        Task<IList<Domain.Entities.Notification>> GetNotificationCountAndDataByUserId(int userId);
     }
 }
