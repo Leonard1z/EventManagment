@@ -1,14 +1,23 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.SignalR;
+using Services.Notification;
 
 namespace EventManagment.Hubs
 {
     public class NotificationHub :Hub
     {
-        public async Task UpdateNotificationCountAndData(int notificationCount, List<Notification> notificationsData)
+        private readonly INotificationService _notificationService;
+
+        public NotificationHub(INotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
+
+        public async Task MarkNotificationAsRead(int notificationId)
         {
             var userId = Context.UserIdentifier;
-            await Clients.User(userId).SendAsync("UpdateNotificationCountAndData", notificationCount, notificationsData);
+            var modifiedNotification = await _notificationService.GetById(notificationId);
+            await Clients.User(userId).SendAsync("MarkNotificationAsRead", modifiedNotification);
         }
     }
     

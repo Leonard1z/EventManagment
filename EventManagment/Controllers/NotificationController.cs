@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Services.Notification;
 using System.Security.Claims;
 
@@ -16,7 +17,7 @@ namespace EventManagment.Controllers
 
 
         [HttpGet]
-        [Route("Notification/GetNotificationCount")]
+        [Route("Notification/GetNotifications")]
         public async Task<ActionResult> GetNotificationCount()
         {
             try
@@ -27,10 +28,10 @@ namespace EventManagment.Controllers
                     var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                     var userId = int.Parse(claim.Value);
 
-                    var notificationsData = await _notificationService.GetNotificationCountAndDataByUserId(userId);
-                    var notificationCount = notificationsData.Count();
+                    var notificationsData = await _notificationService.GetNotificationDataByUserId(userId);
+                    var notificationCount = await _notificationService.GetUnreadNotificationCountByUserId(userId);
 
-                    return Ok( new {data = notificationsData, count = notificationCount } );
+                    return Ok( new {data = notificationsData, count = notificationCount} );
                 }
                 else
                 {

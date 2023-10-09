@@ -22,9 +22,24 @@ namespace Services.Notification
             return await _notificationRepository.CreateAsync(notification);
         }
 
-        public async Task<IList<Domain.Entities.Notification>> GetNotificationCountAndDataByUserId(int userId)
+        public async Task<Domain.Entities.Notification> GetById(int id)
         {
-            return await _notificationRepository.GetNotificationCountAndDataByUserId(userId);
+            var notification =  await _notificationRepository.GetById(id);
+
+            notification.IsRead = true;
+            await _notificationRepository.UpdateAsync(notification);
+
+            return notification;
+        }
+
+        public async Task<IList<Domain.Entities.Notification>> GetNotificationDataByUserId(int userId)
+        {
+            return await _notificationRepository.GetNotificationDataByUserId(userId);
+        }
+
+        public async Task<int> GetUnreadNotificationCountByUserId(int userId)
+        {
+            return await _notificationRepository.GetUnreadNotificationCountByUserId(userId);
         }
     }
 }

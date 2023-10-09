@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories.Notifications
 
         }
 
-        public async Task<IList<Notification>> GetNotificationCountAndDataByUserId(int userId)
+        public async Task<IList<Notification>> GetNotificationDataByUserId(int userId)
         {
             return await DbSet.Where(n => n.UserId == userId).Select(n=> new Notification
             {
@@ -24,6 +24,11 @@ namespace Infrastructure.Repositories.Notifications
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead,
             }).ToListAsync();
+        }
+
+        public async Task<int> GetUnreadNotificationCountByUserId(int userId)
+        {
+            return await DbSet.CountAsync(n => n.UserId == userId && !n.IsRead);
         }
     }
 }

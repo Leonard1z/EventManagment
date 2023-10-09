@@ -19,7 +19,7 @@ body {
 
 #notification-icon {
     position: relative;
-    margin-right: 10px
+    margin-right: 27px;
 }
 
 #notification-icon i {
@@ -44,7 +44,8 @@ body {
     position: absolute;
     display: block;
     top: 100%;
-    right: 0;
+    left:0;
+    width:276px;
     z-index: 1;
     background-color: #fff;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -69,14 +70,17 @@ body {
     padding: 10px;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-bottom: 6px;
+}
+
+#notification-list li.unread-notification:hover {
+    background-color: #ddd;
 }
 
 #notification-list li:last-child {
     border-bottom: none;
-}
-
-#notification-list li:hover {
-    background-color: #f5f5f5;
 }
 
 
@@ -91,4 +95,13 @@ body {
 
 #notification-dropdown::-webkit-scrollbar-track {
     background-color: #D5D5D5;
+}
+
+#notification-list li.read-notification {
+    background-color: #c5c5c5;
+    border-radius: 11px;
+}
+
+#notification-list li.unread-notification {
+    background-color: inherit; 
 }

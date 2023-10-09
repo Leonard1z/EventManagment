@@ -9,6 +9,7 @@ namespace Infrastructure.Repositories.Notifications
 {
     public interface INotificationRepository : IGenericRepository<Notification>
     {
-        Task<IList<Notification>> GetNotificationCountAndDataByUserId(int userId);
+        Task<IList<Notification>> GetNotificationDataByUserId(int userId);
+        Task<int> GetUnreadNotificationCountByUserId(int userId);
     }
 }

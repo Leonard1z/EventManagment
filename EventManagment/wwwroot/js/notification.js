@@ -14,7 +14,6 @@
     });
 });
 
-
 //Connection Setup using the /notificatiohub Url
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/notificationHub")
@@ -27,14 +26,13 @@ connection.start().then(() => {
 }).catch(err => console.error(err));
 
 
-//Sets up the eventHandler for the UpdateNotificationCount eventfrom the server
-connection.on("UpdateNotificationCountAndData", (count, notificationsData) => {
-        //console.log("Updated Notification Count:", count);
-    updateNotificationCountAndData({ count, notificationsData });
+//Sets up the eventHandler for the UpdateNotificationCountAndData eventfrom the server
+connection.on("UpdateNotificationCountAndData", () => {
+    fetchNotificationCount();
 });
 
 function fetchNotificationCount() {
-    fetch('/Notification/GetNotificationCount')
+    fetch('/Notification/GetNotifications')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -51,7 +49,7 @@ function updateNotificationCountAndData(notificationData) {
     const notificationCountElement = document.getElementById('notification-count');
     const list = document.getElementById('notification-list');
 
-    const { count, data } = notificationData;
+    const { data, count } = notificationData;
 
     if (count == 0) {
         notificationCountElement.style.display = 'none';
@@ -65,6 +63,54 @@ function updateNotificationCountAndData(notificationData) {
     data.forEach(notification => {
         const listItem = document.createElement('li');
         listItem.innerText = `${notification.message} - ${notification.createdAt}`;
-        list.appendChild(listItem);
+        listItem.id = `notification-${notification.id}`;
+        if (notification.isRead) {
+            listItem.classList.add('read-notification');
+        } else {
+            listItem.classList.add('unread-notification');
+        }
+
+        listItem.addEventListener('click', function () {
+            openNotificationDetailsModal(notification)
+            markNotificationAsRead(notification);
+        })
+        list.insertBefore(listItem, list.firstChild);
     });
+}
+
+
+function openNotificationDetailsModal(notification) {
+    const modal = new bootstrap.Modal(document.getElementById('notificationDetailsModal'));
+    const modalBody = document.getElementById('notificationDetailsBody');
+    modalBody.innerHTML = `
+        <p>${notification.message}</p>
+        <p>Created at: ${notification.createdAt}</p>
+        <!-- Add other details as needed -->
+    `;
+    modal.show();
+}
+
+function markNotificationAsRead(notification) {
+    //invokes the MarkNotificationAsRead in the HUB
+    connection.invoke("MarkNotificationAsRead", notification.id)
+        .then(() => {
+        }).catch(error => console.error('Error marking the notification',error));
+}
+
+//Sets up the eventHandler for the MarkNotificationAsRead eventfrom the server
+connection.on("MarkNotificationAsRead", (modifiedNotification) => {
+    //console.log('Notification marked as read', modifiedNotification);
+    updateUIForReadNotification(modifiedNotification);
+
+});
+
+function updateUIForReadNotification(modifiedNotification) {
+    const itemId = `notification-${modifiedNotification.id}`;
+    const selectedItembasedId = document.getElementById(itemId);
+    //console.log(selectedItembasedId);
+    if (selectedItembasedId) {
+        selectedItembasedId.classList.remove('unread-notification');
+        selectedItembasedId.classList.add('read-notification');
+    } 
+    fetchNotificationCount();
 }
