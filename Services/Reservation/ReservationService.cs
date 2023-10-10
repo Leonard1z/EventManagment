@@ -6,11 +6,14 @@ using Infrastructure.Repositories.Reservations;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Distributed;
 using Services.SendEmail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Services.Reservation
@@ -24,13 +27,15 @@ namespace Services.Reservation
         private readonly IEventRepository _eventRepository;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IDistributedCache _cache;
 
         public ReservationService(IReservationRepository reservationRepository,ITicketTypeRepository ticketTypesRepository,
             IUserAccountRepository userAccountRepository,
             IEmailService emailService,
             IEventRepository eventRepository,
             IMapper mapper,
-            IWebHostEnvironment webHostEnvironment
+            IWebHostEnvironment webHostEnvironment,
+            IDistributedCache cache
             )
         {
             _reservationRepository = reservationRepository;
@@ -40,6 +45,7 @@ namespace Services.Reservation
             _eventRepository = eventRepository;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _cache = cache;
         }
 
         public async Task<Domain.Entities.Reservation> Create(int ticketId, int userId, int quantity, double ticketTotalPrice)
@@ -63,7 +69,11 @@ namespace Services.Reservation
 
             await _ticketTypesRepository.UpdateAsync(ticket);
 
-            await SendPaymentReminderEmail(userId, ticket, reservation,ticketTotalPrice);
+            var paymentToken = GeneratePaymentToken(reservation.Id);
+
+            await StoreToken(paymentToken, DateTime.UtcNow.AddMinutes(10));
+
+            await SendPaymentReminderEmail(userId, ticket, reservation,ticketTotalPrice, paymentToken);
 
             return reservation;
         }
@@ -75,7 +85,7 @@ namespace Services.Reservation
             return _mapper.Map<List<ReservationDto>>(expiredReservations);
         }
 
-        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice)
+        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice,string paymentToken)
         {
             var user = await _userAccountRepository.GetById(userId);
             var eventName = await _eventRepository.GetById(ticket.EventId);
@@ -87,6 +97,7 @@ namespace Services.Reservation
             string subject = "Reservation Reminder";
             string tittle = "Confirm Payment";
             string message = "To ensure you don't miss out, click the button below and complete your payment before your reservation expires: ";
+            string paymentLink = $"https://localhost:44331/Payment?token={paymentToken}";
             string body = "";
 
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
@@ -94,7 +105,7 @@ namespace Services.Reservation
                 body = streamReader.ReadToEnd();
             }
 
-            string messageBody = string.Format(body,tittle,user.FirstName,eventName.Name,ticket.Name,reservation.Quantity,reservation.ReservationTime,reservation.ExpirationTime,message,ticketTotalPrice);
+            string messageBody = string.Format(body,tittle,user.FirstName,eventName.Name,ticket.Name,reservation.Quantity,reservation.ReservationTime,reservation.ExpirationTime,message,ticketTotalPrice.ToString("c"),paymentLink);
            
             try
             {
@@ -111,6 +122,35 @@ namespace Services.Reservation
             var result = await _reservationRepository.UpdateAsync(_mapper.Map<Domain.Entities.Reservation>(reservationDto));
 
             return _mapper.Map<ReservationDto>(result);
+        }
+
+        private string GeneratePaymentToken(int reservationId)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                string combinedInput = $"{reservationId}-The1Best2Strong*Easiest%Secret9Key/In|The[World]";
+
+                byte[] hashBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(combinedInput));
+
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    stringBuilder.Append(b.ToString("x2"));
+                }
+
+                return stringBuilder.ToString();
+            }
+        }
+
+        private async Task StoreToken(string token, DateTime expirationTime)
+        {
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpiration = expirationTime
+            };
+
+            var serializedToken = JsonSerializer.Serialize(token);
+            await _cache.SetStringAsync(token, serializedToken, options);
         }
     }
 }

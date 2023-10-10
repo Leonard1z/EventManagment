@@ -335,7 +335,6 @@ namespace EventManagment.Controllers
                     return RedirectToAction(nameof(Login));
                 }
 
-                return View(resetPasswordDto);
             }
 
             return RedirectToAction(nameof(Login));

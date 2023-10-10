@@ -12,6 +12,7 @@
 		<PackageReference Include="Hangfire.SqlServer" Version="1.8.5" />
 		<PackageReference Include="Microsoft.AspNet.SignalR" Version="2.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.11" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
 		<PackageReference Include="ReflectionIT.Mvc.Paging" Version="7.0.0" />
 	</ItemGroup>
 

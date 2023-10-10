@@ -11,6 +11,8 @@ using Hangfire;
 using Services.SendEmail;
 using EventManagment.Hubs;
 using Services.Common;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNet.SignalR.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,14 @@ builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 builder.Services.AddSignalR(o =>
 {
     o.EnableDetailedErrors = true;
+});
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    string redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "leonard";   
 });
 
 #region

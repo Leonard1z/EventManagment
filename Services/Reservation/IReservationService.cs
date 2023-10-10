@@ -12,7 +12,7 @@ namespace Services.Reservation
     public interface IReservationService:IService
     {
         Task<Domain.Entities.Reservation> Create(int ticketId,int userId,int quantity,double ticketTotalPrice);
-        Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice);
+        Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice,string paymentToken);
         Task<IList<ReservationDto>> GetExpiredReservationsAsync(DateTime currentDate);
         Task<ReservationDto> UpdateAsync(ReservationDto reservationDto);
     }
