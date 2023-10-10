@@ -11,8 +11,8 @@ namespace Services.Reservation
 {
     public interface IReservationService:IService
     {
-        Task<Domain.Entities.Reservation> Create(int ticketId,int userId,int quantity);
-        Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation);
+        Task<Domain.Entities.Reservation> Create(int ticketId,int userId,int quantity,double ticketTotalPrice);
+        Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice);
         Task<IList<ReservationDto>> GetExpiredReservationsAsync(DateTime currentDate);
         Task<ReservationDto> UpdateAsync(ReservationDto reservationDto);
     }

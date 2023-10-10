@@ -42,7 +42,7 @@ namespace Services.Reservation
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<Domain.Entities.Reservation> Create(int ticketId, int userId, int quantity)
+        public async Task<Domain.Entities.Reservation> Create(int ticketId, int userId, int quantity, double ticketTotalPrice)
         {
             var ticket = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
 
@@ -54,6 +54,7 @@ namespace Services.Reservation
                 IsExpired = false,
                 TicketTypeId = ticketId,
                 UserAccountId = userId,
+                TicketTotalPrice = ticketTotalPrice,
             };
 
             await _reservationRepository.CreateAsync(reservation);
@@ -62,7 +63,7 @@ namespace Services.Reservation
 
             await _ticketTypesRepository.UpdateAsync(ticket);
 
-            await SendPaymentReminderEmail(userId, ticket, reservation);
+            await SendPaymentReminderEmail(userId, ticket, reservation,ticketTotalPrice);
 
             return reservation;
         }
@@ -74,7 +75,7 @@ namespace Services.Reservation
             return _mapper.Map<List<ReservationDto>>(expiredReservations);
         }
 
-        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation)
+        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice)
         {
             var user = await _userAccountRepository.GetById(userId);
             var eventName = await _eventRepository.GetById(ticket.EventId);
@@ -93,7 +94,7 @@ namespace Services.Reservation
                 body = streamReader.ReadToEnd();
             }
 
-            string messageBody = string.Format(body,tittle,user.FirstName,eventName.Name,ticket.Name,reservation.Quantity,reservation.ReservationTime,reservation.ExpirationTime,message);
+            string messageBody = string.Format(body,tittle,user.FirstName,eventName.Name,ticket.Name,reservation.Quantity,reservation.ReservationTime,reservation.ExpirationTime,message,ticketTotalPrice);
            
             try
             {

@@ -10,20 +10,24 @@
             var ticketId = this.getAttribute('data-ticket-id');
             var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
             var currentQuantity = parseInt(quantityInput.value);
+            var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
+            var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
 
-            sendReservationRequest(ticketId, currentQuantity);
+            //console.log(currentTotalPrice);
+
+            sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice);
 
         });
     });
 
 
-    function sendReservationRequest(ticketId, quantity) {
+    function sendReservationRequest(ticketId, quantity, ticketTotalPrice) {
         fetch('/Reservation/Reserve', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ticketId, quantity }),
+            body: JSON.stringify({ ticketId, quantity, ticketTotalPrice }),
             
         })
             .then(response => response.json())

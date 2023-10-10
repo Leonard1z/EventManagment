@@ -67,7 +67,7 @@ namespace EventManagment.Controllers
                     return BadRequest(new { success = false, Message = "Not enought tickets available" });
                 }
 
-                await _reservationService.Create(request.TicketId, userId, request.Quantity);
+                await _reservationService.Create(request.TicketId, userId, request.Quantity, request.TicketTotalPrice);
 
                 var message = $"Reservation created. Please review and complete payment within the next 10 minutes to secure your tickets.";
 
