@@ -23,6 +23,7 @@ namespace Infrastructure.Repositories.Notifications
                 Message = n.Message,
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead,
+                PaymentLink = n.PaymentLink,
             }).ToListAsync();
         }
 

@@ -19,7 +19,6 @@ namespace EventManagment.Controllers
 
         private readonly IReservationService _reservationService;
         private readonly ITicketTypeService _ticketTypeService;
-        private readonly INotificationService _notificationService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<ReservationController> _localizer;
         private readonly ILogger<ReservationController> _logger;
@@ -27,7 +26,6 @@ namespace EventManagment.Controllers
 
         public ReservationController(IReservationService reservationService,
             ITicketTypeService ticketTypeService,
-            INotificationService notificationService,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<ReservationController> localizer,
@@ -37,7 +35,6 @@ namespace EventManagment.Controllers
         { 
             _reservationService = reservationService;
             _ticketTypeService = ticketTypeService;
-            _notificationService = notificationService;
             _protector = provider.CreateProtector(purpose: purposeStrings.ReservationControllerPs);
             _localizer = localizer;
             _logger = logger;
@@ -68,16 +65,6 @@ namespace EventManagment.Controllers
                 }
 
                 await _reservationService.Create(request.TicketId, userId, request.Quantity, request.TicketTotalPrice);
-
-                var message = $"Reservation created. Please review and complete payment within the next 10 minutes to secure your tickets.";
-
-                await _notificationService.Create(new Notification
-                {
-                    UserId = userId,
-                    Message = message,
-                    CreatedAt = DateTime.UtcNow,
-                    IsRead = false,
-                });
 
                 await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCountAndData");
 

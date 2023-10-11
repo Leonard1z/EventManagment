@@ -7,6 +7,7 @@ using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Distributed;
+using Services.Notification;
 using Services.SendEmail;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,16 @@ namespace Services.Reservation
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IEmailService _emailService;
         private readonly IEventRepository _eventRepository;
+        private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IDistributedCache _cache;
 
-        public ReservationService(IReservationRepository reservationRepository,ITicketTypeRepository ticketTypesRepository,
+        public ReservationService(IReservationRepository reservationRepository, ITicketTypeRepository ticketTypesRepository,
             IUserAccountRepository userAccountRepository,
             IEmailService emailService,
             IEventRepository eventRepository,
+            INotificationService notificationService,
             IMapper mapper,
             IWebHostEnvironment webHostEnvironment,
             IDistributedCache cache
@@ -43,6 +46,7 @@ namespace Services.Reservation
             _userAccountRepository = userAccountRepository;
             _emailService = emailService;
             _eventRepository = eventRepository;
+            _notificationService = notificationService;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _cache = cache;
@@ -70,10 +74,20 @@ namespace Services.Reservation
             await _ticketTypesRepository.UpdateAsync(ticket);
 
             var paymentToken = GeneratePaymentToken(reservation.Id);
-
             await StoreToken(paymentToken, DateTime.UtcNow.AddMinutes(10));
 
-            await SendPaymentReminderEmail(userId, ticket, reservation,ticketTotalPrice, paymentToken);
+            await SendPaymentReminderEmail(userId, ticket, reservation, ticketTotalPrice, paymentToken);
+
+            var message = $"Please review and complete payment within the next 10 minutes to secure your tickets. Otherwise your reservation will expire";
+            await _notificationService.Create(new Domain.Entities.Notification
+            {
+                UserId = userId,
+                Message = message,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false,
+                PaymentLink = $"https://localhost:44331/Payment?token={paymentToken}",
+            });
+
 
             return reservation;
         }
@@ -85,7 +99,7 @@ namespace Services.Reservation
             return _mapper.Map<List<ReservationDto>>(expiredReservations);
         }
 
-        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice,string paymentToken)
+        public async Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice, string paymentToken)
         {
             var user = await _userAccountRepository.GetById(userId);
             var eventName = await _eventRepository.GetById(ticket.EventId);
@@ -105,13 +119,14 @@ namespace Services.Reservation
                 body = streamReader.ReadToEnd();
             }
 
-            string messageBody = string.Format(body,tittle,user.FirstName,eventName.Name,ticket.Name,reservation.Quantity,reservation.ReservationTime,reservation.ExpirationTime,message,ticketTotalPrice.ToString("c"),paymentLink);
-           
+            string messageBody = string.Format(body, tittle, user.FirstName, eventName.Name, ticket.Name, reservation.Quantity, reservation.ReservationTime, reservation.ExpirationTime, message, ticketTotalPrice.ToString("c"), paymentLink);
+
             try
             {
-                await _emailService.SendEmailAsync(user.Email,subject,messageBody);
+                await _emailService.SendEmailAsync(user.Email, subject, messageBody);
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }

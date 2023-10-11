@@ -83,9 +83,13 @@ function openNotificationDetailsModal(notification) {
     const modal = new bootstrap.Modal(document.getElementById('notificationDetailsModal'));
     const modalBody = document.getElementById('notificationDetailsBody');
     modalBody.innerHTML = `
-        <p>${notification.message}</p>
-        <p>Created at: ${notification.createdAt}</p>
-        <!-- Add other details as needed -->
+        <div class="alert alert-info" role="alert">
+            <strong>Message:</strong> ${notification.message}
+        </div>
+        <p><strong>Created at:</strong> ${notification.createdAt}</p>
+        <div style="text-align:center;">
+            <a href="${notification.paymentLink}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px;">Complete Payment</a>
+        </div>
     `;
     modal.show();
 }
