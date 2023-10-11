@@ -73,8 +73,8 @@ namespace Services.Reservation
 
             await _ticketTypesRepository.UpdateAsync(ticket);
 
-            var paymentToken = GeneratePaymentToken(reservation.Id);
-            await StoreToken(reservation.Id, DateTime.UtcNow.AddMinutes(10));
+            var paymentToken = GeneratePaymentToken();
+            await StoreToken(paymentToken,reservation.Id, DateTime.UtcNow.AddMinutes(10));
 
             await SendPaymentReminderEmail(userId, ticket, reservation, ticketTotalPrice, paymentToken);
 
@@ -140,11 +140,11 @@ namespace Services.Reservation
             return _mapper.Map<ReservationDto>(result);
         }
 
-        private string GeneratePaymentToken(int reservationId)
+        private string GeneratePaymentToken()
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                string combinedInput = $"{reservationId}-The1Best2Strong*Easiest%Secret9Key/In|The[World]";
+                string combinedInput = $"The1Best2Strong*Easiest%Secret9Key/In|The[World]?YES:NO";
 
                 byte[] hashBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(combinedInput));
 
@@ -158,14 +158,13 @@ namespace Services.Reservation
             }
         }
 
-        private async Task StoreToken(int reservationId, DateTime expirationTime)
+        private async Task StoreToken(string token, int reservationId, DateTime expirationTime)
         {
             var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = expirationTime
             };
 
-            var token = GeneratePaymentToken(reservationId);
             var serializedToken = JsonSerializer.Serialize(new { Token = token, ReservationId = reservationId });
             await _cache.SetStringAsync(token, serializedToken, options);
 
