@@ -74,7 +74,7 @@ namespace Services.Reservation
             await _ticketTypesRepository.UpdateAsync(ticket);
 
             var paymentToken = GeneratePaymentToken(reservation.Id);
-            await StoreToken(paymentToken, DateTime.UtcNow.AddMinutes(10));
+            await StoreToken(reservation.Id, DateTime.UtcNow.AddMinutes(10));
 
             await SendPaymentReminderEmail(userId, ticket, reservation, ticketTotalPrice, paymentToken);
 
@@ -86,6 +86,7 @@ namespace Services.Reservation
                 CreatedAt = DateTime.UtcNow,
                 IsRead = false,
                 PaymentLink = $"https://localhost:44331/Payment?token={paymentToken}",
+                ReservationId = reservation.Id,
             });
 
 
@@ -157,15 +158,19 @@ namespace Services.Reservation
             }
         }
 
-        private async Task StoreToken(string token, DateTime expirationTime)
+        private async Task StoreToken(int reservationId, DateTime expirationTime)
         {
             var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = expirationTime
             };
 
-            var serializedToken = JsonSerializer.Serialize(token);
+            var token = GeneratePaymentToken(reservationId);
+            var serializedToken = JsonSerializer.Serialize(new { Token = token, ReservationId = reservationId });
             await _cache.SetStringAsync(token, serializedToken, options);
+
         }
+
+
     }
 }

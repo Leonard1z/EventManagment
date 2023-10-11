@@ -17,13 +17,21 @@ namespace Infrastructure.Repositories.Notifications
 
         public async Task<IList<Notification>> GetNotificationDataByUserId(int userId)
         {
-            return await DbSet.Where(n => n.UserId == userId).Select(n=> new Notification
-            {
+            return await DbSet.Where(n => n.UserId == userId)
+                .Include(n=>n.Reservation)
+                .Select(n=> new Notification
+                {
                 Id = n.Id,
                 Message = n.Message,
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead,
                 PaymentLink = n.PaymentLink,
+                Reservation = new Reservation
+                {
+                    ExpirationTime = n.Reservation.ExpirationTime,
+                    Quantity = n.Reservation.Quantity,
+                    TicketTotalPrice = n.Reservation.TicketTotalPrice,
+                }
             }).ToListAsync();
         }
 

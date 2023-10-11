@@ -82,11 +82,17 @@ function updateNotificationCountAndData(notificationData) {
 function openNotificationDetailsModal(notification) {
     const modal = new bootstrap.Modal(document.getElementById('notificationDetailsModal'));
     const modalBody = document.getElementById('notificationDetailsBody');
+    const expirationDate = moment(notification.reservation.expirationTime);
+    const formattedDate = expirationDate.format('YYYY, MMMM DD HH:mm:ss');
     modalBody.innerHTML = `
         <div class="alert alert-info" role="alert">
             <strong>Message:</strong> ${notification.message}
         </div>
-        <p><strong>Created at:</strong> ${notification.createdAt}</p>
+        <div>
+            <p><strong>Expiration Date:</strong> ${formattedDate}</p>
+            <p><strong>Quantity:</strong> ${notification.reservation.quantity}</p>
+            <p><strong>Total Price:</strong> ${notification.reservation.ticketTotalPrice}</p>
+        </div>
         <div style="text-align:center;">
             <a href="${notification.paymentLink}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px;">Complete Payment</a>
         </div>

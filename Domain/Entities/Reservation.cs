@@ -12,5 +12,6 @@
         public TicketType TicketTypes { get; set; }
         public int UserAccountId { get; set; }
         public UserAccount UserAccount { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
     }
 }

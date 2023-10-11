@@ -19,6 +19,11 @@ namespace Infrastructure.EntityFramework.Configurations
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(n=>n.Reservation)
+                .WithMany(r=>r.Notifications)
+                .HasForeignKey(n=>n.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
