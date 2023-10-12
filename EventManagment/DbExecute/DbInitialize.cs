@@ -140,7 +140,12 @@ namespace Infrastructure.DbExecute
                     reservation.Status = ReservationStatus.Expired;
                     await _reservationService.UpdateAsync(reservation);
 
-                    var message = $"Your reservation with number: {reservation.ReservationNumber} has expired.";
+                    var ticket = await _ticketTypeRepository.GetTicketByIdAsync(reservation.TicketTypeId);
+                    ticket.Quantity += reservation.Quantity;
+
+                    await _ticketTypeRepository.UpdateAsync(ticket);
+
+                    var message = $"Your reservation with number: {reservation.ReservationNumber} has expired. The reserved tickets have been released for sale.";
                     await _notificationService.Create(new Domain.Entities.Notification
                     {
                         UserId = reservation.UserAccountId,
