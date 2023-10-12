@@ -16,6 +16,11 @@ namespace Infrastructure.Repositories.Reservations
 
         }
 
+        public async Task<bool> ExistsByReservationNumber(int reservationNumber)
+        {
+            return await DbSet.AnyAsync(r => r.ReservationNumber == reservationNumber);
+        }
+
         public async Task<IList<Reservation>> GetExpiredReservationsAsync(DateTime currentDate)
         {
             return await DbSet.Where(r => r.ExpirationTime <= currentDate && !r.IsExpired)

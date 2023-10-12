@@ -124,7 +124,11 @@ namespace Infrastructure.DbExecute
 
                 foreach (var reservation in expiredReservations)
                 {
-                    reservation.IsExpired = true;
+                    if (reservation.Status == ReservationStatus.Paid || reservation.Status == ReservationStatus.PaymentInProgress)
+                    {
+                        continue;
+                    }
+                    reservation.Status = ReservationStatus.Expired;
                     await _reservationService.UpdateAsync(reservation);
                 }
             }

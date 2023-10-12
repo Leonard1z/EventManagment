@@ -55,10 +55,12 @@ namespace Services.Reservation
         public async Task<Domain.Entities.Reservation> Create(int ticketId, int userId, int quantity, double ticketTotalPrice)
         {
             var ticket = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
+            int reservationNumber = await GenerateUniqueReservationNumber();
 
             var reservation = new Domain.Entities.Reservation
             {
                 Quantity = quantity,
+                ReservationNumber = reservationNumber,
                 ReservationTime = DateTime.Now,
                 ExpirationTime = DateTime.Now.AddMinutes(10),
                 IsExpired = false,
@@ -170,6 +172,38 @@ namespace Services.Reservation
 
         }
 
+        private async Task<int> GenerateUniqueReservationNumber()
+        {
+            int maxAttempts = 10;
+
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                int candidateNumber = await GenerateCandidateReservationNumber();
+
+                bool isUnique = await IsReservationNumberUnique(candidateNumber);
+
+                if (isUnique)
+                {
+                    return candidateNumber;
+                }
+            }
+
+            throw new InvalidOperationException("Unable to generate a unique reservation number.");
+        }
+
+        private async Task<int> GenerateCandidateReservationNumber()
+        {
+
+            Random rand = new Random();
+            return rand.Next(11, 99999);
+        }
+
+        private async Task<bool> IsReservationNumberUnique(int candidateNumber)
+        {
+            var exist = await _reservationRepository.ExistsByReservationNumber(candidateNumber);
+
+            return !exist;
+        }
 
     }
 }

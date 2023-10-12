@@ -10,5 +10,6 @@ namespace Infrastructure.Repositories.Reservations
     public interface IReservationRepository:IGenericRepository<Reservation>
     {
         Task<IList<Reservation>> GetExpiredReservationsAsync(DateTime currentDate);
+        Task<bool> ExistsByReservationNumber(int reservationNumber);
     }
 }

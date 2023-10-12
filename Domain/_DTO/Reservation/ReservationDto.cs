@@ -1,5 +1,6 @@
 ﻿using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
+using Domain.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain._DTO.Reservation
@@ -14,9 +15,11 @@ namespace Domain._DTO.Reservation
         [NotMapped]
         public string TicketTypesEncryptedId { get; set; }
         public int Quantity { get; set; }
+        public int ReservationNumber { get; set; }
         public DateTime ReservationTime { get; set; }
         public DateTime ExpirationTime { get; set; }
         public bool IsExpired { get; set; }
+        public ReservationStatus Status { get; set; }
         public double TicketTotalPrice { get; set; }
         public int TicketTypeId { get; set; }
         public TicketTypeDto TicketTypes { get; set; }
