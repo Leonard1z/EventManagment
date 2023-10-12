@@ -13,6 +13,12 @@
 
 
 <div class="container-fluid mt-5">
+    <div id="overlay">
+        <div class="overlay-content">
+            <div class="spinner"></div>
+            <p class="proccessing">Processing...</p>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <h1 class="text-center mb-5">@Model.Event.Name</h1>
@@ -48,44 +54,50 @@
                                     <h5 class="card-title">@ticket.Name</h5>
                                     <p class="card-text">@ticket.Description</p>
                                     <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
-                                    <p class="card-text" id="quantity-@ticket.Id">@Localizer["Available"]: @ticket.Quantity</p>
-                                    <p class="card-text" id="available-@ticket.Id"></p>
-                                    <div class="quantity-container">
-                                        <button class="btn btn-sm btn-secondary minus-button" data-ticket-id="@ticket.Id">-</button>
-                                        <input type="number" class="quantity-input" value="0" min="0" max="@ticket.Quantity" data-ticket-id="@ticket.Id" readonly/>
-                                        <button class="btn btn-sm btn-secondary plus-button" data-ticket-id="@ticket.Id">+</button>
-                                    </div>
-                                    <div data-ticket-id="@ticket.Id" class="quantityErrorMessage text-danger"></div>
-                                    <p class="card-text">
-                                        <strong>@Localizer["Total Price"]: <span class="total-price" data-ticket-id="@ticket.Id">$0.00</span></strong>
-                                    </p>
-                                    @if(ticket.IsAvailable)
-                                    {
-                                        <div id="countdown-@ticket.Id" class="countdown-container">
-                                            <div class="countdown-unit">
-                                                <span class="countdown-number" id="days-@ticket.Id"></span>
-                                                <span class="countdown-label">Days</span>
-                                            </div>
-                                            <div class="countdown-unit">
-                                                <span class="countdown-number" id="hours-@ticket.Id"></span>
-                                                <span class="countdown-label">Hours</span>
-                                            </div>
-                                            <div class="countdown-unit">
-                                                <span class="countdown-number" id="minutes-@ticket.Id"></span>
-                                                <span class="countdown-label">Minutes</span>
-                                            </div>
-                                            <div class="countdown-unit">
-                                                <span class="countdown-number" id="seconds-@ticket.Id"></span>
-                                                <span class="countdown-label">Seconds</span>
-                                            </div>
+                                    @if(ticket.Quantity > 0){
+                                        <p class="card-text" id="quantity-@ticket.Id">@Localizer["Available"]: @ticket.Quantity</p>
+                                        <p class="card-text" id="available-@ticket.Id"></p>
+                                        <div class="quantity-container">
+                                            <button class="btn btn-sm btn-secondary minus-button" data-ticket-id="@ticket.Id">-</button>
+                                            <input type="number" class="quantity-input" value="0" min="0" max="7" data-ticket-id="@ticket.Id" readonly/>
+                                            <button class="btn btn-sm btn-secondary plus-button" data-ticket-id="@ticket.Id">+</button>
                                         </div>
-                                        <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" 
-                                        data-quantity="0">@Localizer["Buy Now"]</button>
+                                        <div data-ticket-id="@ticket.Id" class="quantityErrorMessage text-danger"></div>
+                                        <p class="card-text">
+                                            <strong>@Localizer["Total Price"]: <span class="total-price" data-ticket-id="@ticket.Id">$0.00</span></strong>
+                                        </p>
+                                        @if(ticket.IsAvailable)
+                                        {
+                                            <div id="countdown-@ticket.Id" class="countdown-container">
+                                                <div class="countdown-unit">
+                                                    <span class="countdown-number" id="days-@ticket.Id"></span>
+                                                    <span class="countdown-label">Days</span>
+                                                </div>
+                                                <div class="countdown-unit">
+                                                    <span class="countdown-number" id="hours-@ticket.Id"></span>
+                                                    <span class="countdown-label">Hours</span>
+                                                </div>
+                                                <div class="countdown-unit">
+                                                    <span class="countdown-number" id="minutes-@ticket.Id"></span>
+                                                    <span class="countdown-label">Minutes</span>
+                                                </div>
+                                                <div class="countdown-unit">
+                                                    <span class="countdown-number" id="seconds-@ticket.Id"></span>
+                                                    <span class="countdown-label">Seconds</span>
+                                                </div>
+                                            </div>
+                                            <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" 
+                                            data-quantity="0">@Localizer["Buy Now"]</button>
+                                        }else{
+                                            <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
+                                            <p>@Localizer["There can be a minute delay"]</p>
+                                        }
+                                        <hr />
                                     }else{
-                                        <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
-                                        <p>@Localizer["There can be a minute delay"]</p>
+                                        <div class="text-center">
+                                            <p style="color: red; font-weight: bold; font-size:22px; font-family:sans-serif;">@Localizer["Tickets are sold out."]</p>
+                                        </div>
                                     }
-                                    <hr />
                                 </div>
                             </div>
                         }

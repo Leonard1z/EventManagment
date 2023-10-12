@@ -57,6 +57,12 @@ namespace EventManagment.Controllers
                     return BadRequest(new { Message = "Quantity must be greater than 0." });
                 }
 
+                var maxAllowedQuantity = 7;
+                if (request.Quantity > maxAllowedQuantity)
+                {
+                    return Json(new { success = false, message = $"You cannot exceed the limit of {maxAllowedQuantity} tickets." });
+                }
+
                 var ticket = await _ticketTypeService.GetTicketByIdAsync(request.TicketId);
 
                 if(ticket == null)
@@ -84,7 +90,4 @@ namespace EventManagment.Controllers
             }
         }
     }
-
-
-
 }

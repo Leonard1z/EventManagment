@@ -11,6 +11,8 @@
             var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
             var currentQuantity = parseInt(quantityInput.value);
             var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
+            var overlay = document.getElementById('overlay');
+            overlay.style.display = 'flex';
 
             if (currentQuantity > 0) {
                 quantityErrorMessage.textContent = '';
@@ -21,6 +23,7 @@
                 sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice);
             } else {
                 quantityErrorMessage.textContent = 'Quantity cannot be 0. Please select a valid value.';
+                overlay.style.display = 'none';
             }
 
         });
@@ -67,8 +70,10 @@
                         quantityElement.textContent = 'Available: ' + newQuantity;
 
                         var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
-                        if (quantityInput) {
+                        var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
+                        if (quantityInput && totalPrice) {
                             quantityInput.value = 0;
+                            totalPrice.value = 0;
                         }
                     } else {
                         console.error('Error fetching available quantity:', data.message);
@@ -76,7 +81,10 @@
                 })
                 .catch(error => {
                     console.error('Error fetching available quantity:', error);
-                });
+                })
+                .finally(() => {
+                    overlay.style.display = 'none';
+                })
         }
     }
 
@@ -94,6 +102,10 @@
                 updateQuantityDisplay(ticketId, currentQuantity);
                 //console.log('ticketId  ' + ticketId + ' quantityInput  ' + quantityInput + '  current Quantity  ' + currentQuantity + '  maxQuantity ' +
                 //    maxQuantity);
+            } else {
+
+                var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
+                quantityErrorMessage.textContent = 'You cannot exceed the limit of ' + maxQuantity + ' tickets.';
             }
         });
     });
