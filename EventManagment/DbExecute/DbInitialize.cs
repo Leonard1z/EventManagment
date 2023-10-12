@@ -1,13 +1,16 @@
 ﻿using Domain._DTO.UserAccount;
 using Domain.Entities;
+using EventManagment.Hubs;
 using Hangfire;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services.Events;
+using Services.Notification;
 using Services.Registration;
 using Services.Reservation;
 using Services.Role;
@@ -30,13 +33,17 @@ namespace Infrastructure.DbExecute
         public readonly IEventService _eventService;
         private readonly ITicketTypeRepository _ticketTypeRepository;
         private readonly IReservationService _reservationService;
+        private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
             IUserAccountService userAccountService,
             IEventService eventService,
             ITicketTypeRepository ticketTypeRepository,
-            IReservationService reservationService
+            IReservationService reservationService,
+            INotificationService notificationService,
+            IHubContext<NotificationHub> hubContext
         )
         {
             _serviceProvider = serviceProvider;
@@ -45,6 +52,8 @@ namespace Infrastructure.DbExecute
             _eventService = eventService;
             _ticketTypeRepository = ticketTypeRepository;
             _reservationService = reservationService;
+            _notificationService = notificationService;
+            _hubContext = hubContext;
         }
         public void DbExecute()
         {
@@ -130,6 +139,20 @@ namespace Infrastructure.DbExecute
                     }
                     reservation.Status = ReservationStatus.Expired;
                     await _reservationService.UpdateAsync(reservation);
+
+                    var message = $"Your reservation with number: {reservation.ReservationNumber} has expired.";
+                    await _notificationService.Create(new Domain.Entities.Notification
+                    {
+                        UserId = reservation.UserAccountId,
+                        Message = message,
+                        CreatedAt = DateTime.UtcNow,
+                        IsRead = false,
+                        ReservationId = reservation.Id,
+                        PaymentLink = String.Empty,
+                        Type = "ExpiredReservation",
+                    });
+
+                    await _hubContext.Clients.User(reservation.UserAccountId.ToString()).SendAsync("UpdateNotificationCountAndData");
                 }
             }
             catch (Exception ex)

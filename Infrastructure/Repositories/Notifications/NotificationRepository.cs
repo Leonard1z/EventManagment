@@ -26,11 +26,13 @@ namespace Infrastructure.Repositories.Notifications
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead,
                 PaymentLink = n.PaymentLink,
+                Type = n.Type,
                 Reservation = new Reservation
                 {
                     ExpirationTime = n.Reservation.ExpirationTime,
                     Quantity = n.Reservation.Quantity,
                     TicketTotalPrice = n.Reservation.TicketTotalPrice,
+                    ReservationNumber = n.Reservation.ReservationNumber,                  
                 }
             }).ToListAsync();
         }

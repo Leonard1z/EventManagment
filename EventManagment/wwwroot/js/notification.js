@@ -84,11 +84,13 @@ function openNotificationDetailsModal(notification) {
     const modalBody = document.getElementById('notificationDetailsBody');
     const expirationDate = moment(notification.reservation.expirationTime);
     const formattedDate = expirationDate.format('YYYY, MMMM DD HH:mm:ss');
-    modalBody.innerHTML = `
+    if (notification.type === 'Reservation') {
+        modalBody.innerHTML = `
         <div class="alert alert-info" role="alert">
             <strong>Message:</strong> ${notification.message}
         </div>
         <div>
+            <p><strong>Reservation Number:</strong> ${notification.reservation.reservationNumber}</p>
             <p><strong>Expiration Date:</strong> ${formattedDate}</p>
             <p><strong>Quantity:</strong> ${notification.reservation.quantity}</p>
             <p><strong>Total Price:</strong> ${notification.reservation.ticketTotalPrice}</p>
@@ -96,8 +98,21 @@ function openNotificationDetailsModal(notification) {
         <div style="text-align:center;">
             <a href="${notification.paymentLink}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px;">Complete Payment</a>
         </div>
-    `;
-    modal.show();
+        `;
+        modal.show();
+    } else if (notification.type === 'ExpiredReservation') {
+        modalBody.innerHTML = `
+        <div class="alert alert-info" role="alert">
+            <strong>Message:</strong> ${notification.message}
+        </div>
+        <div>
+            <p><strong>Reservation Number:</strong> ${notification.reservation.reservationNumber}</p>
+            <p><strong>Expiration Date:</strong> ${formattedDate}</p>
+
+        </div>
+        `;
+        modal.show();
+    }
 }
 
 function markNotificationAsRead(notification) {

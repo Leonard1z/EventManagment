@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories.Reservations
 
         public async Task<IList<Reservation>> GetExpiredReservationsAsync(DateTime currentDate)
         {
-            return await DbSet.Where(r => r.ExpirationTime <= currentDate && !r.IsExpired)
+            return await DbSet.Where(r => r.ExpirationTime <= currentDate && r.Status != ReservationStatus.Expired)
                               .AsNoTracking()
                               .ToListAsync();
         }

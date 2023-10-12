@@ -7,7 +7,6 @@
         public int Quantity { get; set; }
         public DateTime ReservationTime { get; set; }
         public DateTime ExpirationTime { get; set; }
-        public bool IsExpired { get; set; }
         public ReservationStatus Status { get; set; }
         public double TicketTotalPrice { get; set; }
         public int TicketTypeId { get; set; }

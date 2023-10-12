@@ -63,7 +63,6 @@ namespace Services.Reservation
                 ReservationNumber = reservationNumber,
                 ReservationTime = DateTime.Now,
                 ExpirationTime = DateTime.Now.AddMinutes(10),
-                IsExpired = false,
                 TicketTypeId = ticketId,
                 UserAccountId = userId,
                 TicketTotalPrice = ticketTotalPrice,
@@ -89,6 +88,7 @@ namespace Services.Reservation
                 IsRead = false,
                 PaymentLink = $"https://localhost:44331/Payment?token={paymentToken}",
                 ReservationId = reservation.Id,
+                Type = "Reservation",
             });
 
 
@@ -115,6 +115,7 @@ namespace Services.Reservation
             string tittle = "Confirm Payment";
             string message = "To ensure you don't miss out, click the button below and complete your payment before your reservation expires: ";
             string paymentLink = $"https://localhost:44331/Payment?token={paymentToken}";
+            string reservationNumber =$"Your reservation number is: {reservation.ReservationNumber}";
             string body = "";
 
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
@@ -122,7 +123,7 @@ namespace Services.Reservation
                 body = streamReader.ReadToEnd();
             }
 
-            string messageBody = string.Format(body, tittle, user.FirstName, eventName.Name, ticket.Name, reservation.Quantity, reservation.ReservationTime, reservation.ExpirationTime, message, ticketTotalPrice.ToString("c"), paymentLink);
+            string messageBody = string.Format(body, tittle, user.FirstName, eventName.Name, ticket.Name, reservation.Quantity, reservation.ReservationTime, reservation.ExpirationTime, message, ticketTotalPrice.ToString("c"), paymentLink,reservationNumber);
 
             try
             {
