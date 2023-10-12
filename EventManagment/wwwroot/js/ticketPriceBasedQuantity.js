@@ -10,38 +10,74 @@
             var ticketId = this.getAttribute('data-ticket-id');
             var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
             var currentQuantity = parseInt(quantityInput.value);
-            var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
-            var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
+            var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
 
-            //console.log(currentTotalPrice);
+            if (currentQuantity > 0) {
+                quantityErrorMessage.textContent = '';
+                var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
+                var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
 
-            sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice);
+                //console.log(currentTotalPrice);
+                sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice);
+            } else {
+                quantityErrorMessage.textContent = 'Quantity cannot be 0. Please select a valid value.';
+            }
 
         });
     });
 
 
-    function sendReservationRequest(ticketId, quantity, ticketTotalPrice) {
-        fetch('/Reservation/Reserve', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ticketId, quantity, ticketTotalPrice }),
-            
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
+    async function sendReservationRequest(ticketId, quantity, ticketTotalPrice) {
+        try {
+            const response = await fetch('/Reservation/Reserve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticketId, quantity, ticketTotalPrice }),
 
-                if (data && data.success) {
-                } else {
-                    console.error('Reservation failed:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
             });
+            if (!response.ok) {
+                throw new Error('Reservation failed: ' + response.statusText);
+            }
+            const data = await response.json()
+            //console.log('After fetch', data);
+
+            if (data && data.success) {
+                updateDOMAfterReservation(ticketId);
+            } else {
+                console.error('Reservation failed:', data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function updateDOMAfterReservation(ticketId) {
+        var quantityElement = document.getElementById('quantity-' + ticketId);
+        var availableElement = document.getElementById('available-' + ticketId);
+
+        if (quantityElement && availableElement) {
+            fetch('/Home/GetAvailableQuantity/?ticketId=' + ticketId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        //console.log(data.availableQuantity)
+                        var newQuantity = data.availableQuantity;
+                        quantityElement.textContent = 'Available: ' + newQuantity;
+
+                        var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
+                        if (quantityInput) {
+                            quantityInput.value = 0;
+                        }
+                    } else {
+                        console.error('Error fetching available quantity:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching available quantity:', error);
+                });
+        }
     }
 
     plusButtons.forEach(function (plusButton) {
@@ -97,18 +133,21 @@
 
     function updateQuantityDisplay(ticketId, quantity) {
 
-        var quantityParagraph = document.getElementById('quantity-' + ticketId).textContent;
+        var quantityParagraph = document.getElementById('quantity-' + ticketId);
         var available = document.getElementById('available-' + ticketId);
 
         //console.log(quantityParagraph);
 
-        var quantityValue = parseInt(quantityParagraph.match(/\d+/)[0], 10);
-
+        var quantityValue = parseInt((quantityParagraph.textContent || '').match(/\d+/)[0], 10);
         var newQuantity = quantityValue - quantity;
 
         //console.log('new quantity ' + newQuantity + ' quanityValue ' + quantityValue);
-
         available.textContent = 'Available: ' + newQuantity;
+        if (quantity >= 0) {
+            quantityParagraph.style.display = 'none';
+        } else {
+            quantityParagraph.style.display = 'block';
+        }
     }
 
 });

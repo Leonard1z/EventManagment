@@ -23,5 +23,15 @@ namespace Infrastructure.Repositories.Tickets
         {
             return await DbSet.Where(x => x.EventId == eventId).ToListAsync();
         }
+        public async Task<int> GetAvailableQuantity(int ticketId)
+        {
+            var ticket = await DbSet.FindAsync(ticketId);
+            if (ticket != null)
+            {
+                return ticket.Quantity;
+            }
+            return 0;
+        }
+
     }
 }

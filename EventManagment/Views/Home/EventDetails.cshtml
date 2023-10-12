@@ -52,9 +52,10 @@
                                     <p class="card-text" id="available-@ticket.Id"></p>
                                     <div class="quantity-container">
                                         <button class="btn btn-sm btn-secondary minus-button" data-ticket-id="@ticket.Id">-</button>
-                                        <input type="number" class="quantity-input" value="0" min="0" max="@ticket.Quantity" data-ticket-id="@ticket.Id" />
+                                        <input type="number" class="quantity-input" value="0" min="0" max="@ticket.Quantity" data-ticket-id="@ticket.Id" readonly/>
                                         <button class="btn btn-sm btn-secondary plus-button" data-ticket-id="@ticket.Id">+</button>
                                     </div>
+                                    <div data-ticket-id="@ticket.Id" class="quantityErrorMessage text-danger"></div>
                                     <p class="card-text">
                                         <strong>@Localizer["Total Price"]: <span class="total-price" data-ticket-id="@ticket.Id">$0.00</span></strong>
                                     </p>
@@ -82,6 +83,7 @@
                                         data-quantity="0">@Localizer["Buy Now"]</button>
                                     }else{
                                         <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
+                                        <p>@Localizer["There can be a minute delay"]</p>
                                     }
                                     <hr />
                                 </div>

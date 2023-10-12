@@ -2,6 +2,7 @@
 using Domain._DTO.Ticket;
 using Domain.Entities;
 using Infrastructure.Repositories.Tickets;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,10 @@ namespace Services.Tickets
             var result = await _ticketTypesRepository.GetTicketsByEventId(eventId);
 
             return _mapper.Map<List<TicketTypeDto>>(result);
+        }
+        public async Task<int> GetAvailableQuantity(int ticketId)
+        {
+            return await _ticketTypesRepository.GetAvailableQuantity(ticketId);
         }
     }
 }

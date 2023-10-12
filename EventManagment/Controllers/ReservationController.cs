@@ -52,6 +52,11 @@ namespace EventManagment.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var userId = int.Parse(claim);
 
+                if(request.Quantity <= 0)
+                {
+                    return BadRequest(new { Message = "Quantity must be greater than 0." });
+                }
+
                 var ticket = await _ticketTypeService.GetTicketByIdAsync(request.TicketId);
 
                 if(ticket == null)

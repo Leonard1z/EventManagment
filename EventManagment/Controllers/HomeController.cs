@@ -93,6 +93,21 @@ namespace EventManagment.Controllers
             }
         }
 
+        [Route("/Home/GetAvailableQuantity/")]
+        public async Task<JsonResult> GetAvailableQuantity(int ticketId)
+        {
+            try
+            {
+                var availableQuantity = await _ticketTypeService.GetAvailableQuantity(ticketId);
+                return Json(new { success = true, availableQuantity });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Json(new { success = false, message = "Error fetching available quantity" });
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
