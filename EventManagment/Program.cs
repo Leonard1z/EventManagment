@@ -30,7 +30,7 @@ builder.Services.AddHangfire(configuration => configuration
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
-builder.Services.AddTransient<IEmailService, SmtpEmailService>();
+builder.Services.AddSingleton<IEmailService, SmtpEmailService>();
 builder.Services.AddSignalR(o =>
 {
     o.EnableDetailedErrors = true;
