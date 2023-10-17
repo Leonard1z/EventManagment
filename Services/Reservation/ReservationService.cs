@@ -6,6 +6,7 @@ using Infrastructure.Repositories.Reservations;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Services.Notification;
 using Services.SendEmail;
@@ -206,5 +207,12 @@ namespace Services.Reservation
             return !exist;
         }
 
+        public async Task<ReservationDto> GetByIdWithTicket(int id)
+        {
+            var reservation = await _reservationRepository
+            .GetByIdWithTicket(id, include => include.Include(r => r.TicketTypes));
+
+            return _mapper.Map<ReservationDto>(reservation);
+        }
     }
 }

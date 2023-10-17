@@ -15,5 +15,6 @@ namespace Services.Reservation
         Task SendPaymentReminderEmail(int userId, TicketType ticket, Domain.Entities.Reservation reservation, double ticketTotalPrice,string paymentToken);
         Task<IList<ReservationDto>> GetExpiredReservationsAsync(DateTime currentDate);
         Task<ReservationDto> UpdateAsync(ReservationDto reservationDto);
+        Task<ReservationDto> GetByIdWithTicket(int id);
     }
 }
