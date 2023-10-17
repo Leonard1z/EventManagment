@@ -13,6 +13,7 @@ using EventManagment.Hubs;
 using Services.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNet.SignalR.Hosting;
+using Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ builder.Services.AddHangfire(configuration => configuration
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(builder.Configuration.GetConnectionString("EventManagment")));
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
