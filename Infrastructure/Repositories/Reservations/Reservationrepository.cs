@@ -27,5 +27,16 @@ namespace Infrastructure.Repositories.Reservations
                               .AsNoTracking()
                               .ToListAsync();
         }
+        public async Task<Reservation> GetByIdWithTicket(int id, Func<IQueryable<Reservation>, IQueryable<Reservation>> include = null)
+        {
+            var query = DbSet.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query.FirstOrDefaultAsync(r => r.Id == id);
+        }
     }
 }

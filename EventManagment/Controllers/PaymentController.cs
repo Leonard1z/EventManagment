@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Services.Reservation;
+using Stripe;
+using Stripe.Checkout;
 using System.Text;
 using System.Text.Json;
 
@@ -11,11 +15,19 @@ namespace EventManagment.Controllers
 
         private readonly IDistributedCache _cache;
         private readonly IReservationService _reservationService;
+        private readonly StripeSettings _stripeSettings;
+        private readonly ILogger<PaymentController> _logger;
 
-        public PaymentController(IDistributedCache cache,IReservationService reservationService)
+        public PaymentController(IDistributedCache cache, IReservationService reservationService, IOptions<StripeSettings> stripeSettings,
+            ILogger<PaymentController> logger
+            )
         {
             _cache = cache;
             _reservationService = reservationService;
+            _stripeSettings = stripeSettings.Value;
+            _logger = logger;
+
+            StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
         }
 
         [HttpGet]
@@ -28,12 +40,51 @@ namespace EventManagment.Controllers
             }
 
             var reservationID = await GetReservationIdFromToken(token);
+            var reservation = await _reservationService.GetByIdWithTicket(reservationID);
 
-            RemoveToken(token);
+            var domain = "https://localhost:44331/";
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                {
+                    "card",
+                },
+                LineItems = new List<SessionLineItemOptions>(),
 
-            return View("PaymentSuccess");
+                Mode = "payment",
+                SuccessUrl = domain + $"success",
+                CancelUrl = domain + $"index",
+            };
+
+            var sessionLineItem = new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = (long)(reservation.TicketTypes.Price * 100),
+                    Currency = "usd",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = reservation.TicketTypes.Name,
+                    },
+                },
+                Quantity = reservation.Quantity,
+            };
+            options.LineItems.Add(sessionLineItem);
+            try
+            {
+                var service = new SessionService();
+                Session session = service.Create(options);
+                Response.Headers.Add("Location", session.Url);
+                RemoveToken(token);
+
+                return new StatusCodeResult(303);
+            }
+            catch (StripeException ex)
+            {
+                _logger.LogError(ex.Message);
+                return RedirectToAction("PaymentError");
+            }
         }
-
         public IActionResult TokenInvalid()
         {
             return View();
