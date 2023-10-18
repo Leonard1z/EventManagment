@@ -16,5 +16,6 @@ namespace Services.Reservation
         Task<IList<ReservationDto>> GetExpiredReservationsAsync(DateTime currentDate);
         Task<ReservationDto> UpdateAsync(ReservationDto reservationDto);
         Task<ReservationDto> GetByIdWithTicket(int id);
+        Task UpdateReservationStatus(int reservationId, ReservationStatus newStatus);
     }
 }

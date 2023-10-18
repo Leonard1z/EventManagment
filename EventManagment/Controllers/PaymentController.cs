@@ -41,6 +41,7 @@ namespace EventManagment.Controllers
 
             var reservationID = await GetReservationIdFromToken(token);
             var reservation = await _reservationService.GetByIdWithTicket(reservationID);
+            await _reservationService.UpdateReservationStatus(reservationID, ReservationStatus.PaymentInProgress);
 
             var domain = "https://localhost:44331/";
             var options = new SessionCreateOptions
@@ -52,9 +53,11 @@ namespace EventManagment.Controllers
                 LineItems = new List<SessionLineItemOptions>(),
 
                 Mode = "payment",
-                SuccessUrl = domain + $"success",
+                SuccessUrl = domain + $"success?rt={token}",
                 CancelUrl = domain + $"index",
             };
+
+            TempData["PaymentToken"] = token;
 
             var sessionLineItem = new SessionLineItemOptions
             {
@@ -75,7 +78,6 @@ namespace EventManagment.Controllers
                 var service = new SessionService();
                 Session session = service.Create(options);
                 Response.Headers.Add("Location", session.Url);
-                RemoveToken(token);
 
                 return new StatusCodeResult(303);
             }
@@ -88,6 +90,24 @@ namespace EventManagment.Controllers
         public IActionResult TokenInvalid()
         {
             return View();
+        }
+
+        [HttpGet]
+        [Route("success")]
+        public async Task<IActionResult> Success()
+        {
+            var token = TempData["PaymentToken"] as string;
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                var reservationId = await GetReservationIdFromToken(token);
+                await _reservationService.UpdateReservationStatus(reservationId, ReservationStatus.Paid);
+                RemoveToken(token);
+
+                return View();
+            }
+
+            return RedirectToAction("TokenNotFound");
         }
 
         private bool IsTokenValid(string token)
