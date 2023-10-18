@@ -52,6 +52,7 @@
                             <div class="card mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">@ticket.Name</h5>
+                                    <img src="@ticket.ImagePath" alt="Event Image" width="450" height="350" class="rounded" />
                                     <p class="card-text">@ticket.Description</p>
                                     <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
                                     @if(ticket.Quantity > 0){
@@ -90,7 +91,6 @@
                                             data-quantity="0">@Localizer["Buy Now"]</button>
                                         }else{
                                             <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
-                                            <p>@Localizer["There can be a minute delay"]</p>
                                         }
                                         <hr />
                                     }else{
