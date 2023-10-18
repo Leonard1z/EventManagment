@@ -214,5 +214,15 @@ namespace Services.Reservation
 
             return _mapper.Map<ReservationDto>(reservation);
         }
+
+        public async Task UpdateReservationStatus(int reservationId, ReservationStatus newStatus)
+        {
+            var reservation = await _reservationRepository.GetById(reservationId);
+            if(reservation != null)
+            {
+                reservation.Status = newStatus;
+                await _reservationRepository.UpdateAsync(reservation);
+            }
+        }
     }
 }

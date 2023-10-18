@@ -9,8 +9,8 @@ namespace Domain.Entities
     public enum ReservationStatus
     {
         Active, //0
-        Expired,//1
-        PaymentInProgress,//2
-        Paid,//3
+        PaymentInProgress,//1
+        Paid,//2
+        Expired,//3
     }
 }
