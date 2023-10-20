@@ -53,8 +53,16 @@ namespace EventManagment.Controllers
                 LineItems = new List<SessionLineItemOptions>(),
 
                 Mode = "payment",
-                SuccessUrl = domain + $"success?rt={token}",
+                SuccessUrl = domain + $"success?rt={token}&session_id={{CHECKOUT_SESSION_ID}}",
                 CancelUrl = domain + $"index",
+                ClientReferenceId = reservation.UserAccountId.ToString(),
+                Metadata = new Dictionary<string, string>
+                {
+                    { "ticketId", reservation.TicketTypeId.ToString() },
+                    { "eventId", reservation.TicketTypes.EventId.ToString()},
+                    { "quantity", reservation.Quantity.ToString()},
+                    { "ticketPrice", reservation.TicketTypes.Price.ToString() },
+                },
             };
 
             TempData["PaymentToken"] = token;
@@ -97,11 +105,33 @@ namespace EventManagment.Controllers
         public async Task<IActionResult> Success()
         {
             var token = TempData["PaymentToken"] as string;
+            var sessionID = HttpContext.Request.Query["session_id"].ToString();
 
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(sessionID))
             {
                 var reservationId = await GetReservationIdFromToken(token);
                 await _reservationService.UpdateReservationStatus(reservationId, ReservationStatus.Paid);
+
+                var service = new SessionService();
+                var session = service.Get(sessionID);
+
+                var quantity = Convert.ToInt32(session.Metadata["quantity"]);
+                var ticketPrice = Convert.ToInt32(session.Metadata["ticketPrice"]);
+                var totalPrice = quantity * ticketPrice;
+                var paymentIntentId = session.PaymentIntentId;
+
+                var registration = new Registration
+                {
+                    RegistrationDate = DateTime.Now,
+                    TransactionId = paymentIntentId,
+                    Quantity = quantity,
+                    TicketPrice = ticketPrice,
+                    TotalPrice = totalPrice,
+                    UserAccountId = Convert.ToInt32(session.ClientReferenceId),
+                    EventId = Convert.ToInt32(session.Metadata["eventId"]),
+                    TicketTypeId = Convert.ToInt32(session.Metadata["ticketId"])
+                };
+
                 RemoveToken(token);
 
                 return View();

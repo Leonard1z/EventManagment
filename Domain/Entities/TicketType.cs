@@ -20,5 +20,6 @@ namespace Domain.Entities
         public Event Event { get; set; }
         public int EventId { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Registration> Registrations { get; set; }
     }
 }
