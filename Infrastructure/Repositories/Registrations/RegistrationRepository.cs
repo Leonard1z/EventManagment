@@ -15,9 +15,9 @@ namespace Infrastructure.Repositories.Registrations
 
         }
 
-        public async Task<Registration> GetUserAndEvent(int userId, int eventId)
+        public async Task<bool> IsUserRegisteredAsync(int userId, int eventId, int ticketTypeId)
         {
-            return await DbSet.FirstOrDefaultAsync(r => r.UserAccountId == userId && r.EventId == eventId);
+            return await DbSet.AnyAsync(r=>r.UserAccountId == userId && r.EventId == eventId && r.TicketTypeId == ticketTypeId);
         }
         public IEnumerable<Registration> GetRegistrationByEventId(int eventId)
         {

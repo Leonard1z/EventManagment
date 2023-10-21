@@ -1,4 +1,6 @@
 ﻿using Domain._DTO.Event;
+using Domain._DTO.Registration;
+using Domain._DTO.Reservation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,5 +27,7 @@ namespace Domain._DTO.Ticket
         public DateTime SaleEndDate { get; set; }
         public EventDto Event { get; set; }
         public int EventId { get; set; }
+        public ICollection<ReservationDto> Reservations { get; set; }
+        public ICollection<RegistrationDto> Registrations { get; set; }
     }
 }

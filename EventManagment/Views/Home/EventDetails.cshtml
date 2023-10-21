@@ -51,8 +51,8 @@
                         {
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h5 class="card-title">@ticket.Name</h5>
                                     <img src="@ticket.ImagePath" alt="Event Image" width="450" height="350" class="rounded" />
+                                    <h5 class="card-title">@ticket.Name</h5>
                                     <p class="card-text">@ticket.Description</p>
                                     <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
                                     @if(ticket.Quantity > 0){

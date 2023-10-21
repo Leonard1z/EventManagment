@@ -1,7 +1,9 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Services.Registration;
 using Services.Reservation;
 using Stripe;
 using Stripe.Checkout;
@@ -15,15 +17,19 @@ namespace EventManagment.Controllers
 
         private readonly IDistributedCache _cache;
         private readonly IReservationService _reservationService;
+        private readonly IRegistrationService _registrationService;
         private readonly StripeSettings _stripeSettings;
         private readonly ILogger<PaymentController> _logger;
 
-        public PaymentController(IDistributedCache cache, IReservationService reservationService, IOptions<StripeSettings> stripeSettings,
+        public PaymentController(IDistributedCache cache, IReservationService reservationService,
+            IRegistrationService registrationService,
+            IOptions<StripeSettings> stripeSettings,
             ILogger<PaymentController> logger
             )
         {
             _cache = cache;
             _reservationService = reservationService;
+            _registrationService = registrationService;
             _stripeSettings = stripeSettings.Value;
             _logger = logger;
 
@@ -43,6 +49,16 @@ namespace EventManagment.Controllers
             var reservation = await _reservationService.GetByIdWithTicket(reservationID);
             await _reservationService.UpdateReservationStatus(reservationID, ReservationStatus.PaymentInProgress);
 
+            bool isUserRegistered = await _registrationService.IsUserRegisteredAsync(reservation.UserAccountId, reservation.TicketTypes.EventId, reservation.TicketTypeId);
+
+            if (isUserRegistered)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = "You are already registered for this event.";
+                RemoveToken(token);
+                return RedirectToAction("Index", "Home");
+            }
+
             var domain = "https://localhost:44331/";
             var options = new SessionCreateOptions
             {
@@ -53,8 +69,16 @@ namespace EventManagment.Controllers
                 LineItems = new List<SessionLineItemOptions>(),
 
                 Mode = "payment",
-                SuccessUrl = domain + $"success?rt={token}",
+                SuccessUrl = domain + $"success?rt={token}&session_id={{CHECKOUT_SESSION_ID}}",
                 CancelUrl = domain + $"index",
+                ClientReferenceId = reservation.UserAccountId.ToString(),
+                Metadata = new Dictionary<string, string>
+                {
+                    { "ticketId", reservation.TicketTypeId.ToString() },
+                    { "eventId", reservation.TicketTypes.EventId.ToString()},
+                    { "quantity", reservation.Quantity.ToString()},
+                    { "ticketPrice", reservation.TicketTypes.Price.ToString() },
+                },
             };
 
             TempData["PaymentToken"] = token;
@@ -97,11 +121,35 @@ namespace EventManagment.Controllers
         public async Task<IActionResult> Success()
         {
             var token = TempData["PaymentToken"] as string;
+            var sessionID = HttpContext.Request.Query["session_id"].ToString();
 
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(sessionID))
             {
                 var reservationId = await GetReservationIdFromToken(token);
                 await _reservationService.UpdateReservationStatus(reservationId, ReservationStatus.Paid);
+
+                var service = new SessionService();
+                var session = service.Get(sessionID);
+
+                var quantity = Convert.ToInt32(session.Metadata["quantity"]);
+                var ticketPrice = Convert.ToInt32(session.Metadata["ticketPrice"]);
+                var totalPrice = quantity * ticketPrice;
+                var paymentIntentId = session.PaymentIntentId;
+
+                var registration = new Registration
+                {
+                    RegistrationDate = DateTime.Now,
+                    TransactionId = paymentIntentId,
+                    Quantity = quantity,
+                    TicketPrice = ticketPrice,
+                    TotalPrice = totalPrice,
+                    UserAccountId = Convert.ToInt32(session.ClientReferenceId),
+                    EventId = Convert.ToInt32(session.Metadata["eventId"]),
+                    TicketTypeId = Convert.ToInt32(session.Metadata["ticketId"])
+                };
+
+                await _registrationService.RegisterUserForEventAsync(registration);
+
                 RemoveToken(token);
 
                 return View();
