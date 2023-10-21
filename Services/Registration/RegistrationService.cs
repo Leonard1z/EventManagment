@@ -18,30 +18,15 @@ namespace Services.Registration
             _registrationRepository = registrationRepository;
             _mapper = mapper;
         }
-        public bool Delete(int id)
+        public async Task<bool> IsUserRegisteredAsync(int userId, int eventId, int ticketTypeId)
         {
-            _registrationRepository.Delete(id);
-
-            return true;
-        }
-        public async Task<bool> CheckIfUserExist(int userId, int eventId)
-        {
-            var registration = await _registrationRepository.GetUserAndEvent(userId, eventId);
-            //return true if user exist if not returns false
-            return registration != null;
+            return await _registrationRepository.IsUserRegisteredAsync(userId, eventId,ticketTypeId);
         }
 
-        public async Task RegisterUserForEvent(int userId, int eventId)
+        public async Task RegisterUserForEventAsync(Domain.Entities.Registration registration)
         {
 
-            var registration = new Domain.Entities.Registration
-            {
-                UserAccountId = userId,
-                EventId = eventId,
-                RegistrationDate = DateTime.UtcNow
-            };
-
-            _registrationRepository.Create(registration);
+            await _registrationRepository.CreateAsync(registration);
         }
         public IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId)
         {

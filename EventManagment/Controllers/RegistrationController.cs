@@ -57,16 +57,16 @@ namespace EventManagment.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = claim.Value != null ? int.Parse(claim.Value) : 0;
 
-                bool isRegistered = await _registrationService.CheckIfUserExist(userId, eventId);
+                //bool isRegistered = await _registrationService.CheckIfUserExist(userId, eventId);
 
-                if (isRegistered)
-                {
-                    TempData["message"] = "Error";
-                    TempData["entity"] = "You are already registered for this event.";
-                    return RedirectToAction("Index", "Home");
-                }
+                //if (isRegistered)
+                //{
+                //    TempData["message"] = "Error";
+                //    TempData["entity"] = "You are already registered for this event.";
+                //    return RedirectToAction("Index", "Home");
+                //}
 
-                await _registrationService.RegisterUserForEvent(userId, eventId);
+                //await _registrationService.RegisterUserForEvent(userId, eventId);
 
                 TempData["message"] = "Success";
                 TempData["entity"] = "You have been registered successfully";

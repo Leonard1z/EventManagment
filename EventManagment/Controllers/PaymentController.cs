@@ -1,7 +1,9 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Services.Registration;
 using Services.Reservation;
 using Stripe;
 using Stripe.Checkout;
@@ -15,15 +17,19 @@ namespace EventManagment.Controllers
 
         private readonly IDistributedCache _cache;
         private readonly IReservationService _reservationService;
+        private readonly IRegistrationService _registrationService;
         private readonly StripeSettings _stripeSettings;
         private readonly ILogger<PaymentController> _logger;
 
-        public PaymentController(IDistributedCache cache, IReservationService reservationService, IOptions<StripeSettings> stripeSettings,
+        public PaymentController(IDistributedCache cache, IReservationService reservationService,
+            IRegistrationService registrationService,
+            IOptions<StripeSettings> stripeSettings,
             ILogger<PaymentController> logger
             )
         {
             _cache = cache;
             _reservationService = reservationService;
+            _registrationService = registrationService;
             _stripeSettings = stripeSettings.Value;
             _logger = logger;
 
@@ -42,6 +48,16 @@ namespace EventManagment.Controllers
             var reservationID = await GetReservationIdFromToken(token);
             var reservation = await _reservationService.GetByIdWithTicket(reservationID);
             await _reservationService.UpdateReservationStatus(reservationID, ReservationStatus.PaymentInProgress);
+
+            bool isUserRegistered = await _registrationService.IsUserRegisteredAsync(reservation.UserAccountId, reservation.TicketTypes.EventId, reservation.TicketTypeId);
+
+            if (isUserRegistered)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = "You are already registered for this event.";
+                RemoveToken(token);
+                return RedirectToAction("Index", "Home");
+            }
 
             var domain = "https://localhost:44331/";
             var options = new SessionCreateOptions
@@ -131,6 +147,8 @@ namespace EventManagment.Controllers
                     EventId = Convert.ToInt32(session.Metadata["eventId"]),
                     TicketTypeId = Convert.ToInt32(session.Metadata["ticketId"])
                 };
+
+                await _registrationService.RegisterUserForEventAsync(registration);
 
                 RemoveToken(token);
 

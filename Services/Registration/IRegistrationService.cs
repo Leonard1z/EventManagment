@@ -10,9 +10,8 @@ namespace Services.Registration
 {
     public interface IRegistrationService : IService
     {
-        bool Delete(int id);
-        Task<bool> CheckIfUserExist(int userId, int eventId);
-        Task RegisterUserForEvent(int userId, int eventId);
+        Task<bool> IsUserRegisteredAsync(int userId, int eventId, int ticketTypeId);
+        Task RegisterUserForEventAsync(Domain.Entities.Registration registration);
         IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId);
     }
 }
