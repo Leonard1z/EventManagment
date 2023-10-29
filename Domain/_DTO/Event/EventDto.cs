@@ -27,7 +27,6 @@ namespace Domain._DTO.Event
         public double Longitude { get; set; }
         public bool IsActive { get; set; }
         public bool IsFree { get; set; }
-        public int CountRegistration { get; set; } = 0;
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }
         public int CategoryId { get; set; }
