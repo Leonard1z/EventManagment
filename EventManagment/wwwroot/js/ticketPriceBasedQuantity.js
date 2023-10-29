@@ -48,8 +48,11 @@
 
             if (data && data.success) {
                 updateDOMAfterReservation(ticketId);
+                toastr.success(data.message);
             } else {
-                console.error('Reservation failed:', data.message);
+                //console.error('Reservation failed:', data.message);
+                toastr.error(data.message);
+                updateDOMAfterReservation(ticketId);
             }
         } catch (error) {
             console.error('Error:', error);

@@ -79,14 +79,14 @@ namespace EventManagment.Controllers
 
                 await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCountAndData");
 
-                return Ok(new { success = true, Message = "Reservation successful" });
+                return Ok(new { success = true, Message = "Reservation made successful. Please check your email or your notification in Home Page" });
             }
             catch (Exception ex)
             {
 
                 _logger.LogError(ex, "An error ocurred during reservation");
 
-                return StatusCode(500, new { Message = "An error occurred during reservation" });
+                return StatusCode(500, new { Message = "An error occurred during reservation. Please try again" });
             }
         }
     }

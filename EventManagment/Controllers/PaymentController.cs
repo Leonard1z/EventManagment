@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using EventManagment.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -47,7 +48,6 @@ namespace EventManagment.Controllers
 
             var reservationID = await GetReservationIdFromToken(token);
             var reservation = await _reservationService.GetByIdWithTicket(reservationID);
-            await _reservationService.UpdateReservationStatus(reservationID, ReservationStatus.PaymentInProgress);
 
             bool isUserRegistered = await _registrationService.IsUserRegisteredAsync(reservation.UserAccountId, reservation.TicketTypes.EventId, reservation.TicketTypeId);
 
@@ -58,6 +58,9 @@ namespace EventManagment.Controllers
                 RemoveToken(token);
                 return RedirectToAction("Index", "Home");
             }
+
+
+            await _reservationService.UpdateReservationStatus(reservationID, ReservationStatus.PaymentInProgress);
 
             var domain = "https://localhost:44331/";
             var options = new SessionCreateOptions
@@ -111,9 +114,15 @@ namespace EventManagment.Controllers
                 return RedirectToAction("PaymentError");
             }
         }
+        [Route("TokenInvalid")]
         public IActionResult TokenInvalid()
         {
-            return View();
+            return View("Error", new ErrorViewModel { StatusCode = 400, ErrorMessage = "The provided token is invalid. Please try again." });
+        }
+        [Route("PaymentError")]
+        public IActionResult PaymentError()
+        {
+            return View("Error", new ErrorViewModel { StatusCode = 500, ErrorMessage = "An error occurred during the payment process. Please try again." });
         }
 
         [HttpGet]
@@ -157,7 +166,11 @@ namespace EventManagment.Controllers
 
             return RedirectToAction("TokenNotFound");
         }
-
+        [Route("TokenNotFound")]
+        public IActionResult TokenNotFound()
+        {
+            return View("Error",new ErrorViewModel { StatusCode = 404, ErrorMessage = "An unexpected error occurred. Please contact support for assistance." });
+        }
         private bool IsTokenValid(string token)
         {
             return !string.IsNullOrEmpty(token) && CheckTokenInCache(token);

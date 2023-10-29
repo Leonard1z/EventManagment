@@ -13,12 +13,11 @@ function loadDataTable() {
             "dataSrc": "data"
         },
         "columns": [
-            { "data": "name", "width": "10%" },
-            { "data": "description", "width": "25%" },
+            { "data": "name", "width": "15%" },
+            { "data": "description", "width": "30%" },
             { "data": "state", "width": "10%" },
             { "data": "city", "width": "10%" },
             { "data": "category.name", "width": "10%" },
-            { "data": "countRegistration", "width": "10%" },
             {
                 "data": "encryptedId",
                 "render": function (data) {

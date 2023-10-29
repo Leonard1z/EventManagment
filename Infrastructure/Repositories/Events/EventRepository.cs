@@ -65,7 +65,7 @@ namespace Infrastructure.Repositories.Events
         {
             var result = DbSet.Include(x => x.Category)
                 //.Include(x => x.UserAccount)
-                .Include(x => x.Registrations)
+                //.Include(x => x.Registrations)
                 .Where(x => x.UserAccountId == userId && x.IsActive)
                 .AsNoTracking()
                 .ToListAsync();
