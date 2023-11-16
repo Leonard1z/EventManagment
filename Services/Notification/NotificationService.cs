@@ -1,14 +1,8 @@
 ﻿using Infrastructure.Repositories.Notifications;
-using Microsoft.AspNetCore.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Notification
 {
-    public class NotificationService:INotificationService
+    public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
 
@@ -24,7 +18,7 @@ namespace Services.Notification
 
         public async Task<Domain.Entities.Notification> GetById(int id)
         {
-            var notification =  await _notificationRepository.GetById(id);
+            var notification = await _notificationRepository.GetById(id);
 
             notification.IsRead = true;
             await _notificationRepository.UpdateAsync(notification);

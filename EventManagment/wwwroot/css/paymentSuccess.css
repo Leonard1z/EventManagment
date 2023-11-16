@@ -1,0 +1,38 @@
+﻿.container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.success {
+    width: clamp(300px, 70%, 42vw);
+    background-color: #dddddd;
+    border-radius: 8px;
+    box-shadow: 9px 9px 10px rgba(0,0,0,0.7);
+    padding: 20px;
+    text-align: center;
+}
+
+.success-icon {
+    color: #28a745;
+    font-size: clamp(30px, 6vw, 45px);
+}
+
+h1 {
+    color: #737373;
+    font-size: clamp(20px, 4vw, 32px);
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin: 0;
+}
+
+.btn {
+    color: #fff;
+    background-color: #62738c;
+    border-color: #7f8fa7;
+    font-size: clamp(12px, 2vw, 18px);
+    margin: 20px;
+}
