@@ -1,13 +1,6 @@
 ﻿using AutoMapper;
 using Domain._DTO.Ticket;
-using Domain.Entities;
 using Infrastructure.Repositories.Tickets;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Tickets
 {
@@ -26,7 +19,7 @@ namespace Services.Tickets
         {
             var result = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
 
-            return _mapper.Map<TicketTypeDto>(result); 
+            return _mapper.Map<TicketTypeDto>(result);
         }
 
         public async Task<List<TicketTypeDto>> GetTicketsByEventId(int eventId)

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain._DTO.Event;
-using Domain._DTO.Ticket;
 using Domain.Entities;
 using Infrastructure.Repositories.Events;
 

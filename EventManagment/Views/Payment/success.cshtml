@@ -6,47 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/paymentSuccess.css" />
     <title>Registration Success</title>
-    <style>
-        .container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .success {
-            width: clamp(300px, 70%, 42vw);
-            background-color: #b1b1b1;
-            border-radius: 8px;
-            box-shadow: 9px 9px 10px rgba(0,0,0,0.7);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .success-icon {
-            color: #28a745;
-            font-size: clamp(30px, 6vw, 45px);
-        }
-
-        h1 {
-            color: #4e4c4c;
-            font-size: clamp(20px, 4vw, 32px);
-            font-weight: bold;
-            letter-spacing: -1px;
-            margin: 0;
-        }
-        .btn{
-            color: #fff;
-            background-color: #62738c;
-            border-color: #7f8fa7;
-            font-size: clamp(12px, 2vw, 18px);
-            margin: 20px;
-        }
-
-    </style>
 </head>
 <body>
     <div class="container">
@@ -63,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
     <script>
         const runFireworks = () => {
-            var duration = 5 * 1000;
+            var duration = 10 * 1000;
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 

@@ -26,5 +26,14 @@ namespace Services.SendEmail
 
             await _smtpClient.SendMailAsync(mailMessage);
         }
+
+        public async Task SendEmailWithAtachmentAsync(string email, string subject, string body, Attachment atachment)
+        {
+           var mailMessage = new MailMessage(_email,email,subject, body);
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Attachments.Add(atachment);
+
+            await _smtpClient.SendMailAsync(mailMessage);
+        }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Domain._DTO.UserAccount;
-using Domain.Entities;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.UserAccounts;
 using Microsoft.AspNetCore.Hosting;
 using Services.Security;
 using Services.SendEmail;
-using System.Security.Policy;
 
 namespace Services.UserAccount
 {

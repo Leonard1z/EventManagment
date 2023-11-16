@@ -24,5 +24,20 @@ namespace Infrastructure.Repositories.Registrations
             return DbSet.Where(r => r.EventId == eventId).ToList();
         }
 
+        public async Task<List<Registration>> GetUserPurchasedTicketsAsync(int userId)
+        {
+            return await DbSet.Include(r=>r.TicketType)
+                .Include(r=>r.Event)
+                .Where(r=>r.UserAccountId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<Registration> GetRegistrationById(int id)
+        {
+            return await DbSet
+                .Include(r => r.Event)
+                .Include(r => r.TicketType)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
     }
 }

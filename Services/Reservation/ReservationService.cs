@@ -10,13 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Services.Notification;
 using Services.SendEmail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Services.Reservation
 {
@@ -76,7 +72,7 @@ namespace Services.Reservation
             await _ticketTypesRepository.UpdateAsync(ticket);
 
             var paymentToken = GeneratePaymentToken();
-            await StoreToken(paymentToken,reservation.Id, DateTime.UtcNow.AddMinutes(10));
+            await StoreToken(paymentToken, reservation.Id, DateTime.UtcNow.AddMinutes(10));
 
             await SendPaymentReminderEmail(userId, ticket, reservation, ticketTotalPrice, paymentToken);
 
@@ -116,7 +112,7 @@ namespace Services.Reservation
             string tittle = "Confirm Payment";
             string message = "To ensure you don't miss out, click the button below and complete your payment before your reservation expires: ";
             string paymentLink = $"https://localhost:44331/Payment?token={paymentToken}";
-            string reservationNumber =$"Your reservation number is: {reservation.ReservationNumber}";
+            string reservationNumber = $"Your reservation number is: {reservation.ReservationNumber}";
             string body = "";
 
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))
@@ -124,7 +120,7 @@ namespace Services.Reservation
                 body = streamReader.ReadToEnd();
             }
 
-            string messageBody = string.Format(body, tittle, user.FirstName, eventName.Name, ticket.Name, reservation.Quantity, reservation.ReservationTime, reservation.ExpirationTime, message, ticketTotalPrice.ToString("c"), paymentLink,reservationNumber);
+            string messageBody = string.Format(body, tittle, user.FirstName, eventName.Name, ticket.Name, reservation.Quantity, reservation.ReservationTime, reservation.ExpirationTime, message, ticketTotalPrice.ToString("c"), paymentLink, reservationNumber);
 
             try
             {
@@ -148,7 +144,7 @@ namespace Services.Reservation
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                string combinedInput = $"The1Best2Strong*Easiest%Secret9Key/In|The[World]?YES:NO";
+                string combinedInput = $"{DateTime.Now.Ticks}The1Best2Strong*Easiest%Secret9Key/In|The[World]?YES:NO";
 
                 byte[] hashBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(combinedInput));
 
@@ -218,7 +214,7 @@ namespace Services.Reservation
         public async Task UpdateReservationStatus(int reservationId, ReservationStatus newStatus)
         {
             var reservation = await _reservationRepository.GetById(reservationId);
-            if(reservation != null)
+            if (reservation != null)
             {
                 reservation.Status = newStatus;
                 await _reservationRepository.UpdateAsync(reservation);
