@@ -1,0 +1,46 @@
+﻿body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.tickets-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ticket {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    max-width: 300px;
+    width: 100%;
+}
+
+    .ticket:hover {
+        transform: scale(1.05);
+    }
+
+.ticket-content {
+    padding: 20px;
+}
+
+.ticket button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+}

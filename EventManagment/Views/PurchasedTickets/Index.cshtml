@@ -1,0 +1,56 @@
+﻿@using Domain.Entities
+@model List<Registration>
+
+<link rel="stylesheet" href="~/css/purchasedTickets.css" />
+
+<div class="container">
+    @if (Model.Any())
+    {
+        <div class="tickets-container">
+            @foreach (var registration in Model)
+            {
+                <div class="ticket">
+                    <div class="ticket-content">
+                        <p>Ticket:@registration.TicketType.Name</p>
+                        <p>Event: @registration.Event.Name</p>
+                        <p>Registration Date: @registration.RegistrationDate.ToString()</p>
+                        <p>TicketPrice: @registration.TicketPrice</p>
+                        <p>Quantity: @registration.Quantity</p>
+                        <p>TotalPrice: @registration.TotalPrice</p>
+
+                        <button class="assign-button" onclick="openAssignModal(@registration.Quantity,@registration.Id)">Assign Tickets</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }else{
+        <h1>No Tickets Purchased</h1>
+    }
+</div>
+
+<div class="modal" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="assignModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:120px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignModalLabel">Assign Tickets</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="assignModalBody">
+
+                </div>
+                <input type="hidden" id="registrationId" value="" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" onclick="assignTickets()">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/AssignTicket.js"></script>
+}

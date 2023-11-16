@@ -1,10 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain._DTO.Registration;
 using Services.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Registration
 {
@@ -12,6 +7,8 @@ namespace Services.Registration
     {
         Task<bool> IsUserRegisteredAsync(int userId, int eventId, int ticketTypeId);
         Task RegisterUserForEventAsync(Domain.Entities.Registration registration);
+        Task<RegistrationDetailsDto> GetRegistrationById(int id);
         IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId);
+        Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId);
     }
 }

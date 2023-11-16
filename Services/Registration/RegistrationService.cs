@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
+using Domain._DTO.Registration;
 using Infrastructure.Repositories.Registrations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Registration
 {
@@ -20,7 +16,7 @@ namespace Services.Registration
         }
         public async Task<bool> IsUserRegisteredAsync(int userId, int eventId, int ticketTypeId)
         {
-            return await _registrationRepository.IsUserRegisteredAsync(userId, eventId,ticketTypeId);
+            return await _registrationRepository.IsUserRegisteredAsync(userId, eventId, ticketTypeId);
         }
 
         public async Task RegisterUserForEventAsync(Domain.Entities.Registration registration)
@@ -31,6 +27,31 @@ namespace Services.Registration
         public IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId)
         {
             return _registrationRepository.GetRegistrationByEventId(eventId);
+        }
+
+        public async Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId)
+        {
+            return await _registrationRepository.GetUserPurchasedTicketsAsync(userId);
+        }
+
+        public async Task<RegistrationDetailsDto> GetRegistrationById(int id)
+        {
+            var registration = await _registrationRepository.GetRegistrationById(id);
+
+            var registrationDetailsDto = new RegistrationDetailsDto
+            {
+                Id = registration.Id,
+                RegistrationDate = registration.RegistrationDate,
+                EventName = registration.Event.Name,
+                EventStartDate = registration.Event.StartDate,
+                Venue = registration.Event.StreetName,
+                TicketTypeName = registration.TicketType.Name,
+                TicketTypeId = registration.TicketTypeId,
+                Quantity = registration.Quantity,
+                TicketPrice = registration.TicketPrice,
+            };
+
+            return registrationDetailsDto;
         }
     }
 }

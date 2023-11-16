@@ -23,6 +23,7 @@ namespace Infrastructure
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<AssignedTicket> AssignetTickets { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventManagmentDb).Assembly);
