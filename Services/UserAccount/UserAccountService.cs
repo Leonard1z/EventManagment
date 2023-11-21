@@ -210,5 +210,12 @@ namespace Services.UserAccount
 
             _userAccountRepository.Update(userAccount);
         }
+
+        public async Task<IEnumerable<UserAccountDto>> GetAllUserAccountsAndRoles()
+        {
+            var users = await _userAccountRepository.GetAllUserAccounts();
+
+            return _mapper.Map<List<UserAccountDto>>(users.ToList());
+        }
     }
 }

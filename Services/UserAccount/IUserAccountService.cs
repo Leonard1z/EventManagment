@@ -20,6 +20,7 @@ namespace Services.UserAccount
         Task SendPasswordResetEmail(string email, string resetUrl);
         Task<Domain.Entities.UserAccount> GetUserByPasswordResetToken(string token);
         void ResetPasword(Domain.Entities.UserAccount userAccount, string newPassword);
+        Task<IEnumerable<UserAccountDto>> GetAllUserAccountsAndRoles();
 
     }
 }

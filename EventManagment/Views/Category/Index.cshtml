@@ -3,26 +3,26 @@
 @model PagingList<CategoryDto>
 
 @{
-    Layout = "~/Views/Shared/_Dependencies.cshtml";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Category List";
 }
 
-<link rel="stylesheet" href="~/css/categoryIndex.css" />
+<link rel="stylesheet" href="~/css/category.css" />
 
-<div class="container mt-5">
+<div class="container">
     <div class="row">
-        <div class="col-12 border p-3">
-            <form class="form" action="@Url.Action("Index", "Category")">
-                <div class ="row ms-5">
+        <div class="col-12 border p-3 row-container">
+            <form action="@Url.Action("Index", "Category")">
+                <div class ="row" style="justify-content:space-between;">
                     <div class="col-4">
                         <a href="@Url.Action("Index", "Category")" class="btn btn-outline-primary"><i class="bi bi-list-ul"></i>Category List</a>
                     </div>
-                    <div class="col-4 me-5">
+                    <div class="col-4">
                         <div class="input-group">
                             <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         </div>
                     </div>
-                    <div class="col-2 ms-5">
+                    <div class="col-2">
                         <a href="@Url.Action("Create", "Category")" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i>Create Category</a>
                     </div>
                 </div>
@@ -42,9 +42,9 @@
                             <td>@category.Name</td>
                             <td class="actions">
                                 <a class="btn btn-primary" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
-                                <a class="btn btn-danger" onclick="confirmDelete('@category.EncryptedId')"><i class="bi bi-trash"></i>Delete</a>
+                                <a class="btn btn-danger text-white" onclick="confirmDelete('@category.EncryptedId')"><i class="bi bi-trash"></i>Delete</a>
                             </td>
-                        </tr>
+                        </tr> 
                     }
                 </tbody>
             </table>
@@ -75,7 +75,7 @@
 @section Scripts{
     @{
         //Client Site Validation
-        <partial name="_ValidationScriptsPartial" />
-        <script src="~/js/index.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/index.js"></script>
     }
 }

@@ -8,6 +8,10 @@
     padding: 7px;
 }
 
+.row-container{
+    margin-top:150px;
+}
+
 .table th {
     height: 70px;
     padding: 20px;
