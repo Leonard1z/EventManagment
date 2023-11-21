@@ -9,6 +9,8 @@ using Services.Role;
 using Services.UserAccount;
 using System.Security.Claims;
 using Services.SendEmail;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace EventManagment.Controllers
 {
@@ -38,9 +40,37 @@ namespace EventManagment.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        [Route("UsersData")]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var users = await _userAccountService.GetAllUserAccountsAndRoles();
+
+                foreach (var user in users)
+                {
+                    user.EncryptedId = _protector.Protect(user.Id.ToString());
+                    user.Id = 0;
+                }
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(users);
+                }
+                else
+                {
+                    return View(users);
+                }
+
+
+            }catch(Exception ex)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString(); ;
+
+                _logger.LogError(ex.Message);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -341,7 +371,7 @@ namespace EventManagment.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {

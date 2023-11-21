@@ -16,8 +16,7 @@ namespace Infrastructure.Repositories.UserAccounts
         }
         public async Task<IList<UserAccount>> GetAllUserAccounts()
         {
-            var result = DbSet.Include(x => x.Events)
-                              .Include(x => x.Registrations)
+            var result = DbSet.Include(x => x.Role)
                               .AsNoTracking()
                               .AsQueryable();
 
