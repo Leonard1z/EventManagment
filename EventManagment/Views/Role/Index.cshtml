@@ -6,40 +6,51 @@
     ViewData["Title"] = "Role Data";
 }
 
+<link rel="stylesheet" href="~/css/index.css" />
 
-
-<div class="container">
-    <div class="role-item">
-        <h2>Role List</h2>
-        <a asp-controller="Role" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New Role</a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 border p-3 row-container">
+            <form action="@Url.Action("Index", "Role")">
+                <div class ="row" style="justify-content:space-between;">
+                    <div class="col-4">
+                        <a href="@Url.Action("Index", "Role")" class="list-btn">Role List <i class="bi bi-list-ul"></i></a>
+                    </div>
+                    <div class="col-2">
+                        <a href="@Url.Action("Create", "Role")" class="create-btn">Create<i class="bi bi-plus-circle"></i></a>
+                    </div>
+                </div>
+            </form>
+            <hr />
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model)
+                    {
+                        <tr>
+                            <td>@role.Name</td>
+                            <td class="actions">
+                                <a class="btn btn-primary" href="@Url.Action("Edit", "Role", new { encryptedId = role.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
+                                <a class="btn btn-danger text-white" onclick="confirmDelete('@role.EncryptedId','Role','Delete')"><i class="bi bi-trash"></i>Delete</a>
+                            </td>
+                        </tr> 
+                    }
+                </tbody>
+            </table>
+           
+        </div>
     </div>
-
-    <br />
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th>Role Name</th>
-                <th>Actions</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obj in Model)
-            {
-                <tr>
-                    <td>
-                        @obj.Name
-                    </td>
-                    <td>
-                        <div role="group">
-                            <a asp-controller="Role" asp-action="Edit" asp-route-encryptedId="@obj.EncryptedId"
-                            class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a> |
-                            <a asp-controller="Role" asp-action="Delete" asp-route-encryptedId="@obj.EncryptedId"
-                            class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>   
 </div>
+
+@section Scripts{
+    @{
+        //Client Site Validation
+        <partial name="_ValidationScriptsPartial" />
+        <script src="~/js/index.js"></script>
+    }
+}

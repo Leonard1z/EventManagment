@@ -1,4 +1,92 @@
-﻿@{
+﻿@using ReflectionIT.Mvc.Paging
+@using Domain._DTO.UserAccount
+@model PagingList<UserAccountDto>
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "User List";
 }
 
+<link rel="stylesheet" href="~/css/index.css" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 border p-3 row-container">
+            <form action="@Url.Action("Index", "UserAccount")">
+                <div class="row" style="justify-content:space-between;">
+                    <div class="col-4">
+                        <a href="@Url.Action("Index", "UserAccount")" class="list-btn">User List <i class="bi bi-list-ul"></i></a>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <hr />
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>LastName</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Address</th>
+                        <th>Gender</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@user.Address</td>
+                            <td>@user.Gender</td>
+                            <td>@user.Role.Name</td>
+                            <td class="actions">
+                                <a class="btn btn-primary" href="@Url.Action("Edit", "UserAccount", new { encryptedId = user.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
+                                <a class="btn btn-danger text-white" onclick="confirmDelete('@user.EncryptedId','UserAccount','Delete')"><i class="bi bi-trash"></i>Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="container">
+                <div class="pagination col-12">
+                    @if (ViewBag.Page > 1)
+                    {
+                        <a href="@Url.Action("Index", "UserAccount", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = ViewBag.Page - 1, sortExpression = ViewBag.SortExpression })">&lt; Previous</a>
+                    }
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <a href="@Url.Action("Index", "UserAccount", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = i, sortExpression = ViewBag.SortExpression })" @(i == ViewBag.Page ? "class=current" : null)>@i</a>
+                    }
+
+                    @if (ViewBag.Page < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "UserAccount", new { filter = ViewBag.Filter, encryptedId = ViewBag.EncryptedId, pageSize = ViewBag.PageSize, page = ViewBag.Page + 1, sortExpression = ViewBag.SortExpression })">Next &gt;</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    @{
+        //Client Site Validation
+        <partial name="_ValidationScriptsPartial" />
+        <script src="~/js/index.js"></script>
+    }
+    }

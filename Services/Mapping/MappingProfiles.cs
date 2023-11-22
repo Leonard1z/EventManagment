@@ -47,6 +47,9 @@ namespace Services.Mapping
 
             CreateMap<Domain.Entities.UserAccount, UserAccountCreateDto>();
             CreateMap<UserAccountCreateDto, Domain.Entities.UserAccount>();
+
+            CreateMap<Domain.Entities.UserAccount, UserAccountEditDto>();
+            CreateMap<UserAccountEditDto, Domain.Entities.UserAccount>();
             #endregion
 
 

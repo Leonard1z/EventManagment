@@ -217,5 +217,47 @@ namespace Services.UserAccount
 
             return _mapper.Map<List<UserAccountDto>>(users.ToList());
         }
+
+        public IQueryable<UserAccountDto> GetAllForPagination(string filter, string? encryptedId)
+        {
+            var result = _userAccountRepository.GetAllForPagination(filter, encryptedId);
+
+            var result2 = _mapper.ProjectTo<UserAccountDto>(result);
+
+            return result2;
+        }
+
+        public async Task<UserAccountEditDto> GetByIdEdit(int id)
+        {
+            var result = await _userAccountRepository.GetById(id);
+
+            return _mapper.Map<UserAccountEditDto>(result);
+        }
+
+        public UserAccountEditDto UpdateWithRole(UserAccountEditDto userAccountEditDto)
+        {
+            if (string.IsNullOrEmpty(userAccountEditDto.Password))
+            {
+                // Properties not provided, exclude them from the update
+                var result = _userAccountRepository.UpdateExceptProperties(
+                    _mapper.Map<Domain.Entities.UserAccount>(userAccountEditDto),
+                    u=>u.Password,
+                    u=>u.Gender,
+                    u=>u.IsEmailVerified,
+                    u=>u.EmailVerificationToken,
+                    u=>u.Salt,
+                    u => u.PasswordResetToken,
+                    u=>u.PasswordResetTokenExpiry
+                    );
+
+                return _mapper.Map<UserAccountEditDto>(result);
+            }
+            else
+            {
+                var result = _userAccountRepository.Update(_mapper.Map<Domain.Entities.UserAccount>(userAccountEditDto));
+
+                return _mapper.Map<UserAccountEditDto>(result);
+            }
+        }
     }
 }
