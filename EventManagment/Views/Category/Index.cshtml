@@ -7,29 +7,29 @@
     ViewData["Title"] = "Category List";
 }
 
-<link rel="stylesheet" href="~/css/category.css" />
+<link rel="stylesheet" href="~/css/index.css" />
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-12 border p-3 row-container">
             <form action="@Url.Action("Index", "Category")">
                 <div class ="row" style="justify-content:space-between;">
                     <div class="col-4">
-                        <a href="@Url.Action("Index", "Category")" class="btn btn-outline-primary"><i class="bi bi-list-ul"></i>Category List</a>
+                        <a href="@Url.Action("Index", "Category")" class="list-btn">Category List <i class="bi bi-list-ul"></i></a>
                     </div>
                     <div class="col-4">
                         <div class="input-group">
                             <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         </div>
                     </div>
-                    <div class="col-2">
-                        <a href="@Url.Action("Create", "Category")" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i>Create Category</a>
+                    <div class="col-2 ml-auto">
+                        <a href="@Url.Action("Create", "Category")" class="create-btn">Create<i class="bi bi-plus-circle"></i></a>
                     </div>
                 </div>
             </form>
             <hr />
             <table class="table table-bordered">
-                <thead class="table-dark">
+                <thead>
                     <tr>
                         <th>Name</th>
                         <th>Actions</th>
@@ -42,7 +42,7 @@
                             <td>@category.Name</td>
                             <td class="actions">
                                 <a class="btn btn-primary" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
-                                <a class="btn btn-danger text-white" onclick="confirmDelete('@category.EncryptedId')"><i class="bi bi-trash"></i>Delete</a>
+                                <a class="btn btn-danger text-white" onclick="confirmDelete('@category.EncryptedId','Category','Delete')"><i class="bi bi-trash"></i>Delete</a>
                             </td>
                         </tr> 
                     }

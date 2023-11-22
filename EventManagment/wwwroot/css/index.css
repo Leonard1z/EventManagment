@@ -1,0 +1,86 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+.form a i {
+    color: #35ecff;
+    padding: 7px;
+}
+
+.row-container{
+    margin-top:120px;
+}
+
+.list-btn {
+    display: block;
+    color: #fff;
+    max-width:130px;
+    background-color: #2a3042;
+    height: 33px;
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.list-btn:hover{
+    color:#fff;
+    opacity:0.9;
+}
+
+.create-btn {
+    display: block;
+    color: #fff;
+    max-width: 130px;
+    background-color: #2a3042;
+    height: 33px;
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.create-btn:hover {
+    color: #fff;
+    opacity: 0.9;
+}
+
+.create-btn i{
+    padding:5px;
+}
+
+.table thead {
+    color: #fff;
+    background-color: #2a3042;
+}
+
+.table th {
+    height: 40px;
+    padding: 8px;
+    width: 250px;
+}
+
+.pagination {
+    margin-top: 33px;
+    text-align: center;
+    display: block;
+}
+
+.pagination a.current {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #007bff;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-right: 5px;
+}
+
+
+.pagination a:hover {
+    background-color: #90c0f3;
+}

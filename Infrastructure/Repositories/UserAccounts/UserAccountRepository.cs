@@ -58,5 +58,25 @@ namespace Infrastructure.Repositories.UserAccounts
         {
             return await DbSet.FirstOrDefaultAsync(x => x.PasswordResetToken == token);
         }
+
+        public IQueryable<UserAccount> GetAllForPagination(string filter, string encryptedId)
+        {
+            var result = DbSet.Include(u => u.Role)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(encryptedId) || !string.IsNullOrWhiteSpace(filter))
+            {
+                if (!string.IsNullOrWhiteSpace(encryptedId))
+                {
+                    result = result.Where(u => u.Id.ToString().Contains(encryptedId));
+                }
+                else
+                {
+                    result = result.Where(u => u.FirstName.Contains(filter));
+                }
+            } 
+            return result;
+        }
     }
 }

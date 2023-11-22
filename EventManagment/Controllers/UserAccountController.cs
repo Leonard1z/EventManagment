@@ -11,6 +11,9 @@ using System.Security.Claims;
 using Services.SendEmail;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using ReflectionIT.Mvc.Paging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EventManagment.Controllers
 {
@@ -39,27 +42,45 @@ namespace EventManagment.Controllers
             _localizer = localizer;
             _logger = logger;
         }
-
+        [Authorize(Policy ="AdminOnly")]
         [HttpGet]
         [Route("UsersData")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filter,string encryptedId,int pageSize=7,int page=1, string sortExpression = "Id")
         {
             try
             {
-                var users = await _userAccountService.GetAllUserAccountsAndRoles();
+                var decryptedId = string.IsNullOrEmpty(encryptedId) ? null : _protector.Unprotect(encryptedId);
 
-                foreach (var user in users)
+                var qry = _userAccountService.GetAllForPagination(filter, decryptedId);
+
+                var dto = await PagingList.CreateAsync(qry, pageSize,page,sortExpression,"Name DESC");
+
+                dto.RouteValue = new RouteValueDictionary { { "filter", filter }, { "pageSize", pageSize } };
+
+                foreach (var user in dto)
                 {
                     user.EncryptedId = _protector.Protect(user.Id.ToString());
                     user.Id = 0;
                 }
+
+                var totalCount = await qry.CountAsync();
+                //get totalpages by dividing the totalcount and pagesize 20 / 7 = 2.857, then rounds it to (3)
+                var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                ViewBag.Filter = filter;
+                ViewBag.EncryptedId = encryptedId;
+                ViewBag.PageSize = pageSize;
+                ViewBag.Page = page;
+                ViewBag.TotalPages = totalPages;
+                ViewBag.SortExpression = sortExpression;
+
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    return Json(users);
+                    return Json(dto);
                 }
                 else
                 {
-                    return View(users);
+                    return View(dto);
                 }
 
 
@@ -398,5 +419,71 @@ namespace EventManagment.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("User/Edit")]
+        public async Task<ActionResult> Edit(string encryptedId)
+        {
+            try
+            {
+                var id = int.Parse(_protector.Unprotect(encryptedId));
+                var result = await _userAccountService.GetByIdEdit(id);
+
+                UserEditDtoEncryption(result);
+
+                return View(result);
+
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
+
+                _logger.LogError(ex.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [HttpPost]
+        [Route("User/Edit")]
+        public ActionResult Edit(UserAccountEditDto userAccountEditDto)
+        {
+            try
+            {
+                userAccountEditDto.RoleId = userAccountEditDto.EncryptedRoleId != null ? int.Parse(_protector.Unprotect(userAccountEditDto.EncryptedRoleId)) : 0;
+                userAccountEditDto.Id = int.Parse(_protector.Unprotect(userAccountEditDto.EncryptedId));
+
+                var result = _userAccountService.UpdateWithRole(userAccountEditDto);
+
+                TempData["message"] = "Updated";
+                TempData["entity"] = _localizer["Event "].ToString();
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "Error";
+                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
+
+                _logger.LogError(ex.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        private UserAccountEditDto UserEditDtoEncryption(UserAccountEditDto userAccountEdit)
+        {
+            userAccountEdit.Role = _roleService.GetAll().Result.Select(x =>
+            {
+                x.EncryptedId = _protector.Protect(x.Id.ToString());
+                if (userAccountEdit.RoleId == x.Id) userAccountEdit.EncryptedRoleId = x.EncryptedId;
+                x.Id = 0;
+
+                return x;
+            }).ToList();
+            userAccountEdit.EncryptedId = _protector.Protect(userAccountEdit.Id.ToString());
+            userAccountEdit.Id = 0;
+
+            return userAccountEdit;
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Domain._DTO.Event;
-using Domain._DTO.Registration;
-using Domain._DTO.Role;
+﻿using Domain._DTO.Role;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
