@@ -41,8 +41,14 @@
                         <tr>
                             <td>@category.Name</td>
                             <td class="actions">
-                                <a class="btn btn-primary" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
-                                <a class="btn btn-danger text-white" onclick="confirmDelete('@category.EncryptedId','Category','Delete')"><i class="bi bi-trash"></i>Delete</a>
+                                <a class="icon edit" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })">
+                                    <div class="toltip">Edit</div>
+                                    <span><i class="fa-regular fa-pen-to-square" style="color:#2a3042;"></i></span>
+                                </a> |
+                                <a class="icon edit" onclick="confirmDelete('@category.EncryptedId','Category','Delete')">
+                                    <div class="toltip">Delete</div>
+                                    <span><i class="fa-regular fa-trash-can" style="color:red"></i></span>
+                                </a>
                             </td>
                         </tr> 
                     }
