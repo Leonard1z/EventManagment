@@ -32,7 +32,8 @@
 		<div class="main-content" id="main-container">
 			<div class="content">
 				<div class="toggle-menu active" id="toggle-sidebar" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
-				<div class="toggle-dropdown" id="toggle-dropdown" ><i class="fa-solid fa-chevron-down"></i></div>
+				<div class="toggle-fullscreen" id="toggle-fullscreen" onclick="toggleFullScreen()"><i id="expand-icon" class="fa-solid fa-expand"></i></div>
+				<div class="toggle-dropdown" id="toggle-dropdown"><i class="fa-solid fa-chevron-down"></i></div>
 
 				<div class="menu-dropdown menu-dropdown-right">
 					<a asp-area="" asp-controller="UserAccount" asp-action="ViewProfile" class="item-dropdown"><i class="fa-regular fa-user font-size-16 align-middle mr-1"></i> @Localizer["Profili im"]</a>
@@ -51,6 +52,44 @@
 	<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
 
 	<script>
+		function toggleFullScreen() {
+			let expandIcon = document.getElementById('expand-icon');
+			expandIcon.classList.toggle('fa-expand');
+			expandIcon.classList.toggle('fa-compress');
+
+			if (expandIcon.classList.contains('fa-expand')) {
+				exitFullScreen();
+			} else {
+				enterFullScreen();
+			}
+		}
+
+		function enterFullScreen() {
+			let element = document.documentElement;
+
+			if (element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if (element.mozRequestFullScreen) { 
+				element.mozRequestFullScreen();
+			} else if (element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen();
+			} else if (element.msRequestFullscreen) {
+				element.msRequestFullscreen();
+			}
+		}
+
+		function exitFullScreen() {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
+			}
+		}
+
 		function toggleMenu(){
 			let navigation = document.getElementById('navigation-bar');
 			let barsIcon = document.getElementById('toggle-sidebar');
