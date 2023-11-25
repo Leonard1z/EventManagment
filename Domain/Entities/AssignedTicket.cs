@@ -15,6 +15,8 @@ namespace Domain.Entities
         public string PhoneNumber { get; set; }
         public string EventName { get; set; }
         public DateTime EventStartDate { get; set; }
+        public DateTime ExpireDate { get; set; }
+        public bool IsInsideEvent { get; set; }
         public string Venue { get; set; }
         public string TicketType { get; set; }
         public double TicketPrice { get; set; }
