@@ -35,8 +35,14 @@
                         <tr>
                             <td>@role.Name</td>
                             <td class="actions">
-                                <a class="btn btn-primary" href="@Url.Action("Edit", "Role", new { encryptedId = role.EncryptedId })"><i class="bi bi-pencil-square"></i>Edit</a> |
-                                <a class="btn btn-danger text-white" onclick="confirmDelete('@role.EncryptedId','Role','Delete')"><i class="bi bi-trash"></i>Delete</a>
+                                <a class="icon edit" href="@Url.Action("Edit", "Role", new { encryptedId = role.EncryptedId })">
+                                    <div class="toltip">Edit</div>
+                                    <span><i class="fa-regular fa-pen-to-square" style="color:#2a3042;"></i></span>
+                                </a> |
+                                <a class="icon edit" onclick="confirmDelete('@role.EncryptedId','Role','Delete')">
+                                    <div class="toltip">Delete</div>
+                                    <span><i class="fa-regular fa-trash-can" style="color:red"></i></span>
+                                </a>
                             </td>
                         </tr> 
                     }
@@ -50,7 +56,7 @@
 @section Scripts{
     @{
         //Client Site Validation
-        <partial name="_ValidationScriptsPartial" />
-        <script src="~/js/index.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/index.js"></script>
     }
 }
