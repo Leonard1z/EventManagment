@@ -15,7 +15,9 @@ namespace Services.QrCodeeGenerator
         {
 
             var qrCodeGenerator = new QRCodeGenerator();
-            var qrCodeData = qrCodeGenerator.CreateQrCode($"{ticket.FirstName} {ticket.LastName} {ticket.EventName} {ticket.Email}", QRCodeGenerator.ECCLevel.Q);
+            var qrCodeData = qrCodeGenerator.CreateQrCode(
+                $"{{ \"FirstName\": \"{ticket.FirstName}\", \"LastName\": \"{ticket.LastName}\", \"ExpireDate\": \"{ticket.ExpireDate.ToString("yyyy-MM-ddTHH:mm:ss")}\" }}", QRCodeGenerator.ECCLevel.Q);
+
 
             var qrCode = new QRCode(qrCodeData);
             var bitmap = qrCode.GetGraphic(4);

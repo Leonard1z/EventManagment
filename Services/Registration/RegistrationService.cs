@@ -44,6 +44,7 @@ namespace Services.Registration
                 RegistrationDate = registration.RegistrationDate,
                 EventName = registration.Event.Name,
                 EventStartDate = registration.Event.StartDate,
+                EventEndDate = registration.Event.EndDate,
                 Venue = registration.Event.StreetName,
                 TicketTypeName = registration.TicketType.Name,
                 TicketTypeId = registration.TicketTypeId,

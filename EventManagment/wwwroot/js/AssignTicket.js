@@ -35,6 +35,7 @@
                     phoneNumber: phoneNumber,
                     eventName: data.eventName,
                     eventStartDate: data.eventStartDate,
+                    expireDate: data.eventEndDate,
                     venue: data.venue,
                     ticketType: data.ticketTypeName,
                     ticketPrice: data.ticketPrice,

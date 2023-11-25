@@ -12,6 +12,7 @@ namespace Domain._DTO.Registration
         public DateTime RegistrationDate { get; set; }
         public string EventName { get; set; }
         public DateTime EventStartDate { get; set; }
+        public DateTime EventEndDate { get; set; }
         public string Venue { get; set; }
         public string TicketTypeName { get; set; }
         public int TicketTypeId { get; set; }
