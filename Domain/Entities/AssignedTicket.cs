@@ -21,6 +21,7 @@ namespace Domain.Entities
         public string TicketType { get; set; }
         public double TicketPrice { get; set; }
         public string QrCodeData { get; set; }
+        public int TicketNumber { get; set; }
         public int RegistrationId { get; set; }
     }
 }

@@ -52,6 +52,17 @@ namespace Services.AssigneTicket
                 throw new Exception(ex.ToString());
             }
         }
+
+        public async Task<AssignedTicket> GetTicketByTicketNumberAsync(int ticketNumber)
+        {
+            return await _assigneeTicketRepository.GetTicketByTicketNumberAsync(ticketNumber);
+        }
+
+        public async Task UpdateAsync(AssignedTicket ticket)
+        {
+            await _assigneeTicketRepository.UpdateAsync(ticket);
+        }
+
         private async Task SendEmailAsync(AssignedTicket ticket)
         {
             var pathToFile = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()

@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace Infrastructure.Repositories.AssigneTicket
         public AssigneTicketRepository(EventManagmentDb context) : base(context)
         {
 
+        }
+
+        public async Task<AssignedTicket> GetTicketByTicketNumberAsync(int ticketNumber)
+        {
+            return await DbSet.FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber);
         }
     }
 }
