@@ -1,15 +1,21 @@
-﻿using System;
+﻿using Domain._DTO.Role;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain._DTO.UserAccount
 {
-    public class UserAccount
+    public class ProfileUpdateDto
     {
         public int Id { get; set; }
+        [NotMapped]
+        public string EncryptedId { get; set; }
+        [NotMapped]
+        public string EncryptedRoleId { get; set; }
         public string FirstName { get; set; }
         public string Username { get; set; }
         public string LastName { get; set; }
@@ -23,14 +29,10 @@ namespace Domain.Entities
         public string? ProfileImage { get; set; }
         public string? Description { get; set; }
         public bool IsEmailVerified { get; set; }
-        public string? EmailVerificationToken { get; set; }
+        public string EmailVerificationToken { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
         public int RoleId { get; set; }
-        public Roles Role { get; set; }
-        public ICollection<Event> Events { get; set; }
-        public ICollection<Registration> Registrations { get; set; }
-        public ICollection<Reservation> Reservations { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
+        public List<RoleDto> Role { get; set; }
     }
 }

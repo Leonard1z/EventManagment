@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 		<Folder Include="wwwroot\images\events\" />
+		<Folder Include="wwwroot\images\profile\" />
 		<Folder Include="wwwroot\images\tickets\" />
 	</ItemGroup>
 

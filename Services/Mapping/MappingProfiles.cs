@@ -50,6 +50,9 @@ namespace Services.Mapping
 
             CreateMap<Domain.Entities.UserAccount, UserAccountEditDto>();
             CreateMap<UserAccountEditDto, Domain.Entities.UserAccount>();
+
+            CreateMap<Domain.Entities.UserAccount, ProfileUpdateDto>();
+            CreateMap<ProfileUpdateDto, Domain.Entities.UserAccount>();
             #endregion
 
 

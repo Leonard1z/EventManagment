@@ -247,7 +247,9 @@ namespace Services.UserAccount
                     u=>u.EmailVerificationToken,
                     u=>u.Salt,
                     u => u.PasswordResetToken,
-                    u=>u.PasswordResetTokenExpiry
+                    u=>u.PasswordResetTokenExpiry,
+                    u=>u.ProfileImage,
+                    u=>u.Description
                     );
 
                 return _mapper.Map<UserAccountEditDto>(result);
@@ -258,6 +260,34 @@ namespace Services.UserAccount
 
                 return _mapper.Map<UserAccountEditDto>(result);
             }
+        }
+
+        public async Task<ProfileUpdateDto> GetProfileById(int userId)
+        {
+            var user = await _userAccountRepository.GetById(userId);
+
+            var profileUpdateDto = _mapper.Map<ProfileUpdateDto>(user);
+
+            return profileUpdateDto;
+        }
+
+        public async Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto)
+        {
+
+            // Properties not provided, exclude them from the update
+            var result = _userAccountRepository.UpdateExceptProperties(
+                _mapper.Map<Domain.Entities.UserAccount>(profileUpdateDto),
+                u => u.Password,
+                u => u.Gender,
+                u => u.IsEmailVerified,
+                u => u.EmailVerificationToken,
+                u => u.Salt,
+                u => u.PasswordResetToken,
+                u => u.PasswordResetTokenExpiry
+                );
+
+            return _mapper.Map<ProfileUpdateDto>(result);
+
         }
     }
 }
