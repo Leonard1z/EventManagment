@@ -248,8 +248,7 @@ namespace Services.UserAccount
                     u=>u.Salt,
                     u => u.PasswordResetToken,
                     u=>u.PasswordResetTokenExpiry,
-                    u=>u.ProfileImage,
-                    u=>u.Description
+                    u=>u.ProfileImage
                     );
 
                 return _mapper.Map<UserAccountEditDto>(result);
