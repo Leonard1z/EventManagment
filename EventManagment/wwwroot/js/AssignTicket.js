@@ -1,7 +1,7 @@
 ﻿function assignTickets() {
     var assigneeData = [];
     var registrationId = document.getElementById('registrationId').value;
-
+    showLoadingOverlay();
     fetch('/GetRegistration?registrationId=' + registrationId, {
         method: 'GET',
         headers: {
@@ -23,6 +23,7 @@
                         title: 'Incomplete Form...',
                         text: 'Please provide all the required information for the ticket assignment.',
                     });
+                    hideLoadingOverlay();
                     return;
                 }
 
@@ -54,15 +55,24 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    //console.log('Success', data);
-                    $('#assignModal').modal('hide');
+                    if (data.success) {
+                        //console.log('Success', data);
+                        hideLoadingOverlay();
+                        $('#assignModal').modal('hide');
+                        hideRegistrationCard(registrationId);
+                        toastr.success(data.message);
+                    } else {
+                        toastr.error(data.message);
+                    }
                 })
                 .catch((error) => {
                     console.log('Error', error);
+                    hideLoadingOverlay();
                 });
 
         })
         .catch((error) => {
+            hideLoadingOverlay();
             console.log('Error while retrieving data', error);
         });
 
@@ -126,4 +136,19 @@ function openAssignModal(quantity, registrationId) {
 
     $('#assignModal').modal('show');
 
+}
+
+function hideRegistrationCard(registrationId) {
+    var registrationCard = document.getElementById('registrationCard_' + registrationId);
+    if (registrationCard) {
+        registrationCard.style.display = 'none';
+    }
+}
+
+function showLoadingOverlay() {
+    document.getElementById('overlay').style.display = 'flex';
+}
+
+function hideLoadingOverlay() {
+    document.getElementById('overlay').style.display = 'none';
 }
