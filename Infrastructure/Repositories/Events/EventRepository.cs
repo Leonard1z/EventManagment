@@ -61,7 +61,7 @@ namespace Infrastructure.Repositories.Events
             return DbSet.Where(x => x.EndDate < currentDate).AsNoTracking().ToList();
         }
 
-        public async Task<IEnumerable<Event>> GetUserEvents(int userId)
+        public async Task<IEnumerable<Event>> GetActiveEventsForEventCreator(int userId)
         {
             var result = DbSet.Include(x => x.Category)
                 //.Include(x => x.UserAccount)
@@ -87,6 +87,16 @@ namespace Infrastructure.Repositories.Events
         {
             return await DbSet.Include(x => x.Category)
                                .FirstOrDefaultAsync(x => x.Id == eventId);
+        }
+
+        public async Task<int> GetTotalEventCount()
+        {
+            return await DbSet.CountAsync();
+        }
+
+        public async Task<int> GetTotalEventCountForEventCreator(int eventCreatorId)
+        {
+            return await DbSet.CountAsync(e => e.UserAccountId == eventCreatorId);
         }
     }
 }

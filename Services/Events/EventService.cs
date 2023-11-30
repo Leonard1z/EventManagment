@@ -86,9 +86,9 @@ namespace Services.Events
             return true;
         }
 
-        public async Task<IEnumerable<EventDto>> GetUserEvents(int useId)
+        public async Task<IEnumerable<EventDto>> GetActiveEventsForEventCreator(int useId)
         {
-            var result = await _eventRepository.GetUserEvents(useId);
+            var result = await _eventRepository.GetActiveEventsForEventCreator(useId);
 
             return _mapper.Map<List<EventDto>>(result.ToList());
         }
@@ -131,6 +131,16 @@ namespace Services.Events
             var result = await _eventRepository.GetEventDetails(eventId);
 
             return _mapper.Map<EventDto>(result);
+        }
+
+        public async Task<int> GetTotalEventCount()
+        {
+            return await _eventRepository.GetTotalEventCount();
+        }
+
+        public async Task<int> GetTotalEventCountForEventCreator(int eventCreatorId)
+        {
+            return await _eventRepository.GetTotalEventCountForEventCreator(eventCreatorId);
         }
     }
 }

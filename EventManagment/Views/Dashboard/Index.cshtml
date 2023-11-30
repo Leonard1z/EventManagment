@@ -1,3 +1,24 @@
 ﻿@{
     Layout = "_DashboardLayout";
 }
+
+
+<div class="container">
+    <h2>Dashboard Statistics</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Events Created</h5>
+                    <p class="card-text" id="totalEvents"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/dashboard.js"></script>
+}

@@ -154,3 +154,23 @@ body {
     font-size: 17px;
     padding:0 17px;
 }
+
+#toast-container > .toast-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+#toast-container > .toast-error {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+#toast-container > .toast-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+#toast-container > .toast-info {
+    background-color: #17a2b8;
+    color: #fff;
+}

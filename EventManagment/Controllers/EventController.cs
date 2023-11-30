@@ -60,7 +60,7 @@ namespace EventManagment.Controllers
         {
             try
             {
-                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Creator"))
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("EventCreator"))
                 {
                     var result = EventCreateDtoEncryption();
 
@@ -90,7 +90,7 @@ namespace EventManagment.Controllers
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Creator"))
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("EventCreator"))
                 {
                     eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
                     eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
@@ -396,7 +396,7 @@ namespace EventManagment.Controllers
                 }
                 else
                 {
-                    var result = await _eventService.GetUserEvents(userId);
+                    var result = await _eventService.GetActiveEventsForEventCreator(userId);
 
                     foreach (var item in result)
                     {

@@ -9,5 +9,6 @@
         public readonly string RoleControllerPs = "EventManagment.RoleController";
         public readonly string HomeControllerPs = "EventManagment.HomeController";
         public readonly string ReservationControllerPs = "EventManagment.ReservationController";
+        public readonly string DashboardControllerPs = "EventManagment.DashboardController";
     }
 }
