@@ -10,5 +10,6 @@ namespace Services.Registration
         Task<RegistrationDetailsDto> GetRegistrationById(int id);
         IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId);
         Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId);
+        Task<int> GetTotalTicketsSoldForUser(int userId);
     }
 }

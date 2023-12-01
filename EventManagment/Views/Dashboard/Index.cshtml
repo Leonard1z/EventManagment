@@ -2,12 +2,11 @@
     Layout = "_DashboardLayout";
 }
 
+<link rel="stylesheet" href="~/css/dashboardIndex.css" />
 
-<div class="container">
-    <h2>Dashboard Statistics</h2>
-
+<div class="container-fluid mt-4">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Events Created</h5>
@@ -15,7 +14,14 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Tickets Sold</h5>
+                    <p class="card-text" id="totalTickets"></p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

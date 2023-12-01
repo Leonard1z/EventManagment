@@ -20,6 +20,7 @@ namespace Domain._DTO.Registration
         public int Quantity { get; set; }
         public double TicketPrice { get; set; }
         public double TotalPrice { get; set; }
+        public bool IsAssigned { get; set; }
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }
         public int EventId { get; set; }

@@ -8,9 +8,9 @@
             'Content-Type': 'application/json',
         },
     })
-        .then(response => response.json())
+    .then(response => response.json())
         .then(data => {
-            //console.log(data);
+            console.log(data);
             for (var i = 1; i <= data.quantity; i++) {
                 var firstName = document.getElementById('assigneeFirstName' + i).value;
                 var lastName = document.getElementById('assigneeLastName' + i).value;
@@ -22,6 +22,16 @@
                         icon: 'error',
                         title: 'Incomplete Form...',
                         text: 'Please provide all the required information for the ticket assignment.',
+                    });
+                    hideLoadingOverlay();
+                    return;
+                }
+
+                if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Email',
+                        text: 'Please provide a valid email address.',
                     });
                     hideLoadingOverlay();
                     return;
@@ -46,29 +56,29 @@
             }
 
 
-            fetch('/Assign/Ticket', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(assigneeData),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        //console.log('Success', data);
-                        hideLoadingOverlay();
-                        $('#assignModal').modal('hide');
-                        hideRegistrationCard(registrationId);
-                        toastr.success(data.message);
-                    } else {
-                        toastr.error(data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error', error);
+        fetch('/Assign/Ticket', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(assigneeData),
+        })
+        .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Success', data);
                     hideLoadingOverlay();
-                });
+                    $('#assignModal').modal('hide');
+                    hideRegistrationCard(registrationId);
+                    toastr.success(data.message);
+                } else {
+                    toastr.error(data.message);
+                }
+            })
+            .catch((error) => {
+                console.log('Error', error);
+                hideLoadingOverlay();
+            });
 
         })
         .catch((error) => {

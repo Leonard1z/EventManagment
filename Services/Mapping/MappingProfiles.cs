@@ -36,9 +36,6 @@ namespace Services.Mapping
             #region
             CreateMap<Domain.Entities.Registration, RegistrationDto>();
             CreateMap<RegistrationDto, Domain.Entities.Registration>();
-
-            CreateMap<Domain.Entities.Registration, RegistrationCreateDto>();
-            CreateMap<RegistrationCreateDto, Domain.Entities.Registration>();
             #endregion
 
             #region

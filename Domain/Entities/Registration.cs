@@ -14,6 +14,7 @@ namespace Domain.Entities
         public int Quantity { get; set; }
         public double TicketPrice { get; set; }
         public double TotalPrice { get; set; }
+        public bool IsAssigned { get; set; }
         public int UserAccountId { get; set; }
         public UserAccount UserAccount { get; set; }
         public int EventId { get; set; }

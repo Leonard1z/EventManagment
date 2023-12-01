@@ -15,7 +15,7 @@
         <div class="tickets-container">
             @foreach (var registration in Model)
             {
-                if (registration.Quantity > 0)
+                if (!registration.IsAssigned)
                 {
                     <div class="ticket" id="registrationCard_@registration.Id">
                         <div class="ticket-content">

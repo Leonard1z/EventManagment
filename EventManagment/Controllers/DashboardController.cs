@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Domain.ViewModels;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Security;
 using Services.Events;
+using Services.Registration;
 using System.Security.Claims;
 
 namespace EventManagment.Controllers
@@ -12,11 +14,13 @@ namespace EventManagment.Controllers
     public class DashboardController : Controller
     {
         private readonly IEventService _eventService;
+        private readonly IRegistrationService _registrationService;
         private readonly ILogger<DashboardController> _logger;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<DashboardController> _localizer;
 
         public DashboardController(IEventService eventService,
+            IRegistrationService registrationService,
             ILogger<DashboardController> logger,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
@@ -24,18 +28,20 @@ namespace EventManagment.Controllers
             )
         {
             _eventService = eventService;
+            _registrationService = registrationService;
             _logger = logger;
             _protector = provider.CreateProtector(purpose: purposeStrings.DashboardControllerPs);
             _localizer = localizer;
         }
+
         [Route("Dashboard")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Route("GetEventCountForDashboard")]
-        public async Task<IActionResult> GetEventCountForDashboard()
+        [Route("GetAllData")]
+        public async Task<IActionResult> GetAllData()
         {
 
             try
@@ -44,17 +50,21 @@ namespace EventManagment.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = int.Parse(claim.Value);
                 var isAdmin = User.IsInRole("Admin");
-                int eventCount;
+
+                var dashboardData = new DashboardViewModel();
+
                 if (isAdmin)
                 {
-                    eventCount = await _eventService.GetTotalEventCount();
+                    dashboardData.TotalEventsCreated = await _eventService.GetTotalEventCount();
+
                 }
                 else
                 {
-                    eventCount = await _eventService.GetTotalEventCountForEventCreator(userId);
+                    dashboardData.TotalEventsCreated = await _eventService.GetTotalEventCountForEventCreator(userId);
+                    dashboardData.TotalTicketsSold = await _registrationService.GetTotalTicketsSoldForUser(userId);
                 }
 
-                return Json(new { eventCount });
+                return Json(dashboardData);
             }
             catch (Exception ex)
             {
