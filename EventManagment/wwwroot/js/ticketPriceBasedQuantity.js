@@ -20,7 +20,7 @@
                 var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
 
                 //console.log(currentTotalPrice);
-                sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice);
+                sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
             } else {
                 quantityErrorMessage.textContent = 'Quantity cannot be 0. Please select a valid value.';
                 overlay.style.display = 'none';
@@ -30,14 +30,14 @@
     });
 
 
-    async function sendReservationRequest(ticketId, quantity, ticketTotalPrice) {
+    async function sendReservationRequest(ticketId, quantity, ticketTotalPrice,eventId) {
         try {
             const response = await fetch('/Reservation/Reserve', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ticketId, quantity, ticketTotalPrice }),
+                body: JSON.stringify({ ticketId, quantity, ticketTotalPrice, eventId }),
 
             });
             if (!response.ok) {
