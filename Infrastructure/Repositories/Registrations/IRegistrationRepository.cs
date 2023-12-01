@@ -8,6 +8,7 @@ namespace Infrastructure.Repositories.Registrations
         IEnumerable<Registration> GetRegistrationByEventId(int eventId);
         Task<List<Registration>> GetUserPurchasedTicketsAsync(int userId);
         Task<Registration> GetRegistrationById(int id);
+        Task<int> GetTotalTicketsSoldForUser(int userId);
 
     }
 }

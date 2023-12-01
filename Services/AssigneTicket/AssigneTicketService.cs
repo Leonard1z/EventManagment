@@ -47,7 +47,7 @@ namespace Services.AssigneTicket
                     var registration = await _registrationRepository.GetById(ticket.RegistrationId);
                     if (registration != null)
                     {
-                        registration.Quantity -= 1;
+                        registration.IsAssigned = true;
                         await _registrationRepository.UpdateAsync(registration);
                         _qrCodeGeneratorService.GenerateQrCode(ticket);
                         var result = await _assigneeTicketRepository.CreateAsync(ticket);

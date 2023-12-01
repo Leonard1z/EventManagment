@@ -50,9 +50,15 @@ namespace Services.Registration
                 TicketTypeId = registration.TicketTypeId,
                 Quantity = registration.Quantity,
                 TicketPrice = registration.TicketPrice,
+                IsAssigned = registration.IsAssigned,
             };
 
             return registrationDetailsDto;
+        }
+
+        public async Task<int> GetTotalTicketsSoldForUser(int userId)
+        {
+            return await _registrationRepository.GetTotalTicketsSoldForUser(userId);
         }
     }
 }

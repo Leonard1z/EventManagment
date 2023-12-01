@@ -39,5 +39,13 @@ namespace Infrastructure.Repositories.Registrations
                 .Include(r => r.TicketType)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
+
+        public async Task<int> GetTotalTicketsSoldForUser(int userId)
+        {
+            var totalTicketsSold = await DbSet.Where(r => r.Event.UserAccountId == userId && r.IsAssigned)
+                .SumAsync(r => r.Quantity);
+
+            return totalTicketsSold;
+        }
     }
 }
