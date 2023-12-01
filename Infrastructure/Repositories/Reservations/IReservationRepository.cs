@@ -12,5 +12,7 @@ namespace Infrastructure.Repositories.Reservations
         Task<IList<Reservation>> GetExpiredReservationsAsync(DateTime currentDate);
         Task<bool> ExistsByReservationNumber(int reservationNumber);
         Task<Reservation> GetByIdWithTicket(int id, Func<IQueryable<Reservation>, IQueryable<Reservation>> include = null);
+        Task<bool> HasActiveReservationForTickets(int userId, List<int> ticketIds);
+        Task<bool> HasCompletedPayment(int userId, int eventId, int ticketId);
     }
 }

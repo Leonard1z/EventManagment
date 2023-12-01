@@ -119,6 +119,7 @@
         saleEndDate = t.SaleEndDate.ToString("yyyy-MM-ddTHH:mm:ss"),
         price = t.Price
     }).ToList();
+    var eventData = Model.Event.Id;
 }
 
 @section Scripts{
@@ -127,7 +128,9 @@
     }
     <script>
         var tickets = @Html.Raw(Json.Serialize(ticketTypes));
-        //console.log(tickets);
+        var eventId = @Html.Raw(Json.Serialize(eventData));
+        console.log(tickets);
+        console.log(eventId);
     </script>
 
     <script src="~/js/ticketCountDown.js"></script>
