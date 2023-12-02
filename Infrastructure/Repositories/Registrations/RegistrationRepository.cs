@@ -42,8 +42,15 @@ namespace Infrastructure.Repositories.Registrations
 
         public async Task<int> GetTotalTicketsSoldForUser(int userId)
         {
-            var totalTicketsSold = await DbSet.Where(r => r.Event.UserAccountId == userId && r.IsAssigned)
+            var totalTicketsSold = await DbSet.Where(r => r.Event.UserAccountId == userId)
                 .SumAsync(r => r.Quantity);
+
+            return totalTicketsSold;
+        }
+
+        public async Task<int> GetTotalTicketsSoldForAdmin()
+        {
+            var totalTicketsSold = await DbSet.SumAsync(r => r.Quantity);
 
             return totalTicketsSold;
         }

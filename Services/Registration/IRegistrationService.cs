@@ -11,5 +11,6 @@ namespace Services.Registration
         IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId);
         Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId);
         Task<int> GetTotalTicketsSoldForUser(int userId);
+        Task<int> GetTotalTicketsSoldForAdmin();
     }
 }

@@ -98,5 +98,16 @@ namespace Infrastructure.Repositories.Events
         {
             return await DbSet.CountAsync(e => e.UserAccountId == eventCreatorId);
         }
+
+        public async Task<IList<Event>> GetUpcomingEvents(int userId, DateTime currentDate)
+        {
+            return await DbSet.Where(e => e.UserAccountId == userId && e.StartDate > currentDate)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId, DateTime currentDate)
+        {
+            return await DbSet.CountAsync(e => e.UserAccountId == eventCreatorId && e.StartDate > currentDate);
+        }
     }
 }

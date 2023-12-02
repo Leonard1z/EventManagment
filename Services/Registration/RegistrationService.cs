@@ -60,5 +60,10 @@ namespace Services.Registration
         {
             return await _registrationRepository.GetTotalTicketsSoldForUser(userId);
         }
+
+        public async Task<int> GetTotalTicketsSoldForAdmin()
+        {
+            return await _registrationRepository.GetTotalTicketsSoldForAdmin();
+        }
     }
 }

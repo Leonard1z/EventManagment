@@ -13,10 +13,12 @@ async function fetchDashboardStatistics() {
 
         const totalEventsElement = document.getElementById("totalEvents");
         const totalTicketsSold = document.getElementById("totalTickets");
+        const totalUpcomingEvents = document.getElementById("totalUpcomingEvents");
         //console.log(data);
         if (totalEventsElement && totalTicketsSold) {
             totalEventsElement.innerText = data.totalEventsCreated;
             totalTicketsSold.innerText = data.totalTicketsSold;
+            totalUpcomingEvents.innerText = data.totalUpcomingEvents;
         }
 
 

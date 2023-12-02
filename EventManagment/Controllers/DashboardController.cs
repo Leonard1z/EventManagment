@@ -56,17 +56,42 @@ namespace EventManagment.Controllers
                 if (isAdmin)
                 {
                     dashboardData.TotalEventsCreated = await _eventService.GetTotalEventCount();
+                    dashboardData.TotalTicketsSold = await _registrationService.GetTotalTicketsSoldForAdmin();
 
                 }
                 else
                 {
                     dashboardData.TotalEventsCreated = await _eventService.GetTotalEventCountForEventCreator(userId);
                     dashboardData.TotalTicketsSold = await _registrationService.GetTotalTicketsSoldForUser(userId);
+                    dashboardData.TotalUpcomingEvents = await _eventService.GetTotalUpcomingEventsForEventCreator(userId);
                 }
 
                 return Json(dashboardData);
             }
             catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                TempData["message"] = "Error";
+                TempData["entity"] = "Invalid value.";
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [Route("UpcomingEvents")]
+        public async Task<IActionResult> UpcomingEvents()
+        {
+            try
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = int.Parse(claim.Value);
+
+                var upcomingEvents = await _eventService.GetUpcomingEvents(userId);
+
+                return View(upcomingEvents);
+
+            }catch(Exception ex)
             {
                 _logger.LogError(ex.Message);
 

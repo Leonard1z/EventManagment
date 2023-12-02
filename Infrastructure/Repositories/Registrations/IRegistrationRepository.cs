@@ -9,6 +9,7 @@ namespace Infrastructure.Repositories.Registrations
         Task<List<Registration>> GetUserPurchasedTicketsAsync(int userId);
         Task<Registration> GetRegistrationById(int id);
         Task<int> GetTotalTicketsSoldForUser(int userId);
+        Task<int> GetTotalTicketsSoldForAdmin();
 
     }
 }
