@@ -10,5 +10,6 @@ namespace Domain.ViewModels
     {
         public int TotalEventsCreated { get; set; }
         public int TotalTicketsSold { get; set; }
+        public int TotalUpcomingEvents { get; set; }
     }
 }
