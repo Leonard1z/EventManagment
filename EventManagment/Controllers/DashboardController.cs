@@ -57,6 +57,7 @@ namespace EventManagment.Controllers
                 {
                     dashboardData.TotalEventsCreated = await _eventService.GetTotalEventCount();
                     dashboardData.TotalTicketsSold = await _registrationService.GetTotalTicketsSoldForAdmin();
+                    dashboardData.TotalUpcomingEvents = await _eventService.GetTotalUpcomingEventsForAdmin();
 
                 }
                 else
@@ -86,10 +87,22 @@ namespace EventManagment.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = int.Parse(claim.Value);
+                var isAdmin = User.IsInRole("Admin");
 
-                var upcomingEvents = await _eventService.GetUpcomingEvents(userId);
+                if (isAdmin)
+                {
+                    var upcomingEvents = await _eventService.GetUpcomingEventsForAdmin();
 
-                return View(upcomingEvents);
+                    return View(upcomingEvents);
+                }
+                else
+                {
+                    var upcomingEvents = await _eventService.GetUpcomingEvents(userId);
+
+                     return View(upcomingEvents);
+                }
+
+                return RedirectToAction(nameof(Index));
 
             }catch(Exception ex)
             {

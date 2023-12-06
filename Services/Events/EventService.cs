@@ -142,6 +142,14 @@ namespace Services.Events
         {
             return await _eventRepository.GetTotalEventCountForEventCreator(eventCreatorId);
         }
+        public async Task<IList<EventDto>> GetUpcomingEventsForAdmin()
+        {
+            DateTime currentDate = DateTime.Now;
+
+            var upcomingEvents = await _eventRepository.GetUpcomingEventsForAdmin(currentDate);
+
+            return _mapper.Map<IList<EventDto>>(upcomingEvents);
+        }
 
         public async Task<IList<EventDto>> GetUpcomingEvents(int userId)
         {
@@ -158,6 +166,15 @@ namespace Services.Events
             DateTime currentDate = DateTime.Now;
 
             var totalUpcomingEvents = await _eventRepository.GetTotalUpcomingEventsForEventCreator(eventCreatorId, currentDate);
+
+            return totalUpcomingEvents;
+        }
+
+        public async Task<int> GetTotalUpcomingEventsForAdmin()
+        {
+            DateTime currentDate = DateTime.Now;
+
+            var totalUpcomingEvents = await _eventRepository.GetTotalUpcomingEventsForAdmin(currentDate);
 
             return totalUpcomingEvents;
         }
