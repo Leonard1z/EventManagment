@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace EventManagment.Controllers
 {
@@ -242,27 +243,34 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult> Login(LoginDto loginDto, string returnUrl)
+        public async Task<ActionResult> Login(string returnUrl)
         {
-
-            var clientType = HttpContext.Request.Headers["Client-Type"].ToString();
-
-            if (clientType == "Mobile")
+            if (Request.ContentType.ToString().Contains("application/json"))
             {
-                var userDto = _userAccountService.Authenticate(loginDto);
-
-                if(userDto == null)
+                using (var reader = new StreamReader(Request.Body))
                 {
-                    return Unauthorized("Invalid Email or password");
+                    var requestBody = await reader.ReadToEndAsync();
+                    var loginDto = JsonConvert.DeserializeObject<LoginDto>(requestBody);
+                    var userDto = _userAccountService.Authenticate(loginDto);
+
+                    if (userDto == null)
+                    {
+                        return Unauthorized("Invalid Email or password");
+                    }
+
+                    var jwtToken = await GenerateJwtToken(userDto);
+
+                    return Ok(new { Token = jwtToken });
                 }
-
-                var jwtToken = await GenerateJwtToken(userDto);
-
-                return Ok(new { Token = jwtToken });
 
             }
             else
             {
+                var loginDto = new LoginDto
+                {
+                    Email = Request.Form["Email"],
+                    Password = Request.Form["Password"]
+                };
 
                 var userDto = _userAccountService.Authenticate(loginDto);
 
