@@ -15,6 +15,9 @@ using ReflectionIT.Mvc.Paging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventManagment.Controllers
 {
@@ -28,6 +31,7 @@ namespace EventManagment.Controllers
         private readonly IStringLocalizer<UserAccountController> _localizer;
         private readonly ILogger<UserAccountController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration _configuration;
 
         public UserAccountController(IUserAccountService userAccountService,
             IRoleService roleService,
@@ -36,7 +40,9 @@ namespace EventManagment.Controllers
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<UserAccountController> localizer,
             ILogger<UserAccountController> logger,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IConfiguration configuration
+            )
         {
             _userAccountService = userAccountService;
             _roleService = roleService;
@@ -45,6 +51,7 @@ namespace EventManagment.Controllers
             _localizer = localizer;
             _logger = logger;
             _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
         }
 
         [Authorize(Policy ="AdminOnly")]
@@ -237,33 +244,54 @@ namespace EventManagment.Controllers
         [Route("Login")]
         public async Task<ActionResult> Login(LoginDto loginDto, string returnUrl)
         {
-            var userDto = _userAccountService.Authenticate(loginDto);
 
-            if (userDto == null)
+            var clientType = HttpContext.Request.Headers["Client-Type"].ToString();
+
+            if (clientType == "Mobile")
             {
-                TempData["message"] = "Error";
-                TempData["entity"] = _localizer["Invalid username or password"].ToString();
-                return RedirectToAction(nameof(Login));
-            }
+                var userDto = _userAccountService.Authenticate(loginDto);
 
-            if (!userDto.IsEmailVerified)
+                if(userDto == null)
+                {
+                    return Unauthorized("Invalid Email or password");
+                }
+
+                var jwtToken = await GenerateJwtToken(userDto);
+
+                return Ok(new { Token = jwtToken });
+
+            }
+            else
             {
-                TempData["message"] = "Warning";
-                TempData["entity"] = _localizer[$"We've sent an email verification to your registered email address ({userDto.Email}). Please check your inbox and follow the instructions to complete the email verification process before logging in."].ToString();
-                return RedirectToAction(nameof(Login));
+
+                var userDto = _userAccountService.Authenticate(loginDto);
+
+                if (userDto == null)
+                {
+                    TempData["message"] = "Error";
+                    TempData["entity"] = _localizer["Invalid username or password"].ToString();
+                    return RedirectToAction(nameof(Login));
+                }
+
+                if (!userDto.IsEmailVerified)
+                {
+                    TempData["message"] = "Warning";
+                    TempData["entity"] = _localizer[$"We've sent an email verification to your registered email address ({userDto.Email}). Please check your inbox and follow the instructions to complete the email verification process before logging in."].ToString();
+                    return RedirectToAction(nameof(Login));
+                }
+
+                TempData["message"] = "Success";
+                TempData["entity"] = _localizer["Logged in successfully"].ToString();
+
+                await SignInUserAsync(userDto);
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
             }
-
-            TempData["message"] = "Success";
-            TempData["entity"] = _localizer["Logged in successfully"].ToString();
-
-            await SignInUserAsync(userDto);
-
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return RedirectToAction("Index", "Home");
         }
 
         private async Task SignInUserAsync(UserAccountDto userDto)
@@ -286,6 +314,30 @@ namespace EventManagment.Controllers
                     IsPersistent = true,
                     ExpiresUtc = DateTime.UtcNow.AddDays(7)
                 });
+        }
+
+        private async Task<string> GenerateJwtToken(UserAccountDto userDto)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtSecretKey = _configuration.GetSection("JwtSettings:SecretKey").Value;
+            var key = Encoding.ASCII.GetBytes(jwtSecretKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] 
+                { 
+                    new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                    new Claim(ClaimTypes.Name, userDto.FirstName),
+                    new Claim(ClaimTypes.Email, userDto.Email),
+                    new Claim(ClaimTypes.Role, userDto.Role.Name),
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+
         }
 
         [HttpGet]

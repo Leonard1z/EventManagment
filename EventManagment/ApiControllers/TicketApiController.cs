@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.AssigneTicket;
@@ -7,6 +9,7 @@ namespace EventManagment.ApiControllers
 {
     [Route("api/ticket")]
     [ApiController]
+    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
     public class TicketApiController : ControllerBase
     {
         private readonly IAssigneTicketService _assigneTicketService;
