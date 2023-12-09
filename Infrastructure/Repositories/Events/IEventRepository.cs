@@ -17,5 +17,6 @@ namespace Infrastructure.Repositories.Events
         Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId, DateTime currentDate);
         Task<IList<Event>> GetUpcomingEventsForAdmin(DateTime currentDate);
         Task<IList<Event>> GetUpcomingEvents(int userId, DateTime currentDate);
+        Task<IList<Event>> GetUpcomingEventsWithinOneWeek(DateTime currentDate, DateTime oneWeekLater,int userId);
     }
 }

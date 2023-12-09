@@ -178,5 +178,15 @@ namespace Services.Events
 
             return totalUpcomingEvents;
         }
+
+        public async Task<IList<EventDto>> GetUpcomingEventsWithinOneWeek(int userId)
+        {
+            DateTime currentDate = DateTime.Now;
+            DateTime oneWeekLater = currentDate.AddDays(7);
+
+            var upcomingEvents = await _eventRepository.GetUpcomingEventsWithinOneWeek(currentDate, oneWeekLater,userId);
+
+            return _mapper.Map<IList<EventDto>>(upcomingEvents);
+        }
     }
 }

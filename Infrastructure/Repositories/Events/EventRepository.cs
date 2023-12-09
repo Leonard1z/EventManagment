@@ -119,5 +119,10 @@ namespace Infrastructure.Repositories.Events
         {
             return await DbSet.CountAsync(e=>e.StartDate > currentDate);
         }
+
+        public async Task<IList<Event>> GetUpcomingEventsWithinOneWeek(DateTime currentDate, DateTime oneWeekLater,int userId)
+        {
+            return await DbSet.Where(e => e.UserAccountId == userId && e.StartDate >= currentDate && e.StartDate <= oneWeekLater).ToListAsync();
+        }
     }
 }

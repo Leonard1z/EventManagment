@@ -25,5 +25,6 @@ namespace Services.Events
         Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId);
         Task<IList<EventDto>> GetUpcomingEventsForAdmin();
         Task<IList<EventDto>> GetUpcomingEvents(int userId);
+        Task<IList<EventDto>> GetUpcomingEventsWithinOneWeek(int userId);
     }
 }
