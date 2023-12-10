@@ -1,4 +1,5 @@
-﻿using Domain._DTO.Event;
+﻿using Domain._DTO.AssignedTickets;
+using Domain._DTO.Event;
 using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
 using System;
@@ -27,5 +28,6 @@ namespace Domain._DTO.Registration
         public EventDto Event { get; set; }
         public int TicketTypeId { get; set; }
         public TicketTypeDto TicketType { get; set; }
+        public ICollection<AssignedTicketsDto> AssignedTickets { get; set; }
     }
 }

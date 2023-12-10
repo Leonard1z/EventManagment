@@ -1,19 +1,23 @@
-﻿using System;
+﻿using Domain._DTO.Registration;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain._DTO.AssignedTickets
 {
-    public class AssignedTicket
+    public class AssignedTicketsDto
     {
         public int Id { get; set; }
+        [NotMapped]
+        public string EncryptedId  { get; set; }
+        [NotMapped]
+        public string EncryptedRegistrationId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string EventName { get; set; }
@@ -26,6 +30,6 @@ namespace Domain.Entities
         public string QrCodeData { get; set; }
         public int TicketNumber { get; set; }
         public int RegistrationId { get; set; }
-        public Registration Registration { get; set; }
+        public RegistrationDto Registration { get; set; }
     }
 }

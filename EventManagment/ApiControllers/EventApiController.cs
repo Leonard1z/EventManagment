@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Security;
 using Services.Events;
+using Services.Registration;
 using System.Security.Claims;
 
 namespace EventManagment.ApiControllers
@@ -15,10 +16,12 @@ namespace EventManagment.ApiControllers
     public class EventApiController : ControllerBase
     {
         private readonly IEventService _eventService;
+        private readonly IRegistrationService _registrationService;
         private readonly ILogger<EventApiController> _logger;
         private readonly IDataProtector _protector;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public EventApiController(
+            IRegistrationService registrationService,
             IEventService eventService,
             IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
@@ -26,6 +29,7 @@ namespace EventManagment.ApiControllers
             IHttpContextAccessor httpContextAccessor
             )
         {
+            _registrationService = registrationService;
             _eventService = eventService;
             _protector = provider.CreateProtector(purpose: purposeStrings.ApiControllersPs);
             _logger = logger;
@@ -61,6 +65,13 @@ namespace EventManagment.ApiControllers
             }
         }
 
+        [HttpGet("assignedTickets/{eventId}")]
+        public async Task<IActionResult> GetAssignedTicketsForEvent(int eventId)
+        {
+            var assignedTickets = await _registrationService.GetAssignedTicketsForEvent(eventId);
+
+            return Ok(assignedTickets);
+        }
         private int GetUserIdFromToken()
         {
             var principal = _httpContextAccessor.HttpContext?.User;

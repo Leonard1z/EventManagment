@@ -10,6 +10,7 @@ namespace Infrastructure.Repositories.Registrations
         Task<Registration> GetRegistrationById(int id);
         Task<int> GetTotalTicketsSoldForUser(int userId);
         Task<int> GetTotalTicketsSoldForAdmin();
+        Task<ICollection<AssignedTicket>> GetAssignedTicketsForEvent(int eventId);
 
     }
 }

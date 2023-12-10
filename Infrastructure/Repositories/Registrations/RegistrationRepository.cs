@@ -54,5 +54,27 @@ namespace Infrastructure.Repositories.Registrations
 
             return totalTicketsSold;
         }
+
+        public async Task<ICollection<AssignedTicket>> GetAssignedTicketsForEvent(int eventId)
+        {
+            var registrationForEvent = await DbSet.Include(r => r.AssignedTickets)
+                .Where(r => r.EventId == eventId)
+                .ToListAsync();
+
+            var assignedTickets = registrationForEvent
+                .SelectMany(r => r.AssignedTickets
+                    .Select(t => new AssignedTicket
+                    {
+                        Id = t.Id,
+                        FirstName = t.FirstName,
+                        LastName = t.LastName,
+                        Email = t.Email,
+                        PhoneNumber = t.PhoneNumber,
+
+                    }))
+                .ToList();
+
+            return assignedTickets;
+        }
     }
 }

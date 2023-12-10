@@ -1,4 +1,5 @@
 ﻿using Domain._DTO.Registration;
+using Domain.Entities;
 using Services.Common;
 
 namespace Services.Registration
@@ -12,5 +13,6 @@ namespace Services.Registration
         Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId);
         Task<int> GetTotalTicketsSoldForUser(int userId);
         Task<int> GetTotalTicketsSoldForAdmin();
+        Task<ICollection<AssignedTicket>> GetAssignedTicketsForEvent(int eventId);
     }
 }

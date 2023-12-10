@@ -21,5 +21,6 @@ namespace Domain.Entities
         public Event Event { get; set; }
         public int TicketTypeId { get; set; }
         public TicketType TicketType { get; set; }
+        public ICollection<AssignedTicket> AssignedTickets { get; set; }
     }
 }
