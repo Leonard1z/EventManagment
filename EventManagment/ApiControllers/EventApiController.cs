@@ -65,11 +65,24 @@ namespace EventManagment.ApiControllers
             }
         }
 
-        [HttpGet("assignedTickets/{eventId}")]
-        public async Task<IActionResult> GetAssignedTicketsForEvent(int eventId)
+        [HttpGet("assignedTickets/{encryptedId}")]
+        public async Task<IActionResult> GetAssignedTicketsForEvent(string encryptedId)
         {
+
+            var eventId = encryptedId != null ? int.Parse(DecryptId(encryptedId)) : 0;
+            if (eventId == 0)
+            {
+                return BadRequest("Invalid or decrypted ID.");
+            }
             var assignedTickets = await _registrationService.GetAssignedTicketsForEvent(eventId);
 
+            foreach(var ticket in assignedTickets)
+            {
+                ticket.EncryptedId = _protector.Protect(ticket.Id.ToString());
+                ticket.EncryptedRegistrationId = _protector.Protect(ticket.RegistrationId.ToString());
+                ticket.Id = 0;
+                ticket.RegistrationId = 0;
+            }
             return Ok(assignedTickets);
         }
         private int GetUserIdFromToken()
@@ -87,6 +100,19 @@ namespace EventManagment.ApiControllers
             }
 
             throw new InvalidOperationException("Unable to retrieve user ID from the authentication token.");
+        }
+        private string DecryptId(string encryptedId)
+        {
+            try
+            {
+                var decryptedId = _protector.Unprotect(encryptedId);
+                return decryptedId;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error decrypting ID");
+                return null;
+            }
         }
     }
 }

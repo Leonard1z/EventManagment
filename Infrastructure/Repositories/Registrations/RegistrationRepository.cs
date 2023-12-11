@@ -70,6 +70,16 @@ namespace Infrastructure.Repositories.Registrations
                         LastName = t.LastName,
                         Email = t.Email,
                         PhoneNumber = t.PhoneNumber,
+                        EventName = t.EventName,
+                        EventStartDate = t.EventStartDate,
+                        ExpireDate = t.ExpireDate,
+                        IsInsideEvent = t.IsInsideEvent,
+                        Venue = t.Venue,
+                        TicketType = t.TicketType,
+                        TicketPrice = t.TicketPrice,
+                        QrCodeData = t.QrCodeData,
+                        TicketNumber = t.TicketNumber,
+                        RegistrationId=t.RegistrationId,
 
                     }))
                 .ToList();
