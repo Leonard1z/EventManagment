@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain._DTO.AssignedTickets;
 using Domain._DTO.Category;
 using Domain._DTO.Event;
 using Domain._DTO.Registration;
@@ -66,6 +67,11 @@ namespace Services.Mapping
             #region
             CreateMap<Domain.Entities.Reservation, ReservationDto>();
             CreateMap<ReservationDto, Domain.Entities.Reservation>();
+            #endregion
+
+            #region
+            CreateMap<AssignedTicket, AssignedTicketsDto>();
+            CreateMap<AssignedTicketsDto, AssignedTicket>();
             #endregion
 
         }
