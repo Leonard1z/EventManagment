@@ -171,39 +171,6 @@ namespace EventManagment.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-        [HttpPost]
-        public IActionResult UploadTicketImage(IFormFile ticketImage)
-        {
-            if (ticketImage != null && ticketImage.Length > 0)
-            {
-                // Retrieves the root path of the web application www.root
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                // Generates a unique filename using Guid.NewGuid()
-                string fileName = Guid.NewGuid().ToString();
-                string extension = Path.GetExtension(ticketImage.FileName).ToLower();
-                // Valid extensions
-                string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
-
-                if (allowedExtensions.Contains(extension))
-                {
-                    string uploads = Path.Combine(wwwRootPath, @"images\tickets");
-                    string filePath = Path.Combine(uploads, fileName + extension);
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        ticketImage.CopyTo(fileStream);
-                    }
-
-                    return Ok(new { ImagePath = "/images/tickets/" + fileName + extension });
-                }
-                else
-                {
-                    return BadRequest(new { ErrorMessage = "Invalid file extension. Allowed extensions are .jpg, .jpeg, and .png." });
-                }
-            }
-
-            return BadRequest(new { ErrorMessage = "Image not received" });
-        }
 
         //GET Method
         [Route("EventDetails")]

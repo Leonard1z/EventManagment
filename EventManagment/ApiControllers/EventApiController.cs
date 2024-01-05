@@ -43,7 +43,14 @@ namespace EventManagment.ApiControllers
             {
                 var userId = GetUserIdFromToken();
 
+                if(userId == 0)
+                {
+                    return BadRequest("Invalid User.");
+                }
+
                 var upcomingEvents = await _eventService.GetUpcomingEventsWithinOneWeek(userId);
+
+
 
                 foreach(var item in upcomingEvents)
                 {
