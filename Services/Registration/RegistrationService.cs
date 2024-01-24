@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Domain._DTO.AssignedTickets;
 using Domain._DTO.Registration;
-using Domain.Entities;
 using Infrastructure.Repositories.Registrations;
 
 namespace Services.Registration
@@ -46,33 +44,14 @@ namespace Services.Registration
                 RegistrationDate = registration.RegistrationDate,
                 EventName = registration.Event.Name,
                 EventStartDate = registration.Event.StartDate,
-                EventEndDate = registration.Event.EndDate,
                 Venue = registration.Event.StreetName,
                 TicketTypeName = registration.TicketType.Name,
                 TicketTypeId = registration.TicketTypeId,
                 Quantity = registration.Quantity,
                 TicketPrice = registration.TicketPrice,
-                IsAssigned = registration.IsAssigned,
             };
 
             return registrationDetailsDto;
-        }
-
-        public async Task<int> GetTotalTicketsSoldForUser(int userId)
-        {
-            return await _registrationRepository.GetTotalTicketsSoldForUser(userId);
-        }
-
-        public async Task<int> GetTotalTicketsSoldForAdmin()
-        {
-            return await _registrationRepository.GetTotalTicketsSoldForAdmin();
-        }
-
-        public async Task<ICollection<AssignedTicketsDto>> GetAssignedTicketsForEvent(int eventId)
-        {
-           var result = await _registrationRepository.GetAssignedTicketsForEvent(eventId);
-
-            return _mapper.Map<ICollection<AssignedTicketsDto>>(result);
         }
     }
 }

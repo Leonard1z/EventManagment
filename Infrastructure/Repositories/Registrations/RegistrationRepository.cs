@@ -39,52 +39,5 @@ namespace Infrastructure.Repositories.Registrations
                 .Include(r => r.TicketType)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
-
-        public async Task<int> GetTotalTicketsSoldForUser(int userId)
-        {
-            var totalTicketsSold = await DbSet.Where(r => r.Event.UserAccountId == userId)
-                .SumAsync(r => r.Quantity);
-
-            return totalTicketsSold;
-        }
-
-        public async Task<int> GetTotalTicketsSoldForAdmin()
-        {
-            var totalTicketsSold = await DbSet.SumAsync(r => r.Quantity);
-
-            return totalTicketsSold;
-        }
-
-        public async Task<ICollection<AssignedTicket>> GetAssignedTicketsForEvent(int eventId)
-        {
-            var registrationForEvent = await DbSet.Include(r => r.AssignedTickets)
-                .Where(r => r.EventId == eventId)
-                .ToListAsync();
-
-            var assignedTickets = registrationForEvent
-                .SelectMany(r => r.AssignedTickets
-                    .Select(t => new AssignedTicket
-                    {
-                        Id = t.Id,
-                        FirstName = t.FirstName,
-                        LastName = t.LastName,
-                        Email = t.Email,
-                        PhoneNumber = t.PhoneNumber,
-                        EventName = t.EventName,
-                        EventStartDate = t.EventStartDate,
-                        ExpireDate = t.ExpireDate,
-                        IsInsideEvent = t.IsInsideEvent,
-                        Venue = t.Venue,
-                        TicketType = t.TicketType,
-                        TicketPrice = t.TicketPrice,
-                        QrCodeData = t.QrCodeData,
-                        TicketNumber = t.TicketNumber,
-                        RegistrationId=t.RegistrationId,
-
-                    }))
-                .ToList();
-
-            return assignedTickets;
-        }
     }
 }

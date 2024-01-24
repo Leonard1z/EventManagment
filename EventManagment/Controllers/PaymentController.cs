@@ -152,7 +152,6 @@ namespace EventManagment.Controllers
                     Quantity = quantity,
                     TicketPrice = ticketPrice,
                     TotalPrice = totalPrice,
-                    IsAssigned=false,
                     UserAccountId = Convert.ToInt32(session.ClientReferenceId),
                     EventId = Convert.ToInt32(session.Metadata["eventId"]),
                     TicketTypeId = Convert.ToInt32(session.Metadata["ticketId"])
