@@ -32,11 +32,6 @@ namespace Infrastructure.EntityFramework.Configurations
                 .HasForeignKey(r => r.TicketTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(r => r.AssignedTickets)
-                .WithOne(a => a.Registration)
-                .HasForeignKey(a => a.RegistrationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }
