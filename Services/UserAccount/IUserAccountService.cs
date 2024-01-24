@@ -26,6 +26,8 @@ namespace Services.UserAccount
         UserAccountEditDto UpdateWithRole(UserAccountEditDto userAccountEditDto);
         Task<ProfileUpdateDto> GetProfileById(int userId);
         Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto);
+        bool VerifyPassword(string oldPassword, string password, string salt);
+        Task ChangePassword(int userId, string newPassword);
 
     }
 }

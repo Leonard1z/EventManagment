@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="~/css/updateProfile.css" />
 @{
-	ViewData["Title"] = "UpdateProfile";
+	ViewData["Title"] = "Profile";
 }
 
 <div class="row">
@@ -11,7 +11,7 @@
 		<div class="account-settings">
 			<ul class="account-links">
 				<li><a href="#">Profile Information</a></li>
-				<li><a href="#">Change Password</a></li>
+				<li><a href="@Url.Action("ChangePassword","UserAccount")">Change Password</a></li>
 				<li><a href="#">Privacy Settings</a></li>
 			</ul>
 		</div>
@@ -91,5 +91,5 @@
 
 
 @section scripts{
-	<script src="~/js/updateProfile.js"></script>
+	<script src="~/js/updatePhotoProfile.js"></script>
 }

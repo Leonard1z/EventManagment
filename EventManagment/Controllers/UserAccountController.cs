@@ -538,7 +538,8 @@ namespace EventManagment.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult> UpdateUserProfile()
+        [Route("UserAccount/Profile")]
+        public async Task<ActionResult> ProfileInformation()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -608,6 +609,50 @@ namespace EventManagment.Controllers
                 TempData["entity"] = "An error occurred while updating the profile. Please try again.";
 
                 return RedirectToAction("Index","Home");
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("UserAccount/ChangePassword")]
+        public ActionResult ChangePassword()
+        {
+            return View(new ChangePasswordDto());
+        }
+        [Authorize]
+        [HttpPost]
+        [Route("UserAccount/ChangePassword")]
+        public async Task<IActionResult> SubmitPasswordChange(ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = claim.Value != null ? int.Parse(claim.Value) : 0;
+
+                var user = await _userAccountService.GetProfileById(userId);
+
+                if (!_userAccountService.VerifyPassword(changePasswordDto.OldPassword, user.Password, user.Salt))
+                {
+                    ModelState.AddModelError("OldPassword", "Incorrect old password.");
+                    return View("ChangePassword", changePasswordDto);
+                }
+
+                await _userAccountService.ChangePassword(user.Id, changePasswordDto.NewPassword);
+
+                TempData["message"] = "Success";
+                TempData["entity"] = "Password changed successfully.";
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                TempData["message"] = "Error";
+                TempData["entity"] = "An error occurred while changing the password. Please try again.";
+
+                return RedirectToAction("Index", "Home");
             }
         }
         private UserAccountEditDto UserEditDtoEncryption(UserAccountEditDto userAccountEdit)

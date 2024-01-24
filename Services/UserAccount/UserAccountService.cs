@@ -288,5 +288,26 @@ namespace Services.UserAccount
             return _mapper.Map<ProfileUpdateDto>(result);
 
         }
+
+        public bool VerifyPassword(string oldPassword, string password, string salt)
+        {
+            if(string.IsNullOrEmpty(password) || string.IsNullOrEmpty(oldPassword))
+            {
+                return false;
+            }
+
+            return PasswordHasher.VerifyPassword(oldPassword, password, salt);
+        }
+
+        public async Task ChangePassword(int userId, string newPassword)
+        {
+            var userAccount = await _userAccountRepository.GetById(userId);
+
+            string salt;
+            userAccount.Password = PasswordHasher.HashPassword(newPassword, out salt);
+            userAccount.Salt = salt;
+
+            _userAccountRepository.Update(userAccount);
+        }
     }
 }
