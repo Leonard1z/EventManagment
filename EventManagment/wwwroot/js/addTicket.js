@@ -6,7 +6,6 @@
     const saleStartDate = document.getElementById('SaleStartDate').value;
     const saleEndDate = document.getElementById('SaleEndDate').value;
     const imageInput = document.getElementById('ticketImage');
-    const imageFile = imageInput.files[0];
 
     if (!name || !description || isNaN(price) || price < 0 || isNaN(quantity) || quantity < 0 || !saleStartDate || !saleEndDate) {
         Swal.fire({
@@ -44,43 +43,23 @@
     const isAvailable = saleStartDate <= currentDate && saleEndDate >= currentDate;
     //console.log('Is Available:', isAvailable);
 
-    if (imageFile) {
-        const formData = new FormData();
-        formData.append('ticketImage', imageFile);
+    const newTicketType = {
+        Name: name,
+        Description: description,
+        Price: price,
+        Quantity: quantity,
+        SaleStartDate: saleStartDate,
+        SaleEndDate: saleEndDate,
+        IsAvailable: isAvailable
+    };
 
-        $.ajax({
-            url: '/Event/UploadTicketImage',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                console.log('Data received from server:', data);
-                const newTicketType = {
-                    Name: name,
-                    Description: description,
-                    Price: price,
-                    Quantity: quantity,
-                    SaleStartDate: saleStartDate,
-                    SaleEndDate: saleEndDate,
-                    IsAvailable: isAvailable,
-                    ImagePath: data.imagePath
-                };
-                ticketTypes.push(newTicketType);
-                var tickets = document.getElementById('ticketData').value = JSON.stringify(ticketTypes);
-                //console.log(tickets);
-                updateTicketList();
-                $('#addTicketModal').modal('hide');
-                //console.log(ticketTypes);
-            },
-            error: function (error) {
-                console.error('Error uploading image:', error);
-            }
-        });
-    } else {
-        updateTicketList();
-        $('#addTicketModal').modal('hide');
-    }
+
+    ticketTypes.push(newTicketType);
+    document.getElementById('ticketData').value = JSON.stringify(ticketTypes);
+    updateTicketList();
+    $('#addTicketModal').modal('hide');
+    //console.log(ticketTypes);
+
 }
 
 function updateTicketList() {

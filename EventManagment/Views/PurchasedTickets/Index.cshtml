@@ -4,23 +4,32 @@
 <link rel="stylesheet" href="~/css/purchasedTickets.css" />
 
 <div class="container">
+    <div id="overlay">
+        <div class="overlay-content">
+            <div class="spinner"></div>
+            <p class="proccessing">Processing...</p>
+        </div>
+    </div>
     @if (Model.Any())
     {
         <div class="tickets-container">
             @foreach (var registration in Model)
             {
-                <div class="ticket">
-                    <div class="ticket-content">
-                        <p>Ticket:@registration.TicketType.Name</p>
-                        <p>Event: @registration.Event.Name</p>
-                        <p>Registration Date: @registration.RegistrationDate.ToString()</p>
-                        <p>TicketPrice: @registration.TicketPrice</p>
-                        <p>Quantity: @registration.Quantity</p>
-                        <p>TotalPrice: @registration.TotalPrice</p>
+                if (!registration.IsAssigned)
+                {
+                    <div class="ticket" id="registrationCard_@registration.Id">
+                        <div class="ticket-content">
+                            <p>Ticket:@registration.TicketType.Name</p>
+                            <p>Event: @registration.Event.Name</p>
+                            <p>Registration Date: @registration.RegistrationDate.ToString()</p>
+                            <p>TicketPrice: @registration.TicketPrice</p>
+                            <p>Quantity: @registration.Quantity</p>
+                            <p>TotalPrice: @registration.TotalPrice</p>
 
-                        <button class="assign-button" onclick="openAssignModal(@registration.Quantity,@registration.Id)">Assign Tickets</button>
+                            <button class="assign-button" onclick="openAssignModal(@registration.Quantity,@registration.Id)">Assign Tickets</button>
+                        </div>
                     </div>
-                </div>
+                }
             }
         </div>
     }else{

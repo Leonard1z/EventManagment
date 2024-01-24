@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using iText.Commons.Actions.Contexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -190,6 +192,34 @@ namespace Infrastructure.Repositories
             Context = null;
         }
 
+        public TEntity UpdateExceptProperties(TEntity entity, params Expression<Func<TEntity, object>>[] excludedProperties)
+        {
+            Context.ChangeTracker.TrackGraph(entity, e => e.Entry.State = EntityState.Modified);
 
+            foreach(var property in excludedProperties)
+            {
+                var propertyName = GetPropertyName(property);
+                Context.Entry(entity).Property(propertyName).IsModified = false;
+            }
+            Save();
+
+            Context.Entry(entity).State = EntityState.Detached;
+
+            return entity;
+        }
+
+        private string GetPropertyName(Expression<Func<TEntity, object>> propertyExpression)
+        {
+            if (propertyExpression.Body is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+            else if (propertyExpression.Body is UnaryExpression unaryExpression && unaryExpression.Operand is MemberExpression unaryMemberExpression)
+            {
+                return unaryMemberExpression.Member.Name;
+            }
+
+            throw new ArgumentException("Invalid property expression");
+        }
     }
 }

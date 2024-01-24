@@ -52,7 +52,7 @@ namespace EventManagment.Controllers
 
                 if (result)
                 {
-                    return Ok(new { Message = "Tickets assigned successfully" });
+                    return Ok(new { Success=true, Message = "Tickets assigned successfully!" });
                 }
                 else
                 {

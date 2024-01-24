@@ -41,9 +41,15 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("EventStartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsInsideEvent")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -60,6 +66,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("RegistrationId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TicketNumber")
+                        .HasColumnType("int");
+
                     b.Property<double>("TicketPrice")
                         .HasColumnType("float");
 
@@ -72,6 +81,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RegistrationId");
 
                     b.ToTable("AssignetTickets");
                 });
@@ -207,6 +218,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -248,6 +262,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ExpirationTime")
                         .HasColumnType("datetime2");
 
@@ -273,6 +290,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("TicketTypeId");
 
@@ -312,10 +331,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("EventId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
@@ -391,6 +406,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfileImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -406,6 +424,17 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserAccounts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AssignedTicket", b =>
+                {
+                    b.HasOne("Domain.Entities.Registration", "Registration")
+                        .WithMany("AssignedTickets")
+                        .HasForeignKey("RegistrationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Registration");
                 });
 
             modelBuilder.Entity("Domain.Entities.Event", b =>
@@ -475,6 +504,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Reservation", b =>
                 {
+                    b.HasOne("Domain.Entities.Event", "Event")
+                        .WithMany("Reservations")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.TicketType", "TicketTypes")
                         .WithMany("Reservations")
                         .HasForeignKey("TicketTypeId")
@@ -486,6 +521,8 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Event");
 
                     b.Navigation("TicketTypes");
 
@@ -523,7 +560,14 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Registrations");
 
+                    b.Navigation("Reservations");
+
                     b.Navigation("TicketTypes");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Registration", b =>
+                {
+                    b.Navigation("AssignedTickets");
                 });
 
             modelBuilder.Entity("Domain.Entities.Reservation", b =>

@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
@@ -26,6 +29,6 @@ namespace Infrastructure.Repositories
         IList<TEntity> SearchBy(string columName, string searchText);
         void Save();
         Task SaveAsync();
-
+        TEntity UpdateExceptProperties(TEntity entity, params Expression<Func<TEntity, object>>[] excludedProperties);
     }
 }

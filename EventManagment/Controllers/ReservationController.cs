@@ -52,7 +52,21 @@ namespace EventManagment.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var userId = int.Parse(claim);
 
-                if(request.Quantity <= 0)
+                var hasActiveReservation = await _reservationService.HasActiveReservationForTickets(userId, new List<int> { request.TicketId });
+
+                if (hasActiveReservation)
+                {
+                    return Json(new { success = false, message = "You already have an active reservation for this ticket." });
+                }
+
+                var hasCompletedPayment = await _reservationService.HasCompletedPayment(userId, request.EventId, request.TicketId);
+
+                if (hasCompletedPayment)
+                {
+                    return Json(new { success = false, message = "You have already completed payment for this ticket." });
+                }
+
+                if (request.Quantity <= 0)
                 {
                     return BadRequest(new { Message = "Quantity must be greater than 0." });
                 }
@@ -75,7 +89,7 @@ namespace EventManagment.Controllers
                     return BadRequest(new { success = false, Message = "Not enought tickets available" });
                 }
 
-                await _reservationService.Create(request.TicketId, userId, request.Quantity, request.TicketTotalPrice);
+                await _reservationService.Create(request.TicketId,request.EventId, userId, request.Quantity, request.TicketTotalPrice);
 
                 await _hubContext.Clients.User(userId.ToString()).SendAsync("UpdateNotificationCountAndData");
 

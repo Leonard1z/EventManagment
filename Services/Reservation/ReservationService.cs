@@ -49,7 +49,7 @@ namespace Services.Reservation
             _cache = cache;
         }
 
-        public async Task<Domain.Entities.Reservation> Create(int ticketId, int userId, int quantity, double ticketTotalPrice)
+        public async Task<Domain.Entities.Reservation> Create(int ticketId,int eventId, int userId, int quantity, double ticketTotalPrice)
         {
             var ticket = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
             int reservationNumber = await GenerateUniqueReservationNumber();
@@ -61,6 +61,7 @@ namespace Services.Reservation
                 ReservationTime = DateTime.Now,
                 ExpirationTime = DateTime.Now.AddMinutes(10),
                 TicketTypeId = ticketId,
+                EventId = eventId,
                 UserAccountId = userId,
                 TicketTotalPrice = ticketTotalPrice,
             };
@@ -219,6 +220,16 @@ namespace Services.Reservation
                 reservation.Status = newStatus;
                 await _reservationRepository.UpdateAsync(reservation);
             }
+        }
+
+        public async Task<bool> HasActiveReservationForTickets(int userId, List<int> ticketIds)
+        {
+            return await _reservationRepository.HasActiveReservationForTickets(userId, ticketIds);
+        }
+
+        public async Task<bool> HasCompletedPayment(int userId, int eventId, int ticketId)
+        {
+            return await _reservationRepository.HasCompletedPayment(userId, eventId, ticketId);
         }
     }
 }
