@@ -86,9 +86,9 @@ namespace Services.Events
             return true;
         }
 
-        public async Task<IEnumerable<EventDto>> GetActiveEventsForEventCreator(int useId)
+        public async Task<IEnumerable<EventDto>> GetUserEvents(int useId)
         {
-            var result = await _eventRepository.GetActiveEventsForEventCreator(useId);
+            var result = await _eventRepository.GetUserEvents(useId);
 
             return _mapper.Map<List<EventDto>>(result.ToList());
         }
@@ -131,62 +131,6 @@ namespace Services.Events
             var result = await _eventRepository.GetEventDetails(eventId);
 
             return _mapper.Map<EventDto>(result);
-        }
-
-        public async Task<int> GetTotalEventCount()
-        {
-            return await _eventRepository.GetTotalEventCount();
-        }
-
-        public async Task<int> GetTotalEventCountForEventCreator(int eventCreatorId)
-        {
-            return await _eventRepository.GetTotalEventCountForEventCreator(eventCreatorId);
-        }
-        public async Task<IList<EventDto>> GetUpcomingEventsForAdmin()
-        {
-            DateTime currentDate = DateTime.Now;
-
-            var upcomingEvents = await _eventRepository.GetUpcomingEventsForAdmin(currentDate);
-
-            return _mapper.Map<IList<EventDto>>(upcomingEvents);
-        }
-
-        public async Task<IList<EventDto>> GetUpcomingEvents(int userId)
-        {
-            DateTime currentDate = DateTime.Now;
-
-            var upcomingEvents = await _eventRepository.GetUpcomingEvents(userId, currentDate);
-
-            return _mapper.Map<IList<EventDto>>(upcomingEvents);
-
-        }
-
-        public async Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId)
-        {
-            DateTime currentDate = DateTime.Now;
-
-            var totalUpcomingEvents = await _eventRepository.GetTotalUpcomingEventsForEventCreator(eventCreatorId, currentDate);
-
-            return totalUpcomingEvents;
-        }
-
-        public async Task<int> GetTotalUpcomingEventsForAdmin()
-        {
-            DateTime currentDate = DateTime.Now;
-
-            var totalUpcomingEvents = await _eventRepository.GetTotalUpcomingEventsForAdmin(currentDate);
-
-            return totalUpcomingEvents;
-        }
-
-        public async Task<IList<EventDto>> GetUpcomingEventsWithinOneWeek(int userId)
-        {
-            DateTime currentDate = DateTime.Now;
-            DateTime oneWeekLater = currentDate.AddDays(7);
-
-            var upcomingEvents = await _eventRepository.GetUpcomingEventsWithinOneWeek(currentDate, oneWeekLater,userId);
-
-            return _mapper.Map<IList<EventDto>>(upcomingEvents);
         }
     }
 }

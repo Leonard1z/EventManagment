@@ -9,14 +9,7 @@ namespace Infrastructure.Repositories.Events
         Task<IEnumerable<Event>> GetAllByIsActive();
         Task<Event> GetByIdWithCategory(int id);
         IEnumerable<Event> GetExpiredEvents();
-        Task<IEnumerable<Event>> GetActiveEventsForEventCreator(int userId);
+        Task<IEnumerable<Event>> GetUserEvents(int userId);
         Task<Event> GetEventDetails(int eventId);
-        Task<int> GetTotalEventCount();
-        Task<int> GetTotalEventCountForEventCreator(int eventCreatorId);
-        Task<int> GetTotalUpcomingEventsForAdmin(DateTime currentDate);
-        Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId, DateTime currentDate);
-        Task<IList<Event>> GetUpcomingEventsForAdmin(DateTime currentDate);
-        Task<IList<Event>> GetUpcomingEvents(int userId, DateTime currentDate);
-        Task<IList<Event>> GetUpcomingEventsWithinOneWeek(DateTime currentDate, DateTime oneWeekLater,int userId);
     }
 }

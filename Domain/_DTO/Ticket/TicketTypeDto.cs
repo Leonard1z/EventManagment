@@ -22,6 +22,7 @@ namespace Domain._DTO.Ticket
         public double Price { get; set; }
         public int Quantity { get; set; }
         public bool IsAvailable { get; set; }
+        public string ImagePath { get; set; }
         public DateTime SaleStartDate { get; set; }
         public DateTime SaleEndDate { get; set; }
         public EventDto Event { get; set; }

@@ -16,7 +16,8 @@ namespace Infrastructure.Repositories.UserAccounts
         }
         public async Task<IList<UserAccount>> GetAllUserAccounts()
         {
-            var result = DbSet.Include(x => x.Role)
+            var result = DbSet.Include(x => x.Events)
+                              .Include(x => x.Registrations)
                               .AsNoTracking()
                               .AsQueryable();
 
@@ -57,26 +58,6 @@ namespace Infrastructure.Repositories.UserAccounts
         public async Task<UserAccount> GetUserByPasswordResetToken(string token)
         {
             return await DbSet.FirstOrDefaultAsync(x => x.PasswordResetToken == token);
-        }
-
-        public IQueryable<UserAccount> GetAllForPagination(string filter, string encryptedId)
-        {
-            var result = DbSet.Include(u => u.Role)
-                .AsNoTracking()
-                .AsQueryable();
-
-            if(!string.IsNullOrWhiteSpace(encryptedId) || !string.IsNullOrWhiteSpace(filter))
-            {
-                if (!string.IsNullOrWhiteSpace(encryptedId))
-                {
-                    result = result.Where(u => u.Id.ToString().Contains(encryptedId));
-                }
-                else
-                {
-                    result = result.Where(u => u.FirstName.Contains(filter));
-                }
-            } 
-            return result;
         }
     }
 }

@@ -2,15 +2,13 @@
 @model CategoryDto
 
 @{
-	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+	Layout = "~/Views/Shared/_Dependencies.cshtml";
 	ViewData["Title"] = "Category Update";
 }
 
-<link rel="stylesheet" href="~/css/index.css" />
-
-<div class="container">
+<div class="container mt-5">
 	<div class="row">
-		<div class="col-12 border p-3 row-container">
+		<div class="col-12 border p-3">
 			 <form asp-action="Edit">
 				<input asp-for="EncryptedId" hidden />
 				<h2 class="text-primary">Update Category</h2>

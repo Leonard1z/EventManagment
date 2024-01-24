@@ -35,16 +35,6 @@ namespace Infrastructure.EntityFramework.Configurations
                 .HasForeignKey(x => x.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(e => e.Reservations)
-                .WithOne(r => r.Event)
-                .HasForeignKey(r => r.EventId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(e => e.Registrations)
-                .WithOne(r => r.Event)
-                .HasForeignKey(r => r.EventId)
-                .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }

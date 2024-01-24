@@ -14,6 +14,7 @@ namespace Domain.Entities
         public double Price { get; set; }
         public int Quantity { get; set; }
         public bool IsAvailable { get; set; }
+        public string ImagePath { get; set; }
         public DateTime SaleStartDate { get; set; }
         public DateTime SaleEndDate { get; set; }
         public Event Event { get; set; }
