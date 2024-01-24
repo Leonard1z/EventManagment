@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_DashboardLayout";
+}
+
+<link rel="stylesheet" href="~/css/dashboardIndex.css" />
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="content">
+                        <h5 class="card-title">Total Events Created</h5>
+                        <p class="card-text" id="totalEvents"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="content">
+                        <h5 class="card-title">Total Tickets Sold</h5>
+                        <p class="card-text" id="totalTickets"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="content">
+                        <h5 class="card-title">Total Upcoming Events</h5>
+                        <p class="card-text" id="totalUpcomingEvents"></p>
+                    </div>
+                    <div class="action">
+                        <a href="@Url.Action("UpcomingEvents", "Dashboard")">See Upcoming Events</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/dashboard.js"></script>
+}

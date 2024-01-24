@@ -2,14 +2,15 @@
 @model CategoryCreateDto
 
 @{
-    Layout = "~/Views/Shared/_Dependencies.cshtml";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Category Create";
 }
 
+<link rel="stylesheet" href="~/css/index.css" />
 
-<div class="container mt-5">
+<div class="container">
     <div class="row">
-        <div class="col-12 border p-3">
+        <div class="col-12 border p-3 row-container">
             <form asp-action="Create">
                 <h2 class="text-primary">Create Category</h2>
                 <hr />

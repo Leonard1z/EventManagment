@@ -1,0 +1,94 @@
+﻿@using Domain._DTO.UserAccount
+@model UserAccountEditDto
+
+@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "UserAccount Update";
+}
+
+
+<div class="container mt-5">
+	<div class="row">
+		<div class="col-10 border p-3">
+			<form action="@Url.Action("Edit", "UserAccount")" method="post" enctype="multipart/form-data">
+				<input asp-for="EncryptedId" hidden/>
+				<h2 class="text-primary">Update UserAccount</h2>
+				<hr />
+				<div class="row">
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="FirstName" class="control-label"></label>
+							<input asp-for="FirstName" class="form-control" />
+							<span asp-validation-for="FirstName" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="LastName" class="control-label"></label>
+							<input asp-for="LastName" class="form-control" />
+							<span asp-validation-for="LastName" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Username" class="control-label"></label>
+							<input asp-for="Username" class="form-control" />
+							<span asp-validation-for="Username" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Email" class="control-label"></label>
+							<input asp-for="Email" class="form-control" />
+							<span asp-validation-for="Email" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="PhoneNumber" class="control-label"></label>
+							<input asp-for="PhoneNumber" class="form-control" />
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pb-3">
+						<div class="form-group">
+							<label asp-for="Address" class="control-label"></label>
+							<input asp-for="Address" class="form-control" />
+							<span asp-validation-for="Address" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-6 mb-3">
+						<div class="form-group">
+							<label asp-for="RoleId" class="control-label"></label>
+							<select class="form-control search-select" asp-for="EncryptedRoleId">
+								<option selected disabled>Zgjidhni Rolin</option>
+								@foreach (var vlera in Model.Role)
+								{
+									<option value="@vlera.EncryptedId">@vlera.Name</option>
+								}
+							</select>
+							<span asp-validation-for="EncryptedRoleId" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-12 pt-3">
+						<div class="btn-display-flex">
+							<input type="submit" class="btn btn-primary" style="width:150px" value="Update" />
+							<a asp-controller="UserAccount" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	@{
+		//Client Site Validation
+		<partial name="_ValidationScriptsPartial" />
+	}
+}

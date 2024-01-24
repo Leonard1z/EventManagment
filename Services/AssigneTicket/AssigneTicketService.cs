@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Infrastructure.Repositories.AssigneTicket;
+using Infrastructure.Repositories.Registrations;
 using Microsoft.AspNetCore.Hosting;
 using Services.PdfGenerator;
 using Services.QrCodeeGenerator;
@@ -11,11 +12,13 @@ namespace Services.AssigneTicket
     public class AssigneTicketService : IAssigneTicketService
     {
         private readonly IAssigneTicketRepository _assigneeTicketRepository;
+        private readonly IRegistrationRepository _registrationRepository;
         private readonly IQrCodeGeneratorService _qrCodeGeneratorService;
         private readonly IEmailService _emailService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPdfGeneratorService _pdfGeneratorService;
         public AssigneTicketService(IAssigneTicketRepository assigneeTicketRepository,
+            IRegistrationRepository registrationRepository,
             IQrCodeGeneratorService qrCodeGeneratorService,
             IEmailService emailService,
             IWebHostEnvironment webHostEnvironment,
@@ -23,6 +26,7 @@ namespace Services.AssigneTicket
             )
         {
             _assigneeTicketRepository = assigneeTicketRepository;
+            _registrationRepository = registrationRepository;
             _qrCodeGeneratorService = qrCodeGeneratorService;
             _emailService = emailService;
             _webHostEnvironment = webHostEnvironment;
@@ -40,9 +44,19 @@ namespace Services.AssigneTicket
                     {
                         throw new ArgumentException("Please provide all the required information for the ticket assignment");
                     }
-                    _qrCodeGeneratorService.GenerateQrCode(ticket);
-                    var result = await _assigneeTicketRepository.CreateAsync(ticket);
-                    await SendEmailAsync(result);
+                    var registration = await _registrationRepository.GetById(ticket.RegistrationId);
+                    if (registration != null)
+                    {
+                        registration.IsAssigned = true;
+                        await _registrationRepository.UpdateAsync(registration);
+                        _qrCodeGeneratorService.GenerateQrCode(ticket);
+                        var result = await _assigneeTicketRepository.CreateAsync(ticket);
+                        await SendEmailAsync(result);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Registration not found for the specified ticket. Cannot assign ticket.");
+                    }
                 }
 
                 return true;
@@ -52,6 +66,17 @@ namespace Services.AssigneTicket
                 throw new Exception(ex.ToString());
             }
         }
+
+        public async Task<AssignedTicket> GetTicketByTicketNumberAsync(int ticketNumber)
+        {
+            return await _assigneeTicketRepository.GetTicketByTicketNumberAsync(ticketNumber);
+        }
+
+        public async Task UpdateAsync(AssignedTicket ticket)
+        {
+            await _assigneeTicketRepository.UpdateAsync(ticket);
+        }
+
         private async Task SendEmailAsync(AssignedTicket ticket)
         {
             var pathToFile = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()

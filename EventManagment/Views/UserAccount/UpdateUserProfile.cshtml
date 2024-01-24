@@ -1,0 +1,95 @@
+﻿@using Domain._DTO.UserAccount
+@model ProfileUpdateDto
+
+<link rel="stylesheet" href="~/css/updateProfile.css" />
+@{
+	ViewData["Title"] = "UpdateProfile";
+}
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="account-settings">
+			<ul class="account-links">
+				<li><a href="#">Profile Information</a></li>
+				<li><a href="#">Change Password</a></li>
+				<li><a href="#">Privacy Settings</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<form method="post" action="@Url.Action("UpdateUserProfile", "UserAccount")" enctype="multipart/form-data">
+			<input asp-for="EncryptedId" hidden />
+			<input asp-for="EncryptedRoleId" hidden />
+			<input asp-for="ProfileImage" hidden />
+			<div class="row">
+				<h2>Profile Information</h2>
+				<hr/>
+				<div class="profile-picture mb-4" id="profilePictureContainer">
+					<div id="imagePreview">
+						@if (Model != null && !string.IsNullOrEmpty(Model.ProfileImage))
+						{
+							<img src="@Model.ProfileImage" alt="Profile picture">
+						}
+						else
+						{
+							<span>Drag &amp; Drop or Click to Select</span>
+						}
+					</div>
+					<input asp-for="ProfileImage" type="file" class="form-control" id="profileImage" name="file" accept="image/png, image/jpeg, image/jpg"/>
+				</div>
+				<br/>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="FirstName" class="control-label"></label>
+						<input asp-for="FirstName" class="form-control" />
+						<span asp-validation-for="FirstName" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="Username" class="control-label"></label>
+						<input asp-for="Username" class="form-control" />
+						<span asp-validation-for="Username" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="LastName" class="control-label"></label>
+						<input asp-for="LastName" class="form-control" />
+						<span asp-validation-for="LastName" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="Email" class="control-label"></label>
+						<input asp-for="Email" class="form-control" />
+						<span asp-validation-for="Email" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="PhoneNumber" class="control-label"></label>
+						<input asp-for="PhoneNumber" class="form-control" />
+						<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="col-6 pb-3">
+					<div class="form-group">
+						<label asp-for="Address" class="control-label"></label>
+						<input asp-for="Address" class="form-control" />
+						<span asp-validation-for="Address" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">Update Profile</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@section scripts{
+	<script src="~/js/updateProfile.js"></script>
+}

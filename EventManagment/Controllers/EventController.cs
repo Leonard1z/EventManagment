@@ -60,9 +60,14 @@ namespace EventManagment.Controllers
         {
             try
             {
-                var result = EventCreateDtoEncryption();
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("EventCreator"))
+                {
+                    var result = EventCreateDtoEncryption();
 
-                return View(result);
+                    return View(result);
+                }
+
+                return RedirectToAction("UpdateForEventCreatorRole", "UserAccount");
             }
             catch (Exception ex)
             {
@@ -85,70 +90,75 @@ namespace EventManagment.Controllers
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
-                eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
-
-                if (string.IsNullOrEmpty(ticketData))
+                if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("EventCreator"))
                 {
-                    eventCreateDto.TicketTypes = new List<TicketTypeDto>();
-                    eventCreateDto.IsFree = true;
-                }
-                else
-                {
-                    // Converts the JSON string containing ticket data into a list of TicketTypeDto objects.
-                    var ticketTypes = eventCreateDto.TicketTypes = JsonConvert.DeserializeObject<List<TicketTypeDto>>(ticketData);
+                    eventCreateDto.UserAccountId = claim.Value != null ? int.Parse(claim.Value) : 0;
+                    eventCreateDto.CategoryId = eventCreateDto.EncryptedCategoryId != null ? int.Parse(_protector.Unprotect(eventCreateDto.EncryptedCategoryId)) : 0;
 
-                    foreach (var ticket in ticketTypes)
+                    if (string.IsNullOrEmpty(ticketData))
                     {
-                        if (string.IsNullOrEmpty(ticket.Name) || ticket.Price < 0 || ticket.Quantity < 0)
-                        {
-                            TempData["message"] = "Error";
-                            TempData["entity"] = "Invalid ticket data.";
-
-                            return RedirectToAction(nameof(Index));
-                        }
-                    }
-
-                    eventCreateDto.TicketTypes = ticketTypes;
-                }
-
-                if (file != null && file.Length > 0)
-                {
-                    //retrieves the root path of the web application www.root
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    //generates a unique filename using Guid.NewGuid()
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(file.FileName).ToLower();
-
-                    if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
-                    {
-                        //path where the file will be saved by combining the web root path with the "images\events" folder.
-                        string uploads = Path.Combine(wwwRootPath, @"images\events");
-                        string filePath = Path.Combine(uploads, fileName + extension);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-
-                        eventCreateDto.Image = @"\images\events\" + fileName + extension;
+                        eventCreateDto.TicketTypes = new List<TicketTypeDto>();
+                        eventCreateDto.IsFree = true;
                     }
                     else
                     {
-                        TempData["message"] = "Error";
-                        TempData["entity"] = "Invalid image format. Please upload a valid image format: .jpg,.jpeg,.png";
+                        // Converts the JSON string containing ticket data into a list of TicketTypeDto objects.
+                        var ticketTypes = eventCreateDto.TicketTypes = JsonConvert.DeserializeObject<List<TicketTypeDto>>(ticketData);
 
-                        return RedirectToAction(nameof(Index));
+                        foreach (var ticket in ticketTypes)
+                        {
+                            if (string.IsNullOrEmpty(ticket.Name) || ticket.Price < 0 || ticket.Quantity < 0)
+                            {
+                                TempData["message"] = "Error";
+                                TempData["entity"] = "Invalid ticket data.";
+
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+
+                        eventCreateDto.TicketTypes = ticketTypes;
                     }
 
+                    if (file != null && file.Length > 0)
+                    {
+                        //retrieves the root path of the web application www.root
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        //generates a unique filename using Guid.NewGuid()
+                        string fileName = Guid.NewGuid().ToString();
+                        string extension = Path.GetExtension(file.FileName).ToLower();
+
+                        if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
+                        {
+                            //path where the file will be saved by combining the web root path with the "images\events" folder.
+                            string uploads = Path.Combine(wwwRootPath, @"images\events");
+                            string filePath = Path.Combine(uploads, fileName + extension);
+
+                            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                            }
+
+                            eventCreateDto.Image = @"\images\events\" + fileName + extension;
+                        }
+                        else
+                        {
+                            TempData["message"] = "Error";
+                            TempData["entity"] = "Invalid image format. Please upload a valid image format: .jpg,.jpeg,.png";
+
+                            return RedirectToAction(nameof(Index));
+                        }
+
+                    }
+
+                    var result = _eventService.Create(eventCreateDto);
+
+                    TempData["message"] = "Added";
+                    TempData["entity"] = _localizer["Event"].ToString();
+
+                    return RedirectToAction(nameof(Index));
                 }
 
-                var result = _eventService.Create(eventCreateDto);
-
-                TempData["message"] = "Added";
-                TempData["entity"] = _localizer["Event"].ToString();
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("UpdateProfileForCreator", "UserAccount");
 
             }
             catch (Exception ex)
@@ -160,39 +170,6 @@ namespace EventManagment.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-        }
-        [HttpPost]
-        public IActionResult UploadTicketImage(IFormFile ticketImage)
-        {
-            if (ticketImage != null && ticketImage.Length > 0)
-            {
-                // Retrieves the root path of the web application www.root
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                // Generates a unique filename using Guid.NewGuid()
-                string fileName = Guid.NewGuid().ToString();
-                string extension = Path.GetExtension(ticketImage.FileName).ToLower();
-                // Valid extensions
-                string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
-
-                if (allowedExtensions.Contains(extension))
-                {
-                    string uploads = Path.Combine(wwwRootPath, @"images\tickets");
-                    string filePath = Path.Combine(uploads, fileName + extension);
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        ticketImage.CopyTo(fileStream);
-                    }
-
-                    return Ok(new { ImagePath = "/images/tickets/" + fileName + extension });
-                }
-                else
-                {
-                    return BadRequest(new { ErrorMessage = "Invalid file extension. Allowed extensions are .jpg, .jpeg, and .png." });
-                }
-            }
-
-            return BadRequest(new { ErrorMessage = "Image not received" });
         }
 
         //GET Method
@@ -386,7 +363,7 @@ namespace EventManagment.Controllers
                 }
                 else
                 {
-                    var result = await _eventService.GetUserEvents(userId);
+                    var result = await _eventService.GetActiveEventsForEventCreator(userId);
 
                     foreach (var item in result)
                     {

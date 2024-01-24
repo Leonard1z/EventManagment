@@ -61,7 +61,7 @@ namespace Infrastructure.Repositories.Events
             return DbSet.Where(x => x.EndDate < currentDate).AsNoTracking().ToList();
         }
 
-        public async Task<IEnumerable<Event>> GetUserEvents(int userId)
+        public async Task<IEnumerable<Event>> GetActiveEventsForEventCreator(int userId)
         {
             var result = DbSet.Include(x => x.Category)
                 //.Include(x => x.UserAccount)
@@ -87,6 +87,42 @@ namespace Infrastructure.Repositories.Events
         {
             return await DbSet.Include(x => x.Category)
                                .FirstOrDefaultAsync(x => x.Id == eventId);
+        }
+
+        public async Task<int> GetTotalEventCount()
+        {
+            return await DbSet.CountAsync();
+        }
+
+        public async Task<int> GetTotalEventCountForEventCreator(int eventCreatorId)
+        {
+            return await DbSet.CountAsync(e => e.UserAccountId == eventCreatorId);
+        }
+        public async Task<IList<Event>> GetUpcomingEventsForAdmin(DateTime currentDate)
+        {
+            return await DbSet.Where(e => e.StartDate > currentDate)
+                .ToListAsync();
+        }
+
+        public async Task<IList<Event>> GetUpcomingEvents(int userId, DateTime currentDate)
+        {
+            return await DbSet.Where(e => e.UserAccountId == userId && e.StartDate > currentDate)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalUpcomingEventsForEventCreator(int eventCreatorId, DateTime currentDate)
+        {
+            return await DbSet.CountAsync(e => e.UserAccountId == eventCreatorId && e.StartDate > currentDate);
+        }
+
+        public async Task<int> GetTotalUpcomingEventsForAdmin(DateTime currentDate)
+        {
+            return await DbSet.CountAsync(e=>e.StartDate > currentDate);
+        }
+
+        public async Task<IList<Event>> GetUpcomingEventsWithinOneWeek(DateTime currentDate, DateTime oneWeekLater,int userId)
+        {
+            return await DbSet.Where(e => e.UserAccountId == userId && e.StartDate >= currentDate && e.StartDate <= oneWeekLater).ToListAsync();
         }
     }
 }

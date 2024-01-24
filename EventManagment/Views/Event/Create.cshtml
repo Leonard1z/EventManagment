@@ -138,7 +138,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addTicketForm" enctype="multipart/form-data">
+                <form id="addTicketForm">
                     <div class="form-group">
                         <label for="TicketName">TicketName</label>
                         <input type="text" class="form-control" id="TicketName" name="TicketName" required />
@@ -162,10 +162,6 @@
                     <div class="form-group">
                         <label for="SaleEndDate">Sale End Date</label>
                         <input type="datetime-local" class="form-control" id="SaleEndDate" name="SaleEndDate" required>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label for="TicketImage"></label>
-                        <input type="file" id="ticketImage" class="form-control" name="TicketImage" accept="image/png, image/jpeg, image/jpg" />
                     </div>
                 </form>
             </div>

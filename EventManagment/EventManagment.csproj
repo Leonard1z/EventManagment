@@ -20,6 +20,7 @@
 		<PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.2" />
 		<PackageReference Include="Microsoft.AspNet.SignalR" Version="2.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.11" />
@@ -41,6 +42,7 @@
 
 	<ItemGroup>
 		<Folder Include="wwwroot\images\events\" />
+		<Folder Include="wwwroot\images\profile\" />
 		<Folder Include="wwwroot\images\tickets\" />
 	</ItemGroup>
 

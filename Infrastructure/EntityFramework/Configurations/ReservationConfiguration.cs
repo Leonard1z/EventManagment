@@ -30,6 +30,11 @@ namespace Infrastructure.EntityFramework.Configurations
                 .WithMany(u => u.Reservations)
                 .HasForeignKey(r => r.UserAccountId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(r => r.Event)
+                .WithMany(e => e.Reservations)
+                .HasForeignKey(r => r.EventId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
