@@ -13,7 +13,7 @@
 
 
 
-function confirmDelete(encryptedId,controller,action) {
+function confirmDelete(encryptedId) {
     event.preventDefault();
     Swal.fire({
         title: 'Are you sure?',
@@ -25,8 +25,7 @@ function confirmDelete(encryptedId,controller,action) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            //console.log('Controller:' + controller, 'Action:' + action);
-            window.location.href = "/" + controller + "/" + action + "?encryptedId=" + encodeURIComponent(encryptedId);
+            window.location.href = "/Category/Delete?encryptedId=" + encodeURIComponent(encryptedId);
         }
     });
 }

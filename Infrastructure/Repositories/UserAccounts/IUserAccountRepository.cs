@@ -12,6 +12,5 @@ namespace Infrastructure.Repositories.UserAccounts
         Task<UserAccount> GetAdminByEmail(string email);
         Task<UserAccount> GetUserByVerificationToken(string token);
         Task<UserAccount> GetUserByPasswordResetToken(string token);
-        IQueryable<UserAccount> GetAllForPagination(string filter, string encryptedId);
     }
 }

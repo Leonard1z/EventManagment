@@ -9,6 +9,5 @@ namespace Infrastructure.Repositories.AssigneTicket
 {
     public interface IAssigneTicketRepository : IGenericRepository<AssignedTicket>
     {
-        Task<AssignedTicket> GetTicketByTicketNumberAsync(int ticketNumber);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Domain._DTO.Event;
-using Domain._DTO.Ticket;
+﻿using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
 using Domain.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,7 +24,5 @@ namespace Domain._DTO.Reservation
         public TicketTypeDto TicketTypes { get; set; }
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }
-        public int EventId { get; set; }
-        public EventDto Event { get; set; }
     }
 }
