@@ -94,13 +94,18 @@
 			let navigation = document.getElementById('navigation-bar');
 			let barsIcon = document.getElementById('toggle-sidebar');
 			let mainContent = document.getElementById('main-container');
+			let menuTitle = document.querySelector('.menu-title');
 			navigation.classList.toggle('active');
 			barsIcon.classList.toggle('active');
 
 			if (!barsIcon.classList.contains('active')) {
 				mainContent.style.marginLeft = '65px';
+				menuTitle.innerHTML = '<i class="fa-solid fa-chart-line"></i>';
+				menuTitle.style.fontSize = '19px';
 			} else {
 				mainContent.style.marginLeft = '250px';
+				menuTitle.innerHTML = 'EventManagement';
+				menuTitle.style.fontSize = '14px';
 			}
 		}
 

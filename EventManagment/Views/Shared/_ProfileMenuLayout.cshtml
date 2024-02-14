@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using System.Text;
+@using System.Text.Json;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProfileMenuLayout</title>
+</head>
+<body>
+    <div class="account-settings">
+        <ul class="account-links">
+            <li><a asp-controller="UserAccount" asp-action="ProfileInformation">
+                    <i class="fa-solid fa-user"></i>
+                    Profile
+                </a>
+            </li>
+            <li><a href="@Url.Action("ChangePassword", "UserAccount")"> 
+                    <i class="fas fa-key"></i>
+                    Change Password
+                </a>
+            </li>
+            <li><a href="#">Privacy Settings</a></li>
+        </ul>
+    </div> 
+</body>
+</html>
+
+

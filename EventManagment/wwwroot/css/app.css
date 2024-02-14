@@ -26,11 +26,10 @@
     letter-spacing: .05em;
     pointer-events: none;
     cursor: default;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #7f8387;
+    font-size: 14px;
+    color: #7ba0c5;
     font-weight: 600;
-    text-align:center;
+    text-align: center;
 }
 
 .sidemenu-list {

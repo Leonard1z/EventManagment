@@ -34,3 +34,25 @@
     opacity: 0;
     cursor: pointer;
 }
+
+.profile-section{
+    width:850px;
+}
+
+.profile-section h2 {
+    text-align: center;
+}
+
+.profile-input-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile-input-col {
+    width: 400px;
+    padding: 20px;
+}
+
+.form-btn {
+    padding: 0 0 0 20px;
+}

@@ -1,0 +1,88 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using System.Text;
+@using System.Text.Json;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Event Managment</title>
+	<link rel="stylesheet" href="~/css/profileInformaftionLayout.css" />
+	<link rel="stylesheet" href="~/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body>
+	<div class="layout-wraper">
+		<div class="navigation" id="navigation-bar">
+			@await Html.PartialAsync("_ProfileMenuLayout")
+		</div>
+		<div class="main-content" id="main-container">
+			<div class="content">					
+				@RenderBody()
+			</div>
+		</div>
+	</div>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+	<script>
+
+		$(function () {
+			if ('@TempData["message"]' == "Added") {
+				toastr.success('', '@TempData["entity"] @Localizer["Created Successfully."]', {
+					"closeButton": true,
+					"timeOut": "7000"
+				});
+			}
+			else if ('@TempData["message"]' == "Updated") {
+				toastr.success('', '@TempData["entity"] @Localizer["Updated Successfully."] ', {
+					"closeButton": true,
+					"timeOut": "7000"
+				});
+
+			}
+			else if ('@TempData["message"]' == "Deleted") {
+				toastr.success('', '@TempData["entity"] @Localizer["Deleted Successfully."] ', {
+					"closeButton": true,
+					"timeOut": "7000"
+
+				});
+			}
+			else if ('@TempData["message"]' == "Error") {
+				toastr.error('', '@TempData["entity"] ', {
+					"closeButton": true,
+					"timeOut": "7000"
+				});
+			}
+			else if ('@TempData["message"]' == "Message") {
+				toastr.info('', '@TempData["entity"] ', {
+					"closeButton": true,
+					"timeOut": "10000"
+				});
+			}
+			else if ('@TempData["message"]' == "Warning") {
+				toastr.warning('', '@TempData["entity"] @Localizer[""]', {
+					"closeButton": true,
+					"timeOut": "10000"
+				});
+			}
+			else if ('@TempData["message"]' == "Success") {
+				toastr.success('', '@TempData["entity"] @Localizer[""] ', {
+					"closeButton": true,
+					"timeOut": "7000"
+				});
+			}
+		});
+
+	</script>
+
+	@RenderSection("Scripts", required: false)
+</body>
+</html>
