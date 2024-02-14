@@ -20,6 +20,14 @@ namespace Services.UserAccount
         Task SendPasswordResetEmail(string email, string resetUrl);
         Task<Domain.Entities.UserAccount> GetUserByPasswordResetToken(string token);
         void ResetPasword(Domain.Entities.UserAccount userAccount, string newPassword);
+        Task<IEnumerable<UserAccountDto>> GetAllUserAccountsAndRoles();
+        IQueryable<UserAccountDto> GetAllForPagination(string filter, string? encryptedId);
+        Task<UserAccountEditDto> GetByIdEdit(int id);
+        UserAccountEditDto UpdateWithRole(UserAccountEditDto userAccountEditDto);
+        Task<ProfileUpdateDto> GetProfileById(int userId);
+        Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto);
+        bool VerifyPassword(string oldPassword, string password, string salt);
+        Task ChangePassword(int userId, string newPassword);
 
     }
 }

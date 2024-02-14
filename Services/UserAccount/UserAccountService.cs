@@ -210,5 +210,104 @@ namespace Services.UserAccount
 
             _userAccountRepository.Update(userAccount);
         }
+
+        public async Task<IEnumerable<UserAccountDto>> GetAllUserAccountsAndRoles()
+        {
+            var users = await _userAccountRepository.GetAllUserAccounts();
+
+            return _mapper.Map<List<UserAccountDto>>(users.ToList());
+        }
+
+        public IQueryable<UserAccountDto> GetAllForPagination(string filter, string? encryptedId)
+        {
+            var result = _userAccountRepository.GetAllForPagination(filter, encryptedId);
+
+            var result2 = _mapper.ProjectTo<UserAccountDto>(result);
+
+            return result2;
+        }
+
+        public async Task<UserAccountEditDto> GetByIdEdit(int id)
+        {
+            var result = await _userAccountRepository.GetById(id);
+
+            return _mapper.Map<UserAccountEditDto>(result);
+        }
+
+        public UserAccountEditDto UpdateWithRole(UserAccountEditDto userAccountEditDto)
+        {
+            if (string.IsNullOrEmpty(userAccountEditDto.Password))
+            {
+                // Properties not provided, exclude them from the update
+                var result = _userAccountRepository.UpdateExceptProperties(
+                    _mapper.Map<Domain.Entities.UserAccount>(userAccountEditDto),
+                    u=>u.Password,
+                    u=>u.Gender,
+                    u=>u.IsEmailVerified,
+                    u=>u.EmailVerificationToken,
+                    u=>u.Salt,
+                    u => u.PasswordResetToken,
+                    u=>u.PasswordResetTokenExpiry,
+                    u=>u.ProfileImage
+                    );
+
+                return _mapper.Map<UserAccountEditDto>(result);
+            }
+            else
+            {
+                var result = _userAccountRepository.Update(_mapper.Map<Domain.Entities.UserAccount>(userAccountEditDto));
+
+                return _mapper.Map<UserAccountEditDto>(result);
+            }
+        }
+
+        public async Task<ProfileUpdateDto> GetProfileById(int userId)
+        {
+            var user = await _userAccountRepository.GetById(userId);
+
+            var profileUpdateDto = _mapper.Map<ProfileUpdateDto>(user);
+
+            return profileUpdateDto;
+        }
+
+        public async Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto)
+        {
+
+            // Properties not provided, exclude them from the update
+            var result = _userAccountRepository.UpdateExceptProperties(
+                _mapper.Map<Domain.Entities.UserAccount>(profileUpdateDto),
+                u => u.Password,
+                u => u.Gender,
+                u => u.IsEmailVerified,
+                u => u.EmailVerificationToken,
+                u => u.Salt,
+                u => u.PasswordResetToken,
+                u => u.PasswordResetTokenExpiry
+                );
+
+            return _mapper.Map<ProfileUpdateDto>(result);
+
+        }
+
+        public bool VerifyPassword(string oldPassword, string password, string salt)
+        {
+            if(string.IsNullOrEmpty(password) || string.IsNullOrEmpty(oldPassword))
+            {
+                return false;
+            }
+
+            return PasswordHasher.VerifyPassword(oldPassword, password, salt);
+        }
+
+        public async Task ChangePassword(int userId, string newPassword)
+        {
+            var userAccount = await _userAccountRepository.GetById(userId);
+
+            string salt;
+            userAccount.Password = PasswordHasher.HashPassword(newPassword, out salt);
+            userAccount.Salt = salt;
+
+            _userAccountRepository.Update(userAccount);
+        }
     }
 }

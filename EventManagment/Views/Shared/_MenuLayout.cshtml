@@ -1,1 +1,50 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using System.Text;
+@using System.Text.Json;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MenuLayout</title>
+</head>
+<body>
+    <ul class="sidemenu-list">
+        <li class="menu-title">Event Management</li>
+        <li class="list-item">
+            <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="list-link">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>
+                <span class="title">@Localizer["Dashboard"]</span>
+            </a>
+        </li>
+        <li class="list-item">
+            <a asp-area="" asp-controller="Category" asp-action="Index" class="list-link">
+                <span class="icon"><i class="fa-solid fa-table-list"></i></span>
+                <span class="title">@Localizer["Category"]</span>
+            </a>
+        </li>
+        <li class="list-item">
+            <a asp-area="" asp-controller="Role" asp-action="Index" class="list-link">
+                <span class="icon"><i class="fas fa-users"></i></span>
+                <span class="title">@Localizer["Roles"]</span>
+            </a>
+        </li>
+        <li class="list-item">
+            <a asp-area="" asp-controller="UserAccount" asp-action="Index" class="list-link">
+                <span class="icon"><i class="fas fa-users"></i></span>
+                <span class="title">@Localizer["Users"]</span>
+            </a>
+        </li>
+        <li class="list-item">
+            <a asp-area="" asp-controller="Event" asp-action="Index" class="list-link">
+                <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
+                <span class="title">@Localizer["Events"]</span>
+            </a>
+        </li>
+    </ul>
+</body>
+</html>
+
+

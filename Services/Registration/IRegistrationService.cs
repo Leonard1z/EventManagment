@@ -1,4 +1,6 @@
-﻿using Domain._DTO.Registration;
+﻿using Domain._DTO.AssignedTickets;
+using Domain._DTO.Registration;
+using Domain.Entities;
 using Services.Common;
 
 namespace Services.Registration
@@ -10,5 +12,8 @@ namespace Services.Registration
         Task<RegistrationDetailsDto> GetRegistrationById(int id);
         IEnumerable<Domain.Entities.Registration> GetRegistrationByEventId(int eventId);
         Task<List<Domain.Entities.Registration>> GetUserPurchasedTicketsAsync(int userId);
+        Task<int> GetTotalTicketsSoldForUser(int userId);
+        Task<int> GetTotalTicketsSoldForAdmin();
+        Task<ICollection<AssignedTicketsDto>> GetAssignedTicketsForEvent(int eventId);
     }
 }

@@ -51,7 +51,6 @@
                         {
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <img src="@ticket.ImagePath" alt="Event Image" width="450" height="350" class="rounded" />
                                     <h5 class="card-title">@ticket.Name</h5>
                                     <p class="card-text">@ticket.Description</p>
                                     <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
@@ -119,6 +118,7 @@
         saleEndDate = t.SaleEndDate.ToString("yyyy-MM-ddTHH:mm:ss"),
         price = t.Price
     }).ToList();
+    var eventData = Model.Event.Id;
 }
 
 @section Scripts{
@@ -127,7 +127,9 @@
     }
     <script>
         var tickets = @Html.Raw(Json.Serialize(ticketTypes));
-        //console.log(tickets);
+        var eventId = @Html.Raw(Json.Serialize(eventData));
+        console.log(tickets);
+        console.log(eventId);
     </script>
 
     <script src="~/js/ticketCountDown.js"></script>
