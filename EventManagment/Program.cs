@@ -16,23 +16,27 @@ using Microsoft.AspNet.SignalR.Hosting;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotEnv.Load();
+
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("EventManagment")
-    ));
+var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__EVENTMANAGEMENT");
+
+
+builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddHangfire(configuration => configuration
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("EventManagment")));
+    .UseSqlServerStorage(connectionString));
 
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-var jwtSecretKey = builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
+var stripeSettings = new StripeSettings();
+builder.Services.AddSingleton(stripeSettings);
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
@@ -44,7 +48,7 @@ builder.Services.AddSignalR(o =>
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    string redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+    string redisConnectionString = Environment.GetEnvironmentVariable("REDIS");
 
     options.Configuration = redisConnectionString;
     options.InstanceName = "leonard";   
@@ -76,6 +80,7 @@ builder.Services.AddDataProtection();
 builder.Services.AddSingleton<DataProtectionPurposeStrings>();
 #endregion
 
+var jwtSecretKey = Environment.GetEnvironmentVariable("JWTSETTINGS__SECRETKEY");
 
 builder.Services.AddAuthentication(options =>
 {

@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class StripeSettings
     {
-        public string PublishableKey { get; set; }
-        public string SecretKey { get; set; }
+        public string PublishableKey => Environment.GetEnvironmentVariable("STRIPE__PUBLISHABLEKEY");
+        public string SecretKey => Environment.GetEnvironmentVariable("STRIPE__SECRETKEY");
     }
 }
