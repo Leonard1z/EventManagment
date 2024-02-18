@@ -1,11 +1,16 @@
 ﻿using Domain._DTO.Verification;
+using Domain.Entities;
+using EventManagment.Hubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
+using Services.Notification;
 using Services.Role;
 using Services.Twilio;
 using Services.UserAccount;
+using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
 
@@ -17,12 +22,18 @@ namespace EventManagment.ApiControllers
     {
         private readonly TwilioService _twilioService;
         private readonly IDistributedCache _distributedCache;
+        private readonly ILogger<VerificationController> _logger;
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IUserAccountService _userAccountService;
         private readonly IRoleService _roleService;
+        private readonly INotificationService _notificationService;
 
         public VerificationController(IDistributedCache distributedCache,
+            ILogger<VerificationController> logger,
+            IHubContext<NotificationHub> hubContext,
             IUserAccountService userAccountService,
-            IRoleService roleService
+            IRoleService roleService,
+            INotificationService notificationService
             )
         {
             var accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
@@ -32,8 +43,11 @@ namespace EventManagment.ApiControllers
             _twilioService = new TwilioService(accountSid, authToken, twilioPhoneNumber);
 
             _distributedCache = distributedCache;
+            _logger = logger;
+            _hubContext = hubContext;
             _userAccountService = userAccountService;
             _roleService = roleService;
+            _notificationService = notificationService;
         }
 
         [HttpPost("send-code")]
@@ -64,9 +78,25 @@ namespace EventManagment.ApiControllers
                 {
                     user.PhoneNumber = request.PhoneNumber;
                     user.RoleId = role.Id;
-                    await _userAccountService.UpdateAsync(user);                 
-                }
+                    await _userAccountService.UpdateAsync(user);
+                    var adminMessage = $"User with ID {userId} has updated their role";
+                    try
+                    {
+                        await _notificationService.Create(new Domain.Entities.Notification
+                        {
+                            Message = adminMessage,
+                            CreatedAt = DateTime.UtcNow,
+                            IsRead = false,
+                            Type = "AdminNotification"
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
 
+                    await _hubContext.Clients.Group("Admins").SendAsync("ReceiveNotification", "user updated their role");
+                }
 
                 return Ok(new { Success=true, PhoneNumber = request.PhoneNumber, Message = "Verification code is valid" });
             }
