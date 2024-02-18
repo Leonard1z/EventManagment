@@ -67,7 +67,7 @@ namespace EventManagment.Controllers
                     return View(result);
                 }
 
-                return RedirectToAction("UpdateForEventCreatorRole", "UserAccount");
+                return RedirectToAction("VerifyPhoneNumber", "Verification");
             }
             catch (Exception ex)
             {
@@ -158,7 +158,7 @@ namespace EventManagment.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction("UpdateProfileForCreator", "UserAccount");
+                return RedirectToAction("VerifyPhoneNumber", "Verification");
 
             }
             catch (Exception ex)
