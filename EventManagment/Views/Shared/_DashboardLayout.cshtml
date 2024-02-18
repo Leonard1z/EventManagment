@@ -32,6 +32,16 @@
 		<div class="main-content" id="main-container">
 			<div class="content">
 				<div class="toggle-menu active" id="toggle-sidebar" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+				@if(User.IsInRole("Admin")){
+					<div id="admin-notification-icon" class="admin-notification-icon">
+						<i class="fa-solid fa-bell"></i>
+						<span class="admin-notification-count" id="admin-notification-count"></span>
+						 <div id="admin-notification-dropdown" class="hide-dropdown">
+							<ul id="admin-notification-list">
+							</ul>
+						</div>
+					</div>
+				}
 				<div class="toggle-fullscreen" id="toggle-fullscreen" onclick="toggleFullScreen()"><i id="expand-icon" class="fa-solid fa-expand"></i></div>
 				<div class="toggle-dropdown" id="toggle-dropdown"><i class="fa-solid fa-chevron-down"></i></div>
 
@@ -50,6 +60,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
 	<script src="//cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 	<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+	<script src="~/js/adminNotification.js"></script>
 
 	<script>
 		function toggleFullScreen() {
