@@ -51,7 +51,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     string redisConnectionString = Environment.GetEnvironmentVariable("REDIS");
 
     options.Configuration = redisConnectionString;
-    options.InstanceName = "leonard";   
+    options.InstanceName = "EventManagement";   
 });
 
 #region
