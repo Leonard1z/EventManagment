@@ -14,16 +14,9 @@
     });
 });
 
-//Connection Setup using the /notificatiohub Url
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/notificationHub")
-    .build();
-
-//Starts the signalR if connected calls the fetchMehtod
-connection.start().then(() => {
-    console.log("SignalR connected!");
+const connection = signalRHelper.createSignalRConnection("/notificationHub", (connection) => {
     fetchNotificationCount();
-}).catch(err => console.error(err));
+});
 
 
 //Sets up the eventHandler for the UpdateNotificationCountAndData eventfrom the server

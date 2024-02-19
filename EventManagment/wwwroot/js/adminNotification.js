@@ -18,14 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/notificationHub")
-    .build();
-
-connection.start().then(() => {
-    console.log("SignalR connected!");
+//Create SignalR connection with url, specify a callback function
+const connection = signalRHelper.createSignalRConnection("/notificationHub", (connection) => {
     fetchAdminNotificationCount();
-}).catch(err => console.error(err));
+});
 
 connection.on("ReceiveNotification", () => {
     fetchAdminNotificationCount();
