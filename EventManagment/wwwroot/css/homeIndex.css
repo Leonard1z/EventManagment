@@ -1,6 +1,7 @@
 ﻿* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body{
@@ -20,54 +21,75 @@ body{
 
 .categories-section {
     width:100vw;
-    background-color: #d4dce4;
 }
 
-.category-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.iconCategoryWrapper {
     display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+    padding:20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 1272px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap:wrap;
 }
 
-.category-item {
+.iconCategoryWrapper a{
+    text-decoration:none;
+}
+
+.iconCategoryCard {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
     text-align: center;
-    width: 150px;
-    height:150px;
-    margin: 10px;
-    padding: 10px;
+}
+
+
+
+.iconCategoryCardImageWrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 107px;
+    width: 107px;
     border-radius: 50%;
-    background-color: #f0f0f0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: #fff;
+    margin-bottom: 10px;
+    border: 1px solid #dee5ff;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.category-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+.iconCategoryCardImageWrapper:hover {
+    background-color: #b7bfc8;
+    box-shadow: 0 0 11px rgba(0, 0, 0, 0.5);
 }
 
-.category-item i {
-    font-size: 48px;
-    color: #666;
+
+.iconCategoryCardImageWrapper i {
+    width: 48px;
+    height: 48px;
+    font-size: 29px;
+    color: #4a4a4a;
 }
 
-.category-item a {
-    display:flex;
-    flex-direction:column;
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-}
-
-.category-item a:hover {
-    color: #111;
+.iconCategoryTittle {
+    font-size: 12px;
+    color: #261b36;
 }
 
 .card-container {
@@ -193,4 +215,238 @@ body{
 .slider-card .card-link:hover {
     text-decoration: none;
     color: inherit;
+}
+
+/* Extra Small (XS) Screens */
+@media (max-width: 480px) {
+    body {
+        font-size: 12px; 
+    }
+
+    .first-section {
+        height: 43vh; 
+    }
+
+    .carousel-item img {
+        height: 80%;
+    }
+
+    .iconCategoryWrapper {
+        gap: 20px;
+    }
+
+    .iconCategoryCardImageWrapper {
+        height: 80px;
+        width: 80px; 
+    }
+
+    .iconCategoryCardImageWrapper i {
+        font-size: 22px;
+    }
+
+    .iconCategoryTittle {
+        font-size: 10px; 
+    }
+
+    .card-row{
+        display:block;
+    }
+
+    .card {
+        width: 300px; 
+        margin-bottom: 15px; 
+    }
+
+    .card img {
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .card h1 {
+        font-size: 18px;
+    }
+
+    .card p {
+        font-size: 12px;
+    }
+
+    .card-footer span {
+        font-size: 10px;
+    }
+
+}
+
+/* Small (SM) Screens */
+@media (min-width: 481px) and (max-width: 767px) {
+    body {
+        font-size: 12px;
+        overflow-x: hidden;
+    }
+
+    #notification-icon {
+        margin: 0;
+    }
+
+    #notification-icon i{
+        font-size:17px
+    }
+
+    #notification-icon #notification-count{
+        font-size:8px;
+    }
+    
+    .navbar-nav{
+        align-items:center;
+    }
+
+    .user-dropdown .fa-circle-user{
+        font-size:14px;
+    }
+    .user-dropdown .fa-chevron-down {
+        font-size: 14px;
+        padding:0 10px;
+    }
+
+    .first-section {
+        height: 48vh;
+    }
+
+    .carousel-item img {
+        height: 371px;
+    }
+
+    .categories-section{
+        display:flex;
+    }
+
+    .iconCategoryWrapper {
+        gap: 20px;
+    }
+
+    .iconCategoryCardImageWrapper {
+        height: 80px;
+        width: 80px;
+    }
+
+    .iconCategoryCardImageWrapper i {
+        font-size: 25px;
+    }
+
+    .iconCategoryTittle {
+        font-size: 10px; 
+    }
+
+    .card-row {
+        display: block;
+    }
+
+    .card {
+        width: 345px;
+        margin-bottom: 15px;
+    }
+
+    .card img {
+        object-fit: cover;
+    }
+
+    .card h1 {
+        font-size: 20px;
+    }
+
+    .card p {
+        font-size: 14px;
+    }
+
+    .card-footer span {
+        font-size: 12px;
+    }
+}
+
+/* Medium (MD) Screens */
+@media (min-width: 768px) and (max-width: 991px) {
+    .user-dropdown {
+        display: flex;
+        margin: 0;
+    }
+    .dropdown-content {
+        top: 45px;
+    }
+    .carousel-item img {
+        height: 450px;
+    }
+    .card-row {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 42%;
+        padding: 15px;
+        margin:auto;
+    }
+
+    .card img {
+        height: 150px;
+    }
+
+    .card h1 {
+        margin: 15px 0;
+        font-size: 20px;
+    }
+
+    .card p {
+        font-size: 14px;
+    }
+
+    .card-footer span {
+        font-size: 12px;
+        padding: 4px 0 0 0;
+    }
+}
+
+/* Large (LG) Screens */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .card-row {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 40%;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .card img {
+        height: 206px;
+    }
+
+    .card h1 {
+        margin: 15px 0;
+        font-size: 21px;
+    }
+
+    .card p {
+        font-size: 15px;
+    }
+
+    .card-footer span {
+        font-size: 13px;
+        padding: 4px 0 0 0;
+    }
+}
+
+/* Extra Large (XL) Screens */
+@media (min-width: 1200px) {
+    .carousel-item img {
+        height: 450px;
+    }
+
+    .card-row {
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+/*    .card{
+        width:440px;
+    }*/
+
 }
