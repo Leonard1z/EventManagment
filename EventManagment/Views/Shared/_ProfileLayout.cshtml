@@ -21,6 +21,9 @@
 
 <body>
 	<div class="layout-wraper">
+		<div class="hamburger-icon" id="hamburger-icon">
+			<i class="fas fa-bars"></i>
+		</div>
 		<div class="navigation" id="navigation-bar">
 			@await Html.PartialAsync("_ProfileMenuLayout")
 		</div>
@@ -31,6 +34,26 @@
 		</div>
 	</div>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var hamburgerIcon = document.getElementById("hamburger-icon");
+			var navigation = document.querySelector(".navigation");
+
+			hamburgerIcon.addEventListener("click", function () {
+				hamburgerIcon.classList.toggle("active");
+				navigation.classList.toggle("show");
+			});
+
+			var links = document.querySelectorAll(".account-links a");
+			links.forEach(function (link) {
+				link.addEventListener("click", function () {
+					hamburgerIcon.classList.remove("active");
+					navigation.classList.remove("show");
+				});
+			});
+		});
+	</script>
 
 	<script>
 
