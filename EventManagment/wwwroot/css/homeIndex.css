@@ -223,6 +223,22 @@ body{
         font-size: 12px; 
     }
 
+    #notification-icon {
+        margin: 0;
+    }
+
+    #notification-icon i {
+        font-size: 16px
+    }
+
+    #notification-icon #notification-count {
+        font-size: 8px;
+    }
+
+    .navbar-nav {
+        align-items: center;
+    }
+
     .first-section {
         height: 43vh; 
     }
@@ -295,6 +311,13 @@ body{
         font-size:8px;
     }
     
+    #navbarNav{
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+        padding:0 22px;
+    }
+
     .navbar-nav{
         align-items:center;
     }

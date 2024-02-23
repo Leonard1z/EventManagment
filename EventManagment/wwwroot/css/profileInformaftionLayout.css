@@ -35,7 +35,7 @@
     text-decoration: none;
     color: #949494;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     transition: color 0.3s;
 }
 
@@ -55,5 +55,65 @@
 }
 
 .content {
-    margin-top: 90px;
+    margin-top: 58px;
+}
+
+
+.hamburger-icon {
+    display: none;
+    cursor: pointer;
+}
+
+
+
+@media only screen and (max-width: 767px) {
+    .navigation {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        z-index: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hamburger-icon {
+        display: block;
+        position: absolute;
+        z-index: 1111;
+        padding: 18px;
+    }
+
+    .hamburger-icon i {
+        font-size: 20px;
+        color: #888;
+        transition: transform 0.3s ease;
+    }
+
+    .hamburger-icon.active i {
+        transform: rotate(360deg);
+    }
+
+    .account-settings {
+        box-shadow: none;
+        height: auto;
+    }
+
+    .show {
+        display: flex !important;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .account-links li a{
+        font-size:12px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .account-links li a{
+        font-size:13px;
+    }
 }
