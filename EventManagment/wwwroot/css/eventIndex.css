@@ -1,0 +1,273 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+h1{
+    font-size:16px;
+    margin:0;
+}
+
+.events-secion {
+    padding: 2rem;
+    background-color: #f5f5f5;
+}
+
+.events-container {
+    display:flex;
+    flex-direction:column;
+    gap:4rem;
+}
+
+.event-wrapper {
+    margin: 0 200px 0 200px;
+}
+
+.event-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.events-controls {
+    display: flex;
+    align-items: center;
+}
+
+.create-event-button a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 6px 16px;
+    background-color: #004cc7;
+    color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.create-event-button a:hover {
+    background-color: #6c98d5;
+}
+
+.create-event-button a i {
+    padding: 0 8px 0 0;
+}
+
+.list-tab a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 6px 16px;
+    background-color: #004cc7;
+    color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.list-tab a:hover {
+    background-color: #6c98d5;
+}
+.list-tab i {
+    padding: 0 6px 0 0;
+}
+
+.status-tab {
+    cursor: pointer;
+    padding: 6px 12px;
+    background-color: #004cc7;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.status-tab i {
+    padding: 4px;
+}
+
+.show {
+    display: block;
+}
+
+.hide{
+    display:none;
+}
+
+.dropdown-content {
+    width:160px;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    list-style: none;
+    padding:5px;
+}
+
+.dropdown-content li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-content li:hover {
+    background-color: #ddd;
+}
+
+.events-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    width:50%
+}
+
+.search-form {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 45%;
+    margin-bottom: 2rem;
+}
+
+#searchInput {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.search-icon {
+    font-size: 18px;
+    color: #555;
+    cursor: pointer;
+}
+
+.event-data-header-wrapper {
+    margin-bottom: 1rem;
+}
+
+.event-data-header {
+    display: flex;
+    align-items: center;
+}
+
+.event-header-title {
+    width: 45%;
+}
+
+.event-header-metric {
+    display: flex;
+    justify-content: space-between;
+    width: 48%;
+}
+
+.event-data-body-wrapper{
+    display:flex;
+    flex-direction:row;
+}
+
+.event-data-body{
+    width:45%;
+}
+
+.event-data-items{
+    display:flex;
+    height:50px;
+}
+
+.event-image img {
+    width: 60px;
+    height: 43px;
+    border-radius: 6px;
+}
+.event-details {
+    width: 70%;
+    padding: 0 0 0 11px;
+}
+
+.event-details-date span {
+    font-size: 11px;
+    color: #888;
+    padding: 6px 0 0 0;
+}
+
+.event-body-metrics {
+    width: 48%;
+}
+.event-metrics-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height:50px;
+}
+.event-body-actions {
+    width: 7%;
+}
+
+.event-actions {
+    display: flex;
+    justify-content: flex-end;
+    height: 50px;
+}
+
+.actions i{
+    cursor:pointer;
+    font-size:18px;
+}
+
+.event-actions-dropdown {
+    width: 160px;
+    position: absolute;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    margin-right: 7px;
+}
+
+.action-item {
+    font-size: 14px;
+    color: #7f7878;
+    padding: 7px;
+    cursor:pointer;
+}
+
+.hidden {
+    transform: scale(0);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.visible {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#prevPage,
+#nextPage {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+#currentPage {
+    font-size: 18px;
+    margin: 0 10px;
+}
+
+#prevPage:hover,
+#nextPage:hover {
+    background-color: #0056b3;
+}

@@ -14,6 +14,8 @@ namespace Services.Events
         Task<EventDto> GetById(int id);
         Task<EventEditDto> GetByIdEdit(int id);
         Task<IEnumerable<EventDto>> GetAllEvents();
+        Task<IList<EventWithMetricsDto>> GetAllEventsWithSoldAndGross();
+        Task<IList<EventWithMetricsDto>> GetActiveEventsWithSoldAndGrossForEventCreator(int userId);
         Task<IEnumerable<EventDto>> GetActiveEventsForEventCreator(int useId);
         EventEditDto Update(EventEditDto eventEditDto);
         Task<EventDto> UpdateByIsActive(EventDto eventDto);

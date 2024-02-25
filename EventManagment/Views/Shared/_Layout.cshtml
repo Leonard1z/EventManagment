@@ -42,22 +42,19 @@
                     </ul>
                     <ul class="navbar-nav" id="navbarNav">
                         @if (User.Identity.IsAuthenticated)
-                        {
-                            @if (!User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <div id="notification-icon" class="notification-icon">
-                                        <i class="bi bi-bell-fill"></i>
-                                        <span id="notification-count" class="notification-count"></span>
-                                        <div id="notification-dropdown" class="hide-dropdown">
-                                            <i class="bi bi-x-lg" style="color: #7e7e7e; font-size: 17px;"></i>
-                                            <ul id="notification-list">
+                        {                         
+                            <li class="nav-item">
+                                <div id="notification-icon" class="notification-icon">
+                                    <i class="bi bi-bell-fill"></i>
+                                    <span id="notification-count" class="notification-count"></span>
+                                    <div id="notification-dropdown" class="hide-dropdown">
+                                        <i class="bi bi-x-lg" style="color: #7e7e7e; font-size: 17px;"></i>
+                                        <ul id="notification-list">
 
-                                            </ul>
-                                        </div>
+                                        </ul>
                                     </div>
-                                </li>
-                            }
+                                </div>
+                            </li>                        
                             <li class="nav-item">
                                 <div class="user-dropdown">
                                     <a class="nav-link text-white dropdown-link"><i class="fa-regular fa-circle-user"></i>Welcome @User.Identity.Name <i class="fa-solid fa-chevron-down"></i></a>
