@@ -345,7 +345,7 @@ namespace EventManagment.Controllers
 
                 if (isAdmin)
                 {
-                    var result = await _eventService.GetAllEvents();
+                    var result = await _eventService.GetAllEventsWithSoldAndGross();
 
                     foreach (var item in result)
                     {
@@ -363,7 +363,7 @@ namespace EventManagment.Controllers
                 }
                 else
                 {
-                    var result = await _eventService.GetActiveEventsForEventCreator(userId);
+                    var result = await _eventService.GetActiveEventsWithSoldAndGrossForEventCreator(userId);
 
                     foreach (var item in result)
                     {

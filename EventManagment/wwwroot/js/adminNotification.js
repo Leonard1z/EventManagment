@@ -72,5 +72,5 @@ function markAllNotificationsAsRead() {
 
 connection.on("MarkAllNotificationsAsRead", () => {
     fetchAdminNotificationCount();
-    console.log("done");
+    //console.log("done");
 });
