@@ -14,7 +14,7 @@
     });
 });
 
-const connection = signalRHelper.createSignalRConnection("/notificationHub", (connection) => {
+const connection = signalRSetup.createSignalRConnection("/notificationHub", (connection) => {
     fetchNotificationCount();
 });
 

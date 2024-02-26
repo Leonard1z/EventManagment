@@ -16,6 +16,6 @@ function createSignalRConnection(url, onConnectedCallback) {
     return connection;
 }
 
-window.signalRHelper = {
+window.signalRSetup = {
     createSignalRConnection
 };
