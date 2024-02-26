@@ -152,5 +152,12 @@ namespace Infrastructure.Repositories.Events
 
             return result;
         }
+
+        public async Task<Event> GetByIdEditForEditStatus(int id)
+        {
+
+            return await DbSet.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

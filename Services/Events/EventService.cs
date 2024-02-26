@@ -145,6 +145,12 @@ namespace Services.Events
 
             return _mapper.Map<EventEditDto>(result);
         }
+        public async Task<EventDto> UpdateAsync(EventDto eventDto)
+        {
+            var result = await _eventRepository.UpdateAsync(_mapper.Map<Event>(eventDto));
+
+            return _mapper.Map<EventDto>(result);
+        }
         public bool Delete(int id)
         {
             _eventRepository.Delete(id);
@@ -253,6 +259,11 @@ namespace Services.Events
             var upcomingEvents = await _eventRepository.GetUpcomingEventsWithinOneWeek(currentDate, oneWeekLater,userId);
 
             return _mapper.Map<IList<EventDto>>(upcomingEvents);
+        }
+
+        public async Task<EventDto> GetByIdEditForEditStatus(int id)
+        {
+            return _mapper.Map<EventDto>(await _eventRepository.GetByIdEditForEditStatus(id));
         }
     }
 }

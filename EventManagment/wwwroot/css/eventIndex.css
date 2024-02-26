@@ -199,6 +199,11 @@ h1{
     align-items: center;
     height:50px;
 }
+.metrics-sold, 
+.metrics-gross, 
+.event-statuses {
+    width: 50px;
+}
 .event-body-actions {
     width: 7%;
 }

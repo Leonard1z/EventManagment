@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //Create SignalR connection with url, specify a callback function
-const connection = signalRHelper.createSignalRConnection("/notificationHub", (connection) => {
+const connection = signalRSetup.createSignalRConnection("/notificationHub", (connection) => {
     fetchAdminNotificationCount();
 });
 

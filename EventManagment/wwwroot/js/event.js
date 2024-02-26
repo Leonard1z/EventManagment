@@ -28,6 +28,21 @@ async function fetchEvents() {
     }
 }
 
+function formatDate(dateString) {
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    };
+
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
+}
+
 function renderEvents(events) {
     // Check if currentPage is within valid bounds
     const maxPage = Math.ceil(allEventsData.length / eventsPerPage);
@@ -73,7 +88,7 @@ function renderEvents(events) {
                 <h1>${event.name}</h1>
             </div>
             <div class="event-details-date">
-                <span>${event.startDate}</span>
+                <span>${formatDate(event.startDate)}</span >
             </div>
         `;
 
@@ -99,7 +114,7 @@ function renderEvents(events) {
         </div>
         `
         const eventStatus = document.createElement('div');
-        eventStatus.classList.add('event-status');
+        eventStatus.classList.add('event-statuses');
         eventStatus.innerHTML = `
         <div class="event-metrics-status">
             <p>${event.status}</p>
@@ -119,7 +134,11 @@ function renderEvents(events) {
         const actions = [
             { label: 'Edit', icon: 'fa-edit', action: () => editEvent(event.encryptedId) },
             { label: 'Delete', icon: 'fa-trash', action: () => deleteEvent(event.encryptedId) },
-            { label: 'View', icon: 'fa-info-circle', action: () => viewEventDetails(event.encryptedId) }
+            { label: 'View Event', icon: 'fa-info-circle', action: () => viewEventDetails(event.encryptedId) },
+            { label: 'View Tickets', icon: 'fa-ticket', action: () => window.location.href = '/Event/ViewTickets?encryptedId=' + event.encryptedId },
+            { label: event.status === 'Draft' ? 'Publish Event' : 'Unpublish Event', icon: event.status === 'Draft' ? 'fa-eye' : 'fa-eye-slash', 
+                action: () => handlePublishAction(event.encryptedId)
+            },
         ];
 
         actions.forEach(action => {
@@ -278,6 +297,26 @@ function deleteEvent(encryptedId) {
                 console.error('Error occurred during the delete operation:', error);
                 toastr.error("Error occurred during the delete operation.");
             });
+        }
+    });
+}
+
+function handlePublishAction(encryptedId) {
+    const publishUrl = '/Event/UpdateEventStatus?encryptedId=' + encryptedId;
+    
+    $.ajax({
+        url: publishUrl,
+        type: 'POST',
+        success: function (response) {
+            if (response.success) {
+                toastr.success(response.message);
+                fetchEvents();
+            } else {
+                toastr.error(response.message);
+            }
+        },
+        error: function () {
+            toastr.error(`Error occurred while updating the event status.`);
         }
     });
 }

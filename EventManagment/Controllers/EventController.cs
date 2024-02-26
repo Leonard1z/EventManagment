@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
@@ -260,7 +260,7 @@ namespace EventManagment.Controllers
                     eventEditDto.Image = @"\images\events\" + fileName + extension;
                 }
 
-                var result = _eventService.Update(eventEditDto);
+                //var result = _eventService.Update(eventEditDto);
 
                 TempData["message"] = "Updated";
                 TempData["entity"] = _localizer["Event "].ToString();
@@ -279,7 +279,48 @@ namespace EventManagment.Controllers
             }
         }
 
+        [Route("Event/ViewTickets")]
+        public ActionResult ViewTickets(string encryptedId)
+        {
+            ViewBag.EncryptedId = encryptedId;
+            return View();
+        }
+        [HttpPost]
+        [Route("Event/UpdateEventStatus")]
+        public async Task<IActionResult> UpdateEventStatus(string encryptedId)
+        {
+            try
+            {
+                var eventId = int.Parse(_protector.Unprotect(encryptedId));
+                var eventToUpdate = await _eventService.GetByIdEditForEditStatus(eventId);
 
+                if (eventToUpdate != null)
+                {
+                    if (eventToUpdate.Status == "Draft")
+                    {
+
+                        eventToUpdate.Status = "Published";
+                        await _eventService.UpdateAsync(eventToUpdate);
+
+                        return Json(new { success = true, message = "Event published successfully." });
+                    }
+                    else if (eventToUpdate.Status == "Published")
+                    {
+                        eventToUpdate.Status = "Draft";
+                         await _eventService.UpdateAsync(eventToUpdate);
+
+                        return Json(new { success = true, message = "Event unpublished successfully." });
+                    }
+                }
+
+                return Json(new { success = false, message = "Event not found or invalid status." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Json(new { success = false, message = "Error occurred while updating the event status." });
+            }
+        }
         private EventCreateDto EventCreateDtoEncryption()
         {
             return new EventCreateDto()
@@ -312,6 +353,7 @@ namespace EventManagment.Controllers
             return eventEditDto;
         }
 
+        #region API CALLS
         [HttpGet]
         [Route("Event/GetTickets")]
         public async Task<ActionResult> GetTickets(string encryptedId)
@@ -331,7 +373,6 @@ namespace EventManagment.Controllers
         }
 
 
-        #region API CALLS
         [HttpGet]
         [Route("GetAllEvents")]
         public async Task<ActionResult> GetAll()

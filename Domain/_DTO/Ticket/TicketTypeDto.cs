@@ -28,5 +28,7 @@ namespace Domain._DTO.Ticket
         public int EventId { get; set; }
         public ICollection<ReservationDto> Reservations { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }
+        [NotMapped]
+        public int TotalTickets { get; set; }
     }
 }
