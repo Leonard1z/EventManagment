@@ -32,6 +32,7 @@
 		<div class="main-content" id="main-container">
 			<div class="content">
 			<div class="toggle-menu active" id="toggle-sidebar" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+			@if(User.IsInRole("Admin")){
 				<div id="admin-notification-icon" class="admin-notification-icon">
 					<i class="fa-solid fa-bell"></i>
 					<span class="admin-notification-count" id="admin-notification-count"></span>
@@ -40,6 +41,7 @@
 						</ul>
 					</div>
 				</div>
+			}
 				<div class="toggle-fullscreen" id="toggle-fullscreen" onclick="toggleFullScreen()"><i id="expand-icon" class="fa-solid fa-expand"></i></div>
 				<div class="toggle-dropdown" id="toggle-dropdown"><i class="fa-solid fa-chevron-down"></i></div>
 
@@ -106,19 +108,40 @@
 			let barsIcon = document.getElementById('toggle-sidebar');
 			let mainContent = document.getElementById('main-container');
 			let menuTitle = document.querySelector('.menu-title');
+			let listTitles = document.querySelectorAll('.title')
+
 			navigation.classList.toggle('active');
 			barsIcon.classList.toggle('active');
 
-			if (!barsIcon.classList.contains('active')) {
+			let isMenuActive = navigation.classList.contains('active');
+			localStorage.setItem('menuState', isMenuActive);
+			//console.log(!isMenuActive);
+			//console.log(listTitles);
+
+			if (!isMenuActive) {
 				mainContent.style.marginLeft = '65px';
 				menuTitle.innerHTML = '<i class="fa-solid fa-chart-line"></i>';
 				menuTitle.style.fontSize = '19px';
+				listTitles.forEach(title => {
+					title.style.visibility = 'hidden';
+				});
 			} else {
 				mainContent.style.marginLeft = '250px';
 				menuTitle.innerHTML = 'EventManagement';
 				menuTitle.style.fontSize = '14px';
-			}
+				listTitles.forEach(title => {
+					title.style.visibility = 'visible';
+				});
+			}			
 		}
+
+		window.addEventListener('DOMContentLoaded', function () {
+			let isMenuActive = localStorage.getItem('menuState');
+			//console.log(isMenuActive);
+			if (isMenuActive === 'false') {
+				toggleMenu();
+			}
+		});
 
 		document.getElementById('toggle-dropdown').addEventListener('click', function () {
 			let dropdownMenu = document.querySelector('.menu-dropdown');

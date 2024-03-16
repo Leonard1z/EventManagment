@@ -14,7 +14,7 @@
     height: 100%;
     background: #2a3042;
     transition: 0.5s;
-    overflow: hidden;
+    z-index:11111;
 }
 
 .navigation.active{
@@ -47,6 +47,7 @@
 
 .list-item:hover {
     background: #525970;
+    width:250px;
 }
 
 .list-item a:hover{
@@ -84,7 +85,9 @@
     text-align: start;
     white-space: nowrap;
 }
-
+.list-item:hover .title {
+    visibility: visible !important;
+}
 
 .main-content {
     margin-left: 250px;
@@ -249,7 +252,7 @@
     border-radius: 5px;
     border: 1px solid #ddd;
     padding: 10px;
-    z-index: 2;
+    z-index: 11111111;
 }
 
 #admin-notification-list {
@@ -286,3 +289,131 @@
 }
 
 
+/* Extra Small (XS) Screens */
+@media (max-width: 480px) {
+    .navigation{
+        width:45px;
+    }
+    .main-content{
+        margin-left:45px !important;
+    }
+    .menu-title {
+        padding: 12px 12px !important;
+        font-size:16px !important;
+    }
+    .list-item a .icon{
+        min-width:45px;
+    }
+    .list-item a .icon i {
+        font-size: 16px;
+    }
+    .list-item a .title{
+        font-size:12px;
+    }
+    .toggle-menu{
+        width:45px;
+        height:45px;
+    }
+    .toggle-menu i{
+        font-size:20px;
+    }
+    .admin-notification-icon{
+        width:45px;
+        height:45px;
+    }
+    .admin-notification-icon i{
+        font-size:16px;
+    }
+    .toggle-fullscreen{
+        width:45px;
+        height:45px;
+    }
+    .toggle-dropdown{
+        width:45px;
+        height:45px;
+    }
+    .show-dropdown{
+        top:37px;
+        right:16px;
+        width:200px;
+    }
+    #admin-notification-list li{
+        font-size:12px;
+    }
+}
+
+/* Small (SM) Screens */
+@media (min-width: 481px) and (max-width: 767px) {
+    .navigation {
+        width: 55px;
+    }
+    .main-content {
+        margin-left: 55px !important;
+    }
+    .menu-title {
+        padding: 12px 14px !important;
+        font-size: 18px !important;
+    }
+
+    .list-item a .icon {
+        min-width: 55px;
+    }
+
+    .list-item a .icon i {
+        font-size: 18px;
+    }
+
+    .list-item a .title {
+        font-size: 13px;
+    }
+
+    .toggle-menu {
+        width: 50px;
+        height: 50px;
+    }
+
+    .toggle-menu i {
+        font-size: 22px;
+    }
+
+    .admin-notification-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .admin-notification-icon i {
+        font-size: 17px;
+    }
+
+    .toggle-fullscreen {
+        width: 50px;
+        height: 50px;
+    }
+
+    .toggle-dropdown {
+        width: 50px;
+        height: 50px;
+    }
+
+    .show-dropdown {
+        top: 37px;
+        right: 20px;
+        width: 250px;
+    }
+
+    #admin-notification-list li {
+        font-size: 12px;
+    }
+}
+
+/* Medium (MD) Screens */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Large (LG) Screens */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Extra Large (XL) Screens */
+@media (min-width: 1200px) {
+}

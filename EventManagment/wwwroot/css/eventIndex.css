@@ -276,3 +276,23 @@ h1{
 #nextPage:hover {
     background-color: #0056b3;
 }
+
+/* Extra Small (XS) Screens */
+@media (max-width: 480px) {
+}
+
+/* Small (SM) Screens */
+@media (min-width: 481px) and (max-width: 767px) {
+}
+
+/* Medium (MD) Screens */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Large (LG) Screens */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Extra Large (XL) Screens */
+@media (min-width: 1200px) {
+}
