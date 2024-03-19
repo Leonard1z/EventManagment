@@ -294,12 +294,9 @@
     .navigation{
         width:45px;
     }
-    .main-content{
-        margin-left:45px !important;
-    }
     .menu-title {
         padding: 12px 12px !important;
-        font-size:16px !important;
+        font-size:16px !important; 
     }
     .list-item a .icon{
         min-width:45px;
@@ -346,9 +343,6 @@
 @media (min-width: 481px) and (max-width: 767px) {
     .navigation {
         width: 55px;
-    }
-    .main-content {
-        margin-left: 55px !important;
     }
     .menu-title {
         padding: 12px 14px !important;

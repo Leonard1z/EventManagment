@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
@@ -278,13 +278,14 @@ namespace EventManagment.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-
+        [HttpGet]
         [Route("Event/ViewTickets")]
         public ActionResult ViewTickets(string encryptedId)
         {
             ViewBag.EncryptedId = encryptedId;
             return View();
         }
+
         [HttpPost]
         [Route("Event/UpdateEventStatus")]
         public async Task<IActionResult> UpdateEventStatus(string encryptedId)
@@ -362,6 +363,10 @@ namespace EventManagment.Controllers
             {
                 var eventId = int.Parse(_protector.Unprotect(encryptedId));
                 var tickets = await _ticketTypesService.GetTicketsByEventId(eventId);
+                foreach(var ticket in tickets)
+                {
+                    ticket.EncryptedId = _protector.Protect(ticket.Id.ToString());
+                }
                 return Json(new { data = tickets });
             }
             catch (Exception ex)
