@@ -52,5 +52,12 @@ namespace Services.Tickets
         {
             return await _ticketTypesRepository.GetAvailableQuantity(ticketId);
         }
+
+        public TicketTypeDto AddTicket(TicketTypeDto ticket)
+        {
+            var result = _ticketTypesRepository.Create(_mapper.Map<TicketType>(ticket));
+
+            return _mapper.Map<TicketTypeDto>(result);
+        }
     }
 }
