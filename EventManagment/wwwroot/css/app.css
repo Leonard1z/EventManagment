@@ -298,8 +298,11 @@
         padding: 12px 12px !important;
         font-size:16px !important; 
     }
-    .list-item a .icon{
-        min-width:45px;
+    .toggle-menu{
+        visibility:hidden;
+    }
+    .list-item a .icon {
+        min-width: 45px;
     }
     .list-item a .icon i {
         font-size: 16px;
@@ -348,7 +351,9 @@
         padding: 12px 14px !important;
         font-size: 18px !important;
     }
-
+    .toggle-menu{
+        visibility:hidden;
+    }
     .list-item a .icon {
         min-width: 55px;
     }
