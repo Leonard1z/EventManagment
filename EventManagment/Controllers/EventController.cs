@@ -285,6 +285,50 @@ namespace EventManagment.Controllers
             ViewBag.EncryptedId = encryptedId;
             return View();
         }
+        [HttpGet]
+        [Route("Event/AddTicket")]
+        public ActionResult AddTicket(string encryptedEventId)
+        {
+            ViewBag.EncryptedEventId = encryptedEventId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddTicket([FromBody]TicketTypeDto formData)
+        {
+            try
+            {
+                var eventId = int.Parse(_protector.Unprotect(formData.EncryptedEventId));
+                formData.EventId = eventId;
+
+                var result = await _eventService.GetById(eventId);
+                var ticketStartDate = formData.SaleStartDate;
+                var ticketEndDate = formData.SaleEndDate;
+
+                if(ticketStartDate > result.EndDate || ticketEndDate > result.EndDate || ticketStartDate > ticketEndDate)
+                {
+                    return BadRequest("Ticket dates must be within the event's timeframe.");
+                }
+
+                if (formData.Price <= 0)
+                {
+                    ModelState.AddModelError("Price", "Price must be a positive number.");
+                    return BadRequest(ModelState);
+                }
+                if (formData.Quantity <= 0)
+                {
+                    ModelState.AddModelError("Quantity", "Quantity must be a positive number.");
+                    return BadRequest(ModelState);
+                }
+
+                _ticketTypesService.AddTicket(formData);
+
+                return Ok(new { success = true, Message = "Ticket added succesfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while adding the ticket: {ex.Message}");
+            }
+        }
         [HttpPost]
         [Route("Event/UpdateEventStatus")]
         public async Task<IActionResult> UpdateEventStatus(string encryptedId)
@@ -362,6 +406,11 @@ namespace EventManagment.Controllers
             {
                 var eventId = int.Parse(_protector.Unprotect(encryptedId));
                 var tickets = await _ticketTypesService.GetTicketsByEventId(eventId);
+                foreach(var ticket in tickets)
+                {
+                    ticket.EncryptedId = _protector.Protect(ticket.Id.ToString());
+                    ticket.EncryptedEventId = _protector.Protect(eventId.ToString());
+                }
                 return Json(new { data = tickets });
             }
             catch (Exception ex)
