@@ -6,9 +6,7 @@
 <link rel="stylesheet" href="~/css/EventDetails.css" />
 
 @{
-
-     Layout = "~/Views/Shared/_Dependencies.cshtml";
-
+    Layout = "~/Views/Shared/_Dependencies.cshtml";
 }
 
 
@@ -53,8 +51,12 @@
                                 <div class="card-body">
                                     <h5 class="card-title">@ticket.Name</h5>
                                     <p class="card-text">@ticket.Description</p>
-                                    <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
                                     @if(ticket.Quantity > 0){
+                                        @if(!ticket.IsFree){
+                                            <p class="card-text">@Localizer["Price"]: $@ticket.Price</p>
+                                        }else{
+                                            <p class="card-text">@Localizer["Free"]</p>
+                                        }
                                         <p class="card-text" id="quantity-@ticket.Id">@Localizer["Available"]: @ticket.Quantity</p>
                                         <p class="card-text" id="available-@ticket.Id"></p>
                                         <div class="quantity-container">
@@ -63,9 +65,14 @@
                                             <button class="btn btn-sm btn-secondary plus-button" data-ticket-id="@ticket.Id">+</button>
                                         </div>
                                         <div data-ticket-id="@ticket.Id" class="quantityErrorMessage text-danger"></div>
-                                        <p class="card-text">
-                                            <strong>@Localizer["Total Price"]: <span class="total-price" data-ticket-id="@ticket.Id">$0.00</span></strong>
-                                        </p>
+                                        @if (!ticket.IsFree)
+                                        {
+                                            <p class="card-text">
+                                                <strong>@Localizer["Total Price"]: <span class="total-price" data-ticket-id="@ticket.Id">$0.00</span></strong>
+                                            </p>
+                                        }else{
+
+                                        }
                                         @if(ticket.IsAvailable)
                                         {
                                             <div id="countdown-@ticket.Id" class="countdown-container">
@@ -86,8 +93,7 @@
                                                     <span class="countdown-label">Seconds</span>
                                                 </div>
                                             </div>
-                                            <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" 
-                                            data-quantity="0">@Localizer["Buy Now"]</button>
+                                            <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" data-quantity="0">@Localizer["Reserve a Spot"]</button>
                                         }else{
                                             <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
                                         }
@@ -101,10 +107,6 @@
                             </div>
                         }
                     }
-                    else
-                    {
-                        <h1>Free</h1>
-                    }
                 </div>
             </div>
         </div>
@@ -116,7 +118,8 @@
     {
         ticketId = t.Id,
         saleEndDate = t.SaleEndDate.ToString("yyyy-MM-ddTHH:mm:ss"),
-        price = t.Price
+        price = t.Price,
+        isFree = t.IsFree
     }).ToList();
     var eventData = Model.Event.Id;
 }

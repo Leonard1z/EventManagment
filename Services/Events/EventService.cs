@@ -83,7 +83,6 @@ namespace Services.Events
                 Status=e.Status,
                 StreetName=e.StreetName,
                 IsActive=e.IsActive,
-                IsFree=e.IsFree,
                 Category = _mapper.Map<CategoryDto>(e.Category),
                 UserAccount = new UserAccountDto
                 {
@@ -113,7 +112,6 @@ namespace Services.Events
                 Status = e.Status,
                 StreetName = e.StreetName,
                 IsActive = e.IsActive,
-                IsFree = e.IsFree,
                 Category = _mapper.Map<CategoryDto>(e.Category),
                 UserAccount = new UserAccountDto
                 {
