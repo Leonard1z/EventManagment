@@ -38,6 +38,7 @@ namespace Services.Tickets
                 Price = t.Price,
                 Quantity = t.Quantity,
                 IsAvailable = t.IsAvailable,
+                IsFree= t.IsFree,
                 SaleStartDate = t.SaleStartDate,
                 SaleEndDate = t.SaleEndDate,
                 TotalTickets = activeReservationsCount = t.Reservations.Where(r => r.Status == ReservationStatus.Active || r.Status == ReservationStatus.PaymentInProgress).Sum(r=>r.Quantity)

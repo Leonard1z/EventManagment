@@ -13,14 +13,19 @@
             var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
             var overlay = document.getElementById('overlay');
             overlay.style.display = 'flex';
+            var ticket = getTicketById(ticketId);
 
             if (currentQuantity > 0) {
-                quantityErrorMessage.textContent = '';
-                var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
-                var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
-
-                //console.log(currentTotalPrice);
-                sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
+                if (!ticket.isFree) {
+                    quantityErrorMessage.textContent = '';
+                    var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
+                    var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
+                    //console.log(currentTotalPrice);
+                    sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
+                } else {
+                    registerUserForFreeTickets();
+                }
+              
             } else {
                 quantityErrorMessage.textContent = 'Quantity cannot be 0. Please select a valid value.';
                 overlay.style.display = 'none';
@@ -130,19 +135,18 @@
     });
 
     function updateTotalPrice(ticketId, quantity) {
-        // Find the ticket in the tickets array by its ID
-        var ticket = tickets.find(function (t) {
-            return t.ticketId === parseInt(ticketId);
-        });
+        var ticket = getTicketById(ticketId);
 
         if (ticket) {
-            var price = ticket.price;
-            //console.log(ticket);
+            if (!ticket.isFree) {
+                var price = ticket.price;
+                //console.log(ticket);
 
-            var totalPrice = (price * quantity).toFixed(2);
+                var totalPrice = (price * quantity).toFixed(2);
 
-            var totalPriceElement = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]');
-            totalPriceElement.textContent = '$' + totalPrice;
+                var totalPriceElement = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]');
+                totalPriceElement.textContent = '$' + totalPrice;
+            }
         }
     }
 
@@ -163,6 +167,14 @@
         } else {
             quantityParagraph.style.display = 'block';
         }
+    }
+
+     // Find the ticket in the tickets array by its ID
+    function getTicketById(ticketId) {
+        var ticket = tickets.find(function (t) {
+            return t.ticketId === parseInt(ticketId);
+        });
+        return ticket;
     }
 
 });
