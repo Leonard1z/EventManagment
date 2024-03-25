@@ -10,10 +10,10 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public DateTime RegistrationDate { get; set; }
-        public string TransactionId { get; set; }
+        public string? TransactionId { get; set; }
         public int Quantity { get; set; }
-        public double TicketPrice { get; set; }
-        public double TotalPrice { get; set; }
+        public double? TicketPrice { get; set; }
+        public double? TotalPrice { get; set; }
         public bool IsAssigned { get; set; }
         public int UserAccountId { get; set; }
         public UserAccount UserAccount { get; set; }

@@ -16,7 +16,7 @@ namespace Domain._DTO.Registration
         public string Venue { get; set; }
         public string TicketTypeName { get; set; }
         public int TicketTypeId { get; set; }
-        public double TicketPrice { get; set; }
+        public double? TicketPrice { get; set; }
         public int Quantity { get; set; }
         public bool IsAssigned { get; set; }
     }

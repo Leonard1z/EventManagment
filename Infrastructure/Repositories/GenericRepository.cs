@@ -137,8 +137,20 @@ namespace Infrastructure.Repositories
         }
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            Context.ChangeTracker.TrackGraph(entity, e => e.Entry.State = EntityState.Modified);
+            var entityType = Context.Model.FindEntityType(typeof(TEntity));
+            var primaryKey = entityType.FindPrimaryKey();
+            var keyValues = primaryKey.Properties.Select(p => entity.GetType().GetProperty(p.Name).GetValue(entity)).ToArray();
+            var existingEntity = await Context.FindAsync<TEntity>(keyValues);
+
+            if (existingEntity != null)
+            {
+                // Detach existing entity
+                Context.Entry(existingEntity).State = EntityState.Detached; 
+            }
+            // Attach updated entity
+            Context.Entry(entity).State = EntityState.Modified; 
             await SaveAsync();
+
             return entity;
         }
         public IList<TEntity> UpdateRange(IList<TEntity> entities)

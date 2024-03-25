@@ -60,5 +60,12 @@ namespace Services.Tickets
 
             return _mapper.Map<TicketTypeDto>(result);
         }
+
+        public async Task<TicketTypeDto> UpdateAsync(TicketTypeDto ticketTypeDto)
+        {
+            var result = await _ticketTypesRepository.UpdateAsync(_mapper.Map<TicketType>(ticketTypeDto));
+
+            return _mapper.Map<TicketTypeDto>(result);
+        }
     }
 }
