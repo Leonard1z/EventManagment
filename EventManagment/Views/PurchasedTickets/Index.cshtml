@@ -22,10 +22,12 @@
                             <p>Ticket:@registration.TicketType.Name</p>
                             <p>Event: @registration.Event.Name</p>
                             <p>Registration Date: @registration.RegistrationDate.ToString()</p>
-                            <p>TicketPrice: @registration.TicketPrice</p>
                             <p>Quantity: @registration.Quantity</p>
-                            <p>TotalPrice: @registration.TotalPrice</p>
-
+                            @if (!registration.TicketType.IsFree)
+                            {
+                                <p>TicketPrice: @registration.TicketPrice</p>
+                                <p>TotalPrice: @registration.TotalPrice</p>
+                            }
                             <button class="assign-button" onclick="openAssignModal(@registration.Quantity,@registration.Id)">Assign Tickets</button>
                         </div>
                     </div>
