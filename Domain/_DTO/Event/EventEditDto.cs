@@ -1,6 +1,9 @@
 ﻿using Domain._DTO.Category;
 using Domain._DTO.Registration;
+using Domain._DTO.Reservation;
+using Domain._DTO.Ticket;
 using Domain._DTO.UserAccount;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,11 +31,13 @@ namespace Domain._DTO.Event
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public bool IsActive { get; set; }
-        public bool IsFree { get; set; }
+        public string Status { get; set; }
         public int UserAccountId { get; set; }
         public UserAccountDto UserAccount { get; set; }
         public int CategoryId { get; set; }
         public IList<CategoryDto> Category { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }
+        public ICollection<TicketTypeDto> TicketTypes { get; set; }
+        public ICollection<ReservationDto> Reservations { get; set; }
     }
 }

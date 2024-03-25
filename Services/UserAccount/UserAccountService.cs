@@ -309,5 +309,15 @@ namespace Services.UserAccount
 
             _userAccountRepository.Update(userAccount);
         }
+
+        public async Task<Domain.Entities.UserAccount> GetById(int userId)
+        {
+            return await _userAccountRepository.GetById(userId);
+        }
+
+        public async Task<Domain.Entities.UserAccount> UpdateAsync(Domain.Entities.UserAccount userAccount)
+        {
+            return await _userAccountRepository.UpdateAsync(userAccount);
+        }
     }
 }

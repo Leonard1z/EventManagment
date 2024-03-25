@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Domain._DTO.Category;
 using Domain._DTO.Event;
+using Domain._DTO.UserAccount;
 using Domain.Entities;
 using Infrastructure.Repositories.Events;
 
@@ -24,7 +26,10 @@ namespace Services.Events
 
         public EventCreateDto Create(EventCreateDto eventCreateDto)
         {
-
+            if (string.IsNullOrEmpty(eventCreateDto.Status))
+            {
+                eventCreateDto.Status = "Draft";
+            }
             eventCreateDto.IsActive = true;
             var result = _eventRepository.Create(_mapper.Map<Event>(eventCreateDto));
 
@@ -61,6 +66,65 @@ namespace Services.Events
             });
         }
 
+
+        public async Task<IList<EventWithMetricsDto>> GetAllEventsWithSoldAndGross()
+        {
+            var events = await _eventRepository.GetAllEventsWithSoldAndGross();
+
+            var result = events.Select(e => new EventWithMetricsDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Description = e.Description,
+                Image = e.Image,
+                City = e.City,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                Status=e.Status,
+                StreetName=e.StreetName,
+                IsActive=e.IsActive,
+                Category = _mapper.Map<CategoryDto>(e.Category),
+                UserAccount = new UserAccountDto
+                {
+                    FirstName = e.UserAccount.FirstName,
+                    Username = e.UserAccount.Username,
+                },
+                Sold = e.Registrations.Sum(reg => reg.Quantity),
+                Gross = e.Registrations.Sum(reg => reg.TotalPrice ?? 0)
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task<IList<EventWithMetricsDto>> GetActiveEventsWithSoldAndGrossForEventCreator(int useId)
+        {
+            var events = await _eventRepository.GetActiveEventsWithSoldAndGrossForEventCreator(useId);
+
+            var result = events.Select(e => new EventWithMetricsDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Description = e.Description,
+                Image = e.Image,
+                City = e.City,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                Status = e.Status,
+                StreetName = e.StreetName,
+                IsActive = e.IsActive,
+                Category = _mapper.Map<CategoryDto>(e.Category),
+                UserAccount = new UserAccountDto
+                {
+                    FirstName = e.UserAccount.FirstName,
+                    Username = e.UserAccount.Username,
+                },
+                Sold = e.Registrations.Sum(reg => reg.Quantity),
+                Gross = e.Registrations.Sum(reg => reg.TotalPrice ?? 0)
+            }).ToList();
+
+            return result;
+
+        }
         public async Task<EventDto> GetByIdWithCategory(int id)
         {
             return _mapper.Map<EventDto>(await _eventRepository.GetByIdWithCategory(id));
@@ -78,6 +142,12 @@ namespace Services.Events
             var result = _eventRepository.Update(_mapper.Map<Event>(eventEditDto));
 
             return _mapper.Map<EventEditDto>(result);
+        }
+        public async Task<EventDto> UpdateAsync(EventDto eventDto)
+        {
+            var result = await _eventRepository.UpdateAsync(_mapper.Map<Event>(eventDto));
+
+            return _mapper.Map<EventDto>(result);
         }
         public bool Delete(int id)
         {
@@ -187,6 +257,11 @@ namespace Services.Events
             var upcomingEvents = await _eventRepository.GetUpcomingEventsWithinOneWeek(currentDate, oneWeekLater,userId);
 
             return _mapper.Map<IList<EventDto>>(upcomingEvents);
+        }
+
+        public async Task<EventDto> GetByIdEditForEditStatus(int id)
+        {
+            return _mapper.Map<EventDto>(await _eventRepository.GetByIdEditForEditStatus(id));
         }
     }
 }

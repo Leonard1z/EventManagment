@@ -594,7 +594,7 @@ namespace EventManagment.Controllers
 
                 var role = await _roleService.GetById(profileUpdateDto.RoleId);
 
-                _userAccountService.UpdateUserProfile(profileUpdateDto);
+                await _userAccountService.UpdateUserProfile(profileUpdateDto);
 
                 TempData["message"] = "Success";
                 TempData["entity"] = "Profile updated successfully.";

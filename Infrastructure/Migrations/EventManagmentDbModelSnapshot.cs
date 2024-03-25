@@ -132,9 +132,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsFree")
-                        .HasColumnType("bit");
-
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
@@ -149,6 +146,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -188,14 +189,14 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PaymentLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReservationId")
+                    b.Property<int?>("ReservationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -227,17 +228,16 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("TicketPrice")
+                    b.Property<double?>("TicketPrice")
                         .HasColumnType("float");
 
                     b.Property<int>("TicketTypeId")
                         .HasColumnType("int");
 
-                    b.Property<double>("TotalPrice")
+                    b.Property<double?>("TotalPrice")
                         .HasColumnType("float");
 
                     b.Property<string>("TransactionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserAccountId")
@@ -333,6 +333,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFree")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -431,7 +434,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Registration", "Registration")
                         .WithMany("AssignedTickets")
                         .HasForeignKey("RegistrationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Registration");
@@ -461,14 +464,12 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Reservation", "Reservation")
                         .WithMany("Notifications")
                         .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Entities.UserAccount", "UserAccount")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Reservation");
 
@@ -486,7 +487,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.TicketType", "TicketType")
                         .WithMany("Registrations")
                         .HasForeignKey("TicketTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserAccount", "UserAccount")
@@ -513,7 +514,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.TicketType", "TicketTypes")
                         .WithMany("Reservations")
                         .HasForeignKey("TicketTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserAccount", "UserAccount")

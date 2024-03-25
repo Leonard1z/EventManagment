@@ -1,0 +1,178 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+h1 {
+    font-size: 16px;
+    margin: 0;
+}
+p{
+    margin:0;
+}
+
+.ticketSection {
+    padding: 2rem;
+    background-color: #f5f5f5;
+}
+
+.ticketContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.ticketWrapper {
+    margin: 0 200px 0 200px;
+}
+.ticketControls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #bdbdbd;
+    margin-bottom: 1rem;
+}
+
+.createTicketBtn a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 6px 16px;
+    background-color: #004cc7;
+    color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.createTicketBtn a:hover {
+    background-color: #6c98d5;
+}
+.createTicketBtn a i {
+    padding: 0 8px 0 0;
+}
+
+.ticketSearchForm {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 45%;
+    margin-bottom: 2rem;
+}
+
+#searchInput {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.search-icon {
+    font-size: 18px;
+    color: #555;
+    cursor: pointer;
+}
+.ticketDataHeaderWrapper{
+    margin-bottom:1rem;
+}
+.ticketDataHeader {
+    display: flex;
+    align-items: center;
+}
+.ticketHeaderTitle {
+    width: 45%;
+    display: flex;
+}
+.ticketTitle,
+.ticketTotalQuantity,
+.ticketBodyTitle,
+.ticketBodyTotalQuantity {
+    width: 50%;
+}
+.ticketQuantity,
+.ticketPrice,
+.ticketStatus
+{
+    width:33%;
+}
+
+.ticketHeaderDetails {
+    width: 48%;
+    display: flex;
+}
+.ticketDataBodyWrapper{
+    display:flex;
+}
+.ticketBodyData {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 70px;
+}
+.ticketBodyDataItems {
+    width: 45%;
+}
+.ticketBodyDataDetails {
+    width: 48%;
+}
+.ticketDataDetails {
+    display: flex;
+    height: 70px;
+    align-items: center;
+}
+.ticketBodyActions {
+    width: 7%;
+}
+.ticketBodyTitle span {
+    font-size: 11px;
+    color: #888;
+    padding: 6px 0 0 0;
+}
+
+
+.ticketBodyActions {
+    width: 7%;
+}
+
+.ticketActions {
+    display: flex;
+    justify-content: flex-end;
+    height: 70px;
+    padding-top: 25px;
+}
+
+.actions i {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.ticketActionsDropdown {
+    width: 160px;
+    position: absolute;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    margin-right: 7px;
+}
+
+.actionItem {
+    font-size: 14px;
+    color: #7f7878;
+    padding: 7px;
+    cursor: pointer;
+}
+
+.hidden {
+    transform: scale(0);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.visible {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+}

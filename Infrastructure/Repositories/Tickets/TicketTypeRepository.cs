@@ -21,7 +21,10 @@ namespace Infrastructure.Repositories.Tickets
 
         public async Task<List<TicketType>> GetTicketsByEventId(int eventId)
         {
-            return await DbSet.Where(x => x.EventId == eventId).ToListAsync();
+            return await DbSet
+                .Include(x=>x.Registrations)
+                .Include(x=>x.Reservations)
+                .Where(x => x.EventId == eventId).ToListAsync();
         }
         public async Task<int> GetAvailableQuantity(int ticketId)
         {

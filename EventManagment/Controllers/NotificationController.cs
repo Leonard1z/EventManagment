@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Services.Notification;
 using System.Security.Claims;
@@ -43,6 +45,24 @@ namespace EventManagment.Controllers
             {
                 return StatusCode(500, new { Message = "An error occurred while fetching notification count" });
 
+            }
+        }
+
+        [HttpGet]
+        [Route("Notification/GetAdminNotifications")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetAdminNotifications()
+        {
+            try
+            {
+                var adminNotifications = await _notificationService.GetAdminNotifications();
+                var notificationCount = await _notificationService.GetAdminUnreadNotificationCount();
+
+                return Ok(new { data = adminNotifications, count = notificationCount });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while fetching admin notifications" });
             }
         }
     }

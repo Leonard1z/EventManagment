@@ -20,6 +20,7 @@ namespace Domain._DTO.Ticket
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
+        public bool IsFree { get; set; }
         public int Quantity { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime SaleStartDate { get; set; }
@@ -28,5 +29,7 @@ namespace Domain._DTO.Ticket
         public int EventId { get; set; }
         public ICollection<ReservationDto> Reservations { get; set; }
         public ICollection<RegistrationDto> Registrations { get; set; }
+        [NotMapped]
+        public int TotalTickets { get; set; }
     }
 }

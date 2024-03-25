@@ -8,5 +8,7 @@ namespace Services.Tickets
         Task<List<TicketTypeDto>> GetTicketsByEventId(int eventId);
         Task<TicketTypeDto> GetTicketByIdAsync(int ticketId);
         Task<int> GetAvailableQuantity(int ticketId);
+        TicketTypeDto AddTicket(TicketTypeDto ticket);
+        Task<TicketTypeDto> UpdateAsync(TicketTypeDto ticketTypeDto);
     }
 }

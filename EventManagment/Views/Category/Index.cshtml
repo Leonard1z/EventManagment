@@ -13,22 +13,22 @@
     <div class="row">
         <div class="col-12 border p-3 row-container">
             <form action="@Url.Action("Index", "Category")">
-                <div class ="row" style="justify-content:space-between;">
-                    <div class="col-4">
+                <div class ="row actions-container" style="justify-content:space-between;">
+                    <div class="col-4 grid-column">
                         <a href="@Url.Action("Index", "Category")" class="list-btn">Category List <i class="bi bi-list-ul"></i></a>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4 grid-column">
                         <div class="input-group">
                             <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         </div>
                     </div>
-                    <div class="col-2 ml-auto">
+                    <div class="col-2 grid-column ml-auto">
                         <a href="@Url.Action("Create", "Category")" class="create-btn">Create<i class="bi bi-plus-circle"></i></a>
                     </div>
                 </div>
             </form>
             <hr />
-            <table class="table table-bordered">
+            <table>
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -39,8 +39,8 @@
                     @foreach (var category in Model)
                     {
                         <tr>
-                            <td>@category.Name</td>
-                            <td class="actions">
+                            <td data-cell="name">@category.Name</td>
+                            <td data-cell="actions" class="actions">
                                 <a class="icon edit" href="@Url.Action("Edit", "Category", new { encryptedId = category.EncryptedId })">
                                     <div class="toltip">Edit</div>
                                     <span><i class="fa-regular fa-pen-to-square" style="color:#2a3042;"></i></span>
@@ -50,7 +50,7 @@
                                     <span><i class="fa-regular fa-trash-can" style="color:red"></i></span>
                                 </a>
                             </td>
-                        </tr> 
+                        </tr>
                     }
                 </tbody>
             </table>

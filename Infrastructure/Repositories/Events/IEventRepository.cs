@@ -6,8 +6,11 @@ namespace Infrastructure.Repositories.Events
     {
         IQueryable<Event> GetAllForPagination(string filter, string encryptedId);
         Task<IList<Event>> GetAllEvents();
+        Task<IList<Event>> GetAllEventsWithSoldAndGross();
+        Task<IList<Event>> GetActiveEventsWithSoldAndGrossForEventCreator(int userId);
         Task<IEnumerable<Event>> GetAllByIsActive();
         Task<Event> GetByIdWithCategory(int id);
+        Task<Event> GetByIdEditForEditStatus(int id);
         IEnumerable<Event> GetExpiredEvents();
         Task<IEnumerable<Event>> GetActiveEventsForEventCreator(int userId);
         Task<Event> GetEventDetails(int eventId);
