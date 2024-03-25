@@ -23,7 +23,7 @@
                     //console.log(currentTotalPrice);
                     sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
                 } else {
-                    registerUserForFreeTickets();
+                    registerUserForFreeTickets(ticketId, currentQuantity, eventId);
                 }
               
             } else {
@@ -34,6 +34,33 @@
         });
     });
 
+    async function registerUserForFreeTickets(ticketId, quantity, eventId) {
+        try {
+            const response = await fetch('/Registration/RegisterForFreeTickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticketId, quantity, eventId }),
+            });
+            if (!response.ok) {
+                throw new Error('User registration failed: ' + response.statusText);
+            }
+            const data = await response.json()
+            //console.log('After fetch', data);
+
+            if (data && data.success) {
+                updateDOMAfterReservation(ticketId);
+                toastr.success(data.message);
+            } else {
+                //console.error('Reservation failed:', data.message);
+                toastr.error(data.message);
+                updateDOMAfterReservation(ticketId);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     async function sendReservationRequest(ticketId, quantity, ticketTotalPrice,eventId) {
         try {

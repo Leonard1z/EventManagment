@@ -90,7 +90,7 @@ namespace Services.Events
                     Username = e.UserAccount.Username,
                 },
                 Sold = e.Registrations.Sum(reg => reg.Quantity),
-                Gross = e.Registrations.Sum(reg => reg.TotalPrice)
+                Gross = e.Registrations.Sum(reg => reg.TotalPrice ?? 0)
             }).ToList();
 
             return result;
@@ -119,7 +119,7 @@ namespace Services.Events
                     Username = e.UserAccount.Username,
                 },
                 Sold = e.Registrations.Sum(reg => reg.Quantity),
-                Gross = e.Registrations.Sum(reg => reg.TotalPrice)
+                Gross = e.Registrations.Sum(reg => reg.TotalPrice ?? 0)
             }).ToList();
 
             return result;
