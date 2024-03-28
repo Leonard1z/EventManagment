@@ -106,7 +106,7 @@
 
                         var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
                         var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
-                        if (quantityInput && totalPrice) {
+                        if (quantityInput || totalPrice) {
                             quantityInput.value = 0;
                             totalPrice.value = 0;
                         }
@@ -127,16 +127,23 @@
         plusButton.addEventListener('click', function () {
             var ticketId = this.getAttribute('data-ticket-id');
             var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
+            var quantityElement = document.getElementById('quantity-' + ticketId);
             var currentQuantity = parseInt(quantityInput.value);
             var maxQuantity = parseInt(quantityInput.getAttribute('max'));
+            //console.log(quantityElement.textContent);
+            var availableQuantity = parseInt(quantityElement.textContent.replace('Available: ', ''));
+            //console.log(availableQuantity);
 
-            if (currentQuantity < maxQuantity) {
+            if (currentQuantity < maxQuantity && currentQuantity < availableQuantity) {
                 currentQuantity++;
                 quantityInput.value = currentQuantity;
                 updateTotalPrice(ticketId, currentQuantity)
                 updateQuantityDisplay(ticketId, currentQuantity);
                 //console.log('ticketId  ' + ticketId + ' quantityInput  ' + quantityInput + '  current Quantity  ' + currentQuantity + '  maxQuantity ' +
                 //    maxQuantity);
+            } else if (currentQuantity >= availableQuantity) {
+                var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
+                quantityErrorMessage.textContent = 'You cannot exceed the available tickets limit.';
             } else {
 
                 var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');

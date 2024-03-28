@@ -19,32 +19,74 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <h1 class="text-center mb-5">@Model.Event.Name</h1>
-            <div class="text-center">
-                <img src="@Model.Event.Image" alt="Event Image" class="event-img"/>
+            <div class="event-image-container"> 
+                <img src="@Model.Event.Image" alt="Event Image" class="event-img" />
             </div>
         </div>
-        <div class="col-10 mx-auto p-3 border mt-5">
+        <div class="event-container col-10 mx-auto p-3 mt-5">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>@Model.Event.Name</h1>
+                    <div class="event-title">
+                        <h1>@Model.Event.Name</h1>
+                    </div>
+                    <div class="event-date">
+                        <h2>Date and time</h2>
+                        <div class="date-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>@Model.Event.StartDate.ToString("ddd, MMM d • h:mm tt", System.Globalization.CultureInfo.InvariantCulture)</span> -
+                            <span>@Model.Event.EndDate.ToString("ddd, MMM d • h:mm tt", System.Globalization.CultureInfo.InvariantCulture)</span>
+                        </div>
+                    </div>
+                    <div class="event-location">
+                        <h2>Location</h2>
+                        <div class="location-info">
+                            <div class="location-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="location-place">
+                                <h3>@Model.Event.Place</h3>
+                                <span>@Model.Event.StreetName, @Model.Event.City, @Model.Event.State</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-duration">
+                        <h2>Duration</h2>
+                        <div class="duration-info">
+                            <div class="duration-icon">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div class="duration-details">
+                                @{
+                                    TimeSpan duration = Model.Event.EndDate - Model.Event.StartDate;
+                                    int days = duration.Days;
+                                    int hours = duration.Hours;
+
+                                    string durationString = "";
+                                    if (days > 0)
+                                    {
+                                        durationString += $"{days} {(days == 1 ? "day" : "days")}";
+                                        if (hours > 0)
+                                        {
+                                            durationString += $" {hours} {(hours == 1 ? "hour" : "hours")}";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        durationString += $"{hours} {(hours == 1 ? "hour" : "hours")}";
+                                    }
+                                }
+                                <span>@durationString</span>
+                            </div>
+                        </div>
+                    </div>
                     <p class="card-text">
                         <strong>@Localizer["About"]</strong> @Model.Event.Description
                     </p>
-                    <p class="card-text">
-                        <strong>@Localizer["Start Date"]:</strong> @Model.Event.StartDate.ToString("MMMM dd, yyyy HH:mm tt")
-                    </p>
-                    <p class="card-text">
-                        <strong>@Localizer["End Date"]:</strong> @Model.Event.EndDate.ToString("MMM dd, yyyy HH:mm tt")
-                    </p>
-                    <p>
-                        <strong>@Localizer["Location"]:</strong> @Model.Event.City, @Model.Event.StreetName, @Model.Event.State
-                    </p>    
+ 
                 </div>
                 <div class="col-md-6">
                     @if (Model.Tickets.Count > 0)
                     {
-                        <h1>Tickets</h1>
                         @foreach (var ticket in Model.Tickets)
                         {
                             <div class="card mb-3">
@@ -60,9 +102,9 @@
                                         <p class="card-text" id="quantity-@ticket.Id">@Localizer["Available"]: @ticket.Quantity</p>
                                         <p class="card-text" id="available-@ticket.Id"></p>
                                         <div class="quantity-container">
-                                            <button class="btn btn-sm btn-secondary minus-button" data-ticket-id="@ticket.Id">-</button>
+                                            <button class="minus-button" data-ticket-id="@ticket.Id">-</button>
                                             <input type="number" class="quantity-input" value="0" min="0" max="7" data-ticket-id="@ticket.Id" readonly/>
-                                            <button class="btn btn-sm btn-secondary plus-button" data-ticket-id="@ticket.Id">+</button>
+                                            <button class="plus-button" data-ticket-id="@ticket.Id">+</button>
                                         </div>
                                         <div data-ticket-id="@ticket.Id" class="quantityErrorMessage text-danger"></div>
                                         @if (!ticket.IsFree)
@@ -75,6 +117,7 @@
                                         }
                                         @if(ticket.IsAvailable)
                                         {
+                                            <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" data-quantity="0">@Localizer["Reserve a Spot"]</button>
                                             <div id="countdown-@ticket.Id" class="countdown-container">
                                                 <div class="countdown-unit">
                                                     <span class="countdown-number" id="days-@ticket.Id"></span>
@@ -93,7 +136,7 @@
                                                     <span class="countdown-label">Seconds</span>
                                                 </div>
                                             </div>
-                                            <button id="buy-btn-@ticket.Id" class="btn btn-success buy-button" data-ticket-id="@ticket.Id" data-quantity="0">@Localizer["Reserve a Spot"]</button>
+                                         
                                         }else{
                                             <p>@Localizer["Tickets are currently unavailable."] (@Localizer["Sale Start Date"]: @ticket.SaleStartDate.ToString("MMM dd, yyyy HH:mm tt"),  @Localizer["Sale End Date"]: @ticket.SaleEndDate.ToString("MMM dd, yyyy HH:mm tt"))</p>
                                         }
