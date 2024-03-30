@@ -113,6 +113,9 @@
     font-weight: 600;
     color: #929699;
 }
+.buy-button {
+    margin: 20px 0;
+}
 .countdown-container {
     display: flex;
     justify-content: center;

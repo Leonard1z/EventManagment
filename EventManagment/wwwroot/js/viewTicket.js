@@ -96,7 +96,7 @@ function renderTickets(tickets) {
 					<h1>${ticket.quantity}</h1>
 				</div>
 				<div class="ticketPrice">
-					<h1>${ticket.price}</h1>
+					<h1>${(ticket.price == 0 ? "Free" : ticket.price)}</h1>
 				</div>
 				<div class="ticketStatus">
 					<h1>${ticketAvailablity}</h1>
