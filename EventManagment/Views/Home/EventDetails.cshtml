@@ -79,10 +79,12 @@
                             </div>
                         </div>
                     </div>
-                    <p class="card-text">
-                        <strong>@Localizer["About"]</strong> @Model.Event.Description
-                    </p>
- 
+                    <div class="about-event">
+                        <h2>@Localizer["About this event"]</h2>
+                        <div class="about-description">
+                            <p>@Model.Event.Description</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     @if (Model.Tickets.Count > 0)
