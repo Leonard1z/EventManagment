@@ -11,6 +11,7 @@
 	<div class="container">
 		<form id="addTicketForm" action="@Url.Action("AddTicket","Event")" method="post">
 			<div id="encryptedId" style="display: none;">@ViewBag.EncryptedEventId</div>
+			<div id="ticketOption" style="display: none;">@ViewBag.Option</div>
 
 			<div class="input-wrapper">
 				<label for="Name" class="input-label">Ticket Name</label>

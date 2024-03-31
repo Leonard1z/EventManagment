@@ -1,6 +1,19 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
 	var encryptedId = document.getElementById('encryptedId').innerText;
+	var freeOption = document.getElementById("freeOption");
+	var paidOption = document.getElementById("paidOption");
+	const baseUrl = window.location.origin;
 	getTickets(encryptedId);
+
+	freeOption.addEventListener('click', function () {
+		window.location.href = `${baseUrl}/Event/AddTicket?encryptedEventId=${encryptedId}&option=free`;
+		$('#selectTicketTypeModal').modal('hide');
+	});
+
+	paidOption.addEventListener('click', function () {
+		window.location.href = `${baseUrl}/Event/AddTicket?encryptedEventId=${encryptedId}&option=paid`;
+		$('#selectTicketTypeModal').modal('hide');
+	});
 });
 
 let allTicketsData = [];

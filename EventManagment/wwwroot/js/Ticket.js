@@ -1,5 +1,15 @@
-﻿const textarea = document.getElementById('Description');
+﻿document.addEventListener('DOMContentLoaded', function () {
+	const ticketOption = document.getElementById('ticketOption').textContent;
+	const ticketPriceInput = document.getElementById('Price');
 
+	if (ticketOption === 'free') {
+		ticketPriceInput.disabled = true;
+		ticketPriceInput.type = "text";
+		ticketPriceInput.value = "Free";
+	}
+})
+
+const textarea = document.getElementById('Description');
 textarea.addEventListener('input', function () {
 	this.style.height = 'auto';
 	this.style.height = this.scrollHeight + 'px';
@@ -11,11 +21,16 @@ document.getElementById('createButton').addEventListener('click', function (even
 	const form = document.getElementById('addTicketForm');
 	const formData = new FormData(form);
 	const encryptedEventId = document.getElementById('encryptedId').textContent;
-	formData.append('EncryptedEventId', encryptedEventId);
+	const ticketOption = document.getElementById('ticketOption').textContent;
+	formData.append('EncryptedEventId', encodeURIComponent(encryptedEventId));
 	//console.log(...formData.entries());
 	const plainFormData = {};
 	for (const [key, value] of formData.entries()) {
 		plainFormData[key] = value;
+	}
+	if (ticketOption === 'free') {
+		plainFormData['Price'] = 0;
+		plainFormData['IsFree'] = true;
 	}
 	//console.log(plainFormData);
 	const saleStartDate = new Date(document.getElementById('SaleStartDate').value);
@@ -69,7 +84,7 @@ document.getElementById('createButton').addEventListener('click', function (even
 				const errorElement = document.getElementById(`${fieldName.toLowerCase()}Error`);
 				errorElement.textContent = `${fieldName} must be a positive number greater than zero.`
 			}
-		} else if (fieldName === 'Price') {
+		} else if (fieldName === 'Price' && !input.disabled) {
 			if (parseFloat(value) <= 0 || isNaN(parseFloat(value))) {
 				isValid = false;
 				const errorElement = document.getElementById(`${fieldName.toLowerCase()}Error`);
@@ -80,7 +95,7 @@ document.getElementById('createButton').addEventListener('click', function (even
 	});
 
 	if (isValid) {
-		console.log('Form is valid.');
+		//console.log('Form is valid.');
 		//console.log(plainFormData);
 		//form.submit();
 		fetch('/Event/AddTicket', {
@@ -97,7 +112,7 @@ document.getElementById('createButton').addEventListener('click', function (even
 				return response.json();
 			})
 			.then(data => {
-				console.log('Server response:', data);
+				//console.log('Server response:', data);
 				window.location.href = '/Event/ViewTickets?encryptedId=' + encodeURIComponent(encryptedEventId);
 			})
 			.catch(error => {

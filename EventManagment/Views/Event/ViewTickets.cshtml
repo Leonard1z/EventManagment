@@ -18,7 +18,7 @@
 			<div class="actionsWrapper">
 				<div class="ticketControls">
 					<div class="createTicketBtn">
-						<a asp-controller="Event" asp-action="AddTicket" asp-route-encryptedEventId="@ViewBag.EncryptedId" class=""><i class="fa-solid fa-plus"></i> Add Ticket</a>
+						<button type="button" id="addTicketBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectTicketTypeModal">Add Ticket Option</button>
 					</div>
 					<div class="ticketSearchForm">
 						<input type="text" id="searchInput" placeholder="Search ticket">
@@ -85,6 +85,37 @@
 								<i class="fa-solid fa-ellipsis-vertical"></i>
 							</div>
 						</div>*@
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="selectTicketTypeModal" tabindex="-1" aria-labelledby="selectTicketTypeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Select an Option</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+			</div>
+			<div class="modal-body">
+				<div class="option" id="freeOption">
+					<div class="icon">
+						<i class="fas fa-lock-open"></i>
+					</div>
+					<div class="details">
+						<h1>Free</h1>
+						<span>A ticket that no one has to pay</span>
+					</div>
+				</div>
+				<div class="option" id="paidOption">
+					<div class="icon">
+						<i class="fas fa-tag"></i>
+					</div>
+					<div class="details">
+						<h1>Paid</h1>
+						<span>A ticket that requires payment</span>
 					</div>
 				</div>
 			</div>

@@ -286,9 +286,10 @@ namespace EventManagment.Controllers
         }
         [HttpGet]
         [Route("Event/AddTicket")]
-        public ActionResult AddTicket(string encryptedEventId)
+        public ActionResult AddTicket([FromQuery] string encryptedEventId, [FromQuery] string option)
         {
             ViewBag.EncryptedEventId = encryptedEventId;
+            ViewBag.Option = option;
             return View();
         }
         [HttpPost]
@@ -307,11 +308,13 @@ namespace EventManagment.Controllers
                 {
                     return BadRequest("Ticket dates must be within the event's timeframe.");
                 }
-
-                if (formData.Price <= 0)
+                if (!formData.IsFree)
                 {
-                    ModelState.AddModelError("Price", "Price must be a positive number.");
-                    return BadRequest(ModelState);
+                    if (formData.Price <= 0)
+                    {
+                        ModelState.AddModelError("Price", "Price must be a positive number.");
+                        return BadRequest(ModelState);
+                    }
                 }
                 if (formData.Quantity <= 0)
                 {
@@ -405,6 +408,11 @@ namespace EventManagment.Controllers
             {
                 var eventId = int.Parse(_protector.Unprotect(encryptedId));
                 var tickets = await _ticketTypesService.GetTicketsByEventId(eventId);
+                foreach (var ticket in tickets)
+                {
+                    ticket.EncryptedId = _protector.Protect(ticket.Id.ToString());
+                    ticket.EncryptedEventId = _protector.Protect(ticket.EventId.ToString());
+                }
                 return Json(new { data = tickets });
             }
             catch (Exception ex)
