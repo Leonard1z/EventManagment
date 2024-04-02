@@ -10,5 +10,8 @@ namespace Services.Tickets
         Task<int> GetAvailableQuantity(int ticketId);
         TicketTypeDto AddTicket(TicketTypeDto ticket);
         Task<TicketTypeDto> UpdateAsync(TicketTypeDto ticketTypeDto);
+        bool Delete(int id);
+        bool HasRegistrations(int ticketId);
+        bool HasReservations(int ticketId);
     }
 }

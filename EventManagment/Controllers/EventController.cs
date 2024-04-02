@@ -259,7 +259,7 @@ namespace EventManagment.Controllers
                     eventEditDto.Image = @"\images\events\" + fileName + extension;
                 }
 
-                //var result = _eventService.Update(eventEditDto);
+                var result = _eventService.Update(eventEditDto);
 
                 TempData["message"] = "Updated";
                 TempData["entity"] = _localizer["Event "].ToString();

@@ -52,7 +52,7 @@ function renderEvents(events) {
     } else if (currentPage > maxPage) {
         currentPage = maxPage;
     }
-
+    updatePagination();
     const eventContainer = document.querySelector('.event-data-body');
     const eventContainerMetric = document.querySelector('.event-body-metrics');
     const eventContainerActions = document.querySelector('.event-body-actions');
