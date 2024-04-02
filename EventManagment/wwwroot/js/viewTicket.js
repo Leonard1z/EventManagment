@@ -28,11 +28,13 @@ function getTickets(encryptedId) {
 		dataType: 'json',
 		success: function (response) {
 			if (response.data.length > 0) {
-				console.log(response.data);
+				//console.log(response.data);
 				allTicketsData = response.data;
 				renderTickets(allTicketsData);
 			} else {
 				console.log('No tickets found for this event.');
+				allTicketsData = response.data;
+				renderTickets(allTicketsData);
 			}
 		},
 		error: function () {
@@ -124,8 +126,8 @@ function renderTickets(tickets) {
 		const ticketActionsDropdown = document.createElement('div');
 		ticketActionsDropdown.classList.add('ticketActionsDropdown', `ticketId-${ticket.encryptedId}`, 'hidden');
 		const actions = [
-			{ label: 'Edit', icon: 'fa-edit', action: () => editTicket() },
-			{ label: 'Delete', icon: 'fa-trash', action: () => deleteTicket() },
+			{ label: 'Edit', icon: 'fa-edit', action: () => editTicket(ticket.encryptedId) },
+			{ label: 'Delete', icon: 'fa-trash', action: () => deleteTicket(ticket.encryptedId) },
 
 		];
 
@@ -182,4 +184,46 @@ function filterTickets(searchTerm) {
 	});
 
 	renderTickets(filteredTickets);
+}
+function editTicket(ticketId) {
+	console.log('Editing ticket:', ticketId);
+}
+function deleteTicket(encryptedId) {
+	const baseUrl = window.location.origin;
+	var url = `${baseUrl}/api/ticket/DeleteTicket?encryptedId=${encryptedId}`;
+	Swal.fire({
+		title: 'Are you sure?',
+		text: "You won't be able to revert this!",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Yes, delete it!'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			fetch(url, {
+				method: 'DELETE',
+			})
+				.then(response => {
+					if (!response.ok) {
+						toastr.error(response.message);
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						toastr.success(data.message);
+						var encryptedEventId = document.getElementById('encryptedId').innerText;
+						getTickets(encryptedEventId);
+
+					} else {
+						toastr.error(data.message);
+					}
+				})
+				.catch(error => {
+					console.error('Error occurred during the delete operation:', error);
+					toastr.error("Error occurred during the delete operation.");
+				});
+		}
+	});
 }

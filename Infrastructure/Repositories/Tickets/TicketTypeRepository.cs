@@ -36,5 +36,14 @@ namespace Infrastructure.Repositories.Tickets
             return 0;
         }
 
+        public bool HasRegistrations(int ticketId)
+        {
+            return DbSet.Any(t => t.Id == ticketId && t.Registrations.Any());
+        }
+
+        public bool HasReservations(int ticketId)
+        {
+            return DbSet.Any(t => t.Id == ticketId && t.Reservations.Any());
+        }
     }
 }

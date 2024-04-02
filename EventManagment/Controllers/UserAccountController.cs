@@ -327,7 +327,7 @@ namespace EventManagment.Controllers
         private async Task<string> GenerateJwtToken(UserAccountDto userDto)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtSecretKey = _configuration.GetSection("JwtSettings:SecretKey").Value;
+            var jwtSecretKey = Environment.GetEnvironmentVariable("JWTSETTINGS__SECRETKEY");
             var key = Encoding.ASCII.GetBytes(jwtSecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {

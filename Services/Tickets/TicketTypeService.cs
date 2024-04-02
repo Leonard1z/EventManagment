@@ -67,5 +67,21 @@ namespace Services.Tickets
 
             return _mapper.Map<TicketTypeDto>(result);
         }
+
+        public bool Delete(int id)
+        {
+            _ticketTypesRepository.Delete(id);
+            return true;
+        }
+
+        public bool HasRegistrations(int ticketId)
+        {
+            return _ticketTypesRepository.HasRegistrations(ticketId);
+        }
+
+        public bool HasReservations(int ticketId)
+        {
+            return _ticketTypesRepository.HasReservations(ticketId);
+        }
     }
 }
