@@ -331,6 +331,13 @@ namespace EventManagment.Controllers
                 return StatusCode(500, $"An error occurred while adding the ticket: {ex.Message}");
             }
         }
+
+        [HttpGet]
+        [Route("Ticket/Edit")]
+        public ActionResult EditTicket()
+        {
+            return View();
+        }
         [HttpPost]
         [Route("Event/UpdateEventStatus")]
         public async Task<IActionResult> UpdateEventStatus(string encryptedId)

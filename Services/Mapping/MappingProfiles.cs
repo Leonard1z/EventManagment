@@ -65,6 +65,9 @@ namespace Services.Mapping
             #region
             CreateMap<TicketType, TicketTypeDto>();
             CreateMap<TicketTypeDto, TicketType>();
+
+            CreateMap<TicketType, TicketTypeEditDto>();
+            CreateMap<TicketTypeEditDto, TicketType>();
             #endregion
 
             #region

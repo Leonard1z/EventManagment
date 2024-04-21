@@ -67,7 +67,7 @@ namespace EventManagment.Controllers
                 {
                     return Json(new { success = false, message = $"You cannot exceed the limit of {maxAllowedQuantity} tickets." });
                 }
-                var ticket = await _ticketTypeService.GetTicketByIdAsync(request.TicketId);
+                var ticket = await _ticketTypeService.GetTicketForEditByIdAsync(request.TicketId);
                 if (ticket == null)
                 {
                     return Json(new { success = false, Message = "Ticket Not Found" });

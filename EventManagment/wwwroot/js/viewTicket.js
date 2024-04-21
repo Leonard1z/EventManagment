@@ -186,7 +186,8 @@ function filterTickets(searchTerm) {
 	renderTickets(filteredTickets);
 }
 function editTicket(ticketId) {
-	console.log('Editing ticket:', ticketId);
+	const baseUrl = window.location.origin;	
+	window.location.href = `${baseUrl}/Ticket/Edit?encryptedId=${ticketId}`;
 }
 function deleteTicket(encryptedId) {
 	const baseUrl = window.location.origin;
@@ -204,12 +205,7 @@ function deleteTicket(encryptedId) {
 			fetch(url, {
 				method: 'DELETE',
 			})
-				.then(response => {
-					if (!response.ok) {
-						toastr.error(response.message);
-					}
-					return response.json();
-				})
+				.then(response => response.json())
 				.then(data => {
 					if (data.success) {
 						toastr.success(data.message);

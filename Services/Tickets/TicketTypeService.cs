@@ -61,11 +61,11 @@ namespace Services.Tickets
             return _mapper.Map<TicketTypeDto>(result);
         }
 
-        public async Task<TicketTypeDto> UpdateAsync(TicketTypeDto ticketTypeDto)
+        public async Task<TicketTypeEditDto> UpdateAsync(TicketTypeEditDto ticketTypeEditDto)
         {
-            var result = await _ticketTypesRepository.UpdateAsync(_mapper.Map<TicketType>(ticketTypeDto));
+            var result = await _ticketTypesRepository.UpdateAsync(_mapper.Map<TicketType>(ticketTypeEditDto));
 
-            return _mapper.Map<TicketTypeDto>(result);
+            return _mapper.Map<TicketTypeEditDto>(result);
         }
 
         public bool Delete(int id)
@@ -82,6 +82,20 @@ namespace Services.Tickets
         public bool HasReservations(int ticketId)
         {
             return _ticketTypesRepository.HasReservations(ticketId);
+        }
+
+        public async Task<TicketTypeDto> GetById(int id)
+        {
+            var result= await _ticketTypesRepository.GetById(id);
+
+            return _mapper.Map<TicketTypeDto>(result);
+        }
+
+        public async Task<TicketTypeEditDto> GetTicketForEditByIdAsync(int ticketId)
+        {
+            var result = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
+
+            return _mapper.Map<TicketTypeEditDto>(result);
         }
     }
 }
