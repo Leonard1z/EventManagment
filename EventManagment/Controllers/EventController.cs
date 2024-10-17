@@ -67,7 +67,7 @@ namespace EventManagment.Controllers
                     return View(result);
                 }
 
-                return RedirectToAction("UpdateForEventCreatorRole", "UserAccount");
+                return RedirectToAction("VerifyPhoneNumber", "Verification");
             }
             catch (Exception ex)
             {
@@ -98,7 +98,6 @@ namespace EventManagment.Controllers
                     if (string.IsNullOrEmpty(ticketData))
                     {
                         eventCreateDto.TicketTypes = new List<TicketTypeDto>();
-                        eventCreateDto.IsFree = true;
                     }
                     else
                     {
@@ -158,7 +157,7 @@ namespace EventManagment.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction("UpdateProfileForCreator", "UserAccount");
+                return RedirectToAction("VerifyPhoneNumber", "Verification");
 
             }
             catch (Exception ex)
@@ -278,8 +277,103 @@ namespace EventManagment.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+        [HttpGet]
+        [Route("Event/ViewTickets")]
+        public ActionResult ViewTickets(string encryptedId)
+        {
+            ViewBag.EncryptedId = encryptedId;
+            return View();
+        }
+        [HttpGet]
+        [Route("Event/AddTicket")]
+        public ActionResult AddTicket([FromQuery] string encryptedEventId, [FromQuery] string option)
+        {
+            ViewBag.EncryptedEventId = encryptedEventId;
+            ViewBag.Option = option;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddTicket([FromBody]TicketTypeDto formData)
+        {
+            try
+            {
+                var eventId = int.Parse(_protector.Unprotect(formData.EncryptedEventId));
+                formData.EventId = eventId;
 
+                var result = await _eventService.GetById(eventId);
+                var ticketStartDate = formData.SaleStartDate;
+                var ticketEndDate = formData.SaleEndDate;
 
+                if(ticketStartDate > result.EndDate || ticketEndDate > result.EndDate || ticketStartDate > ticketEndDate)
+                {
+                    return BadRequest("Ticket dates must be within the event's timeframe.");
+                }
+                if (!formData.IsFree)
+                {
+                    if (formData.Price <= 0)
+                    {
+                        ModelState.AddModelError("Price", "Price must be a positive number.");
+                        return BadRequest(ModelState);
+                    }
+                }
+                if (formData.Quantity <= 0)
+                {
+                    ModelState.AddModelError("Quantity", "Quantity must be a positive number.");
+                    return BadRequest(ModelState);
+                }
+
+                _ticketTypesService.AddTicket(formData);
+
+                return Ok(new { success = true, Message = "Ticket added succesfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while adding the ticket: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("Ticket/Edit")]
+        public ActionResult EditTicket()
+        {
+            return View();
+        }
+        [HttpPost]
+        [Route("Event/UpdateEventStatus")]
+        public async Task<IActionResult> UpdateEventStatus(string encryptedId)
+        {
+            try
+            {
+                var eventId = int.Parse(_protector.Unprotect(encryptedId));
+                var eventToUpdate = await _eventService.GetByIdEditForEditStatus(eventId);
+
+                if (eventToUpdate != null)
+                {
+                    if (eventToUpdate.Status == "Draft")
+                    {
+
+                        eventToUpdate.Status = "Published";
+                        await _eventService.UpdateAsync(eventToUpdate);
+
+                        return Json(new { success = true, message = "Event published successfully." });
+                    }
+                    else if (eventToUpdate.Status == "Published")
+                    {
+                        eventToUpdate.Status = "Draft";
+                         await _eventService.UpdateAsync(eventToUpdate);
+
+                        return Json(new { success = true, message = "Event unpublished successfully." });
+                    }
+                }
+
+                return Json(new { success = false, message = "Event not found or invalid status." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Json(new { success = false, message = "Error occurred while updating the event status." });
+            }
+        }
         private EventCreateDto EventCreateDtoEncryption()
         {
             return new EventCreateDto()
@@ -312,6 +406,7 @@ namespace EventManagment.Controllers
             return eventEditDto;
         }
 
+        #region API CALLS
         [HttpGet]
         [Route("Event/GetTickets")]
         public async Task<ActionResult> GetTickets(string encryptedId)
@@ -320,6 +415,11 @@ namespace EventManagment.Controllers
             {
                 var eventId = int.Parse(_protector.Unprotect(encryptedId));
                 var tickets = await _ticketTypesService.GetTicketsByEventId(eventId);
+                foreach (var ticket in tickets)
+                {
+                    ticket.EncryptedId = _protector.Protect(ticket.Id.ToString());
+                    ticket.EncryptedEventId = _protector.Protect(ticket.EventId.ToString());
+                }
                 return Json(new { data = tickets });
             }
             catch (Exception ex)
@@ -331,7 +431,6 @@ namespace EventManagment.Controllers
         }
 
 
-        #region API CALLS
         [HttpGet]
         [Route("GetAllEvents")]
         public async Task<ActionResult> GetAll()
@@ -345,7 +444,7 @@ namespace EventManagment.Controllers
 
                 if (isAdmin)
                 {
-                    var result = await _eventService.GetAllEvents();
+                    var result = await _eventService.GetAllEventsWithSoldAndGross();
 
                     foreach (var item in result)
                     {
@@ -363,7 +462,7 @@ namespace EventManagment.Controllers
                 }
                 else
                 {
-                    var result = await _eventService.GetActiveEventsForEventCreator(userId);
+                    var result = await _eventService.GetActiveEventsWithSoldAndGrossForEventCreator(userId);
 
                     foreach (var item in result)
                     {

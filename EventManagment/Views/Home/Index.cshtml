@@ -31,33 +31,39 @@
     </section>
 
     <section class="categories-section">
-        <div class="categories">
-            <ul class="category-list">
-                <li class="category-item">                     
-                    <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
+        <div class="iconCategoryWrapper">
+            <a asp-area="" asp-controller="" asp-action="">
+                <div class="iconCategoryCard">
+                    <div class="iconCategoryCardImageWrapper">
                         <i class="bi bi-music-note-list"></i>
-                        Music
-                    </a>
-                </li>
-                <li class="category-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
+                    </div>
+                    <p class="iconCategoryTittle">Music</p>
+                </div>
+            </a>
+            <a asp-area="" asp-controller="" asp-action="">
+                <div class="iconCategoryCard">
+                    <div class="iconCategoryCardImageWrapper">
                         <i class="bi bi-trophy-fill"></i>
-                        Sport
-                    </a>
-                </li>
-                <li class="category-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
+                    </div>
+                    <p class="iconCategoryTittle">Sport</p>
+                </div>
+            </a>
+            <a asp-area="" asp-controller="" asp-action="">
+                <div class="iconCategoryCard">
+                    <div class="iconCategoryCardImageWrapper">
                         <i class="bi bi-cpu-fill"></i>
-                        Technology
-                    </a>
-                </li>
-                <li class="category-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
+                    </div>
+                    <p class="iconCategoryTittle">Technology</p>
+                </div>
+            </a>
+            <a asp-area="" asp-controller="" asp-action="">
+                <div class="iconCategoryCard">
+                    <div class="iconCategoryCardImageWrapper">
                         <i class="bi bi-cup-straw"></i>
-                        Food & Drink
-                    </a>
-                </li>
-            </ul>
+                    </div>
+                    <p class="iconCategoryTittle">Food & Drink</p>
+                </div>
+            </a>
         </div>
     </section>
     <div class="card-container" id="cardContainer">
@@ -88,23 +94,7 @@
             </div>
         }
     </div>
-    <div class="slider-container">
-        @*<h2>Featured Events</h2>*@
-        <div class="slider">
-            @foreach (var item in sortedModel)
-            {
-                <div class="slider-item">
-                    <div class="slider-card">
-                        <a href="@Url.Action("EventDetails", "Home", new { encryptedId = item.EncryptedId })" class="card-link">
-                            <img src="@item.Image" alt="Event Image">
-                            <h3>@item.Name</h3>
-                            <p>@item.Description</p>
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+
     @*If there are more than 8 events(2 rows) show the button*@
 @*    @if (rowsToShow * 4 < sortedModel.Count())
     {
@@ -114,19 +104,6 @@
     @section scripts {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-        <script>
-            $(document).ready(function () {
-                $('.slider').slick({
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    autoplay: true,
-                    autoplaySpeed: 2000,
-                    arrows:false,
-                });
-            });
-        </script>
     }
     </body>
 </html>

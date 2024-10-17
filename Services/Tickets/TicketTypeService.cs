@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Domain._DTO.Ticket;
+using Domain.Entities;
 using Infrastructure.Repositories.Tickets;
+using static StackExchange.Redis.Role;
 
 namespace Services.Tickets
 {
@@ -26,11 +28,74 @@ namespace Services.Tickets
         {
             var result = await _ticketTypesRepository.GetTicketsByEventId(eventId);
 
-            return _mapper.Map<List<TicketTypeDto>>(result);
+            int activeReservationsCount;
+
+            var tickets = result.Select(t => new TicketTypeDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Description = t.Description,
+                Price = t.Price,
+                Quantity = t.Quantity,
+                IsAvailable = t.IsAvailable,
+                IsFree= t.IsFree,
+                SaleStartDate = t.SaleStartDate,
+                SaleEndDate = t.SaleEndDate,
+                TotalTickets = activeReservationsCount = t.Reservations.Where(r => r.Status == ReservationStatus.Active || r.Status == ReservationStatus.PaymentInProgress).Sum(r=>r.Quantity)
+                + t.Quantity + t.Registrations.Sum(r=>r.Quantity),
+
+            }).ToList();
+
+            return tickets;
+           
         }
         public async Task<int> GetAvailableQuantity(int ticketId)
         {
             return await _ticketTypesRepository.GetAvailableQuantity(ticketId);
+        }
+
+        public TicketTypeDto AddTicket(TicketTypeDto ticket)
+        {
+            var result = _ticketTypesRepository.Create(_mapper.Map<TicketType>(ticket));
+
+            return _mapper.Map<TicketTypeDto>(result);
+        }
+
+        public async Task<TicketTypeEditDto> UpdateAsync(TicketTypeEditDto ticketTypeEditDto)
+        {
+            var result = await _ticketTypesRepository.UpdateAsync(_mapper.Map<TicketType>(ticketTypeEditDto));
+
+            return _mapper.Map<TicketTypeEditDto>(result);
+        }
+
+        public bool Delete(int id)
+        {
+            _ticketTypesRepository.Delete(id);
+            return true;
+        }
+
+        public bool HasRegistrations(int ticketId)
+        {
+            return _ticketTypesRepository.HasRegistrations(ticketId);
+        }
+
+        public bool HasReservations(int ticketId)
+        {
+            return _ticketTypesRepository.HasReservations(ticketId);
+        }
+
+        public async Task<TicketTypeDto> GetById(int id)
+        {
+            var result= await _ticketTypesRepository.GetById(id);
+
+            return _mapper.Map<TicketTypeDto>(result);
+        }
+
+        public async Task<TicketTypeEditDto> GetTicketForEditByIdAsync(int ticketId)
+        {
+            var result = await _ticketTypesRepository.GetTicketByIdAsync(ticketId);
+
+            return _mapper.Map<TicketTypeEditDto>(result);
         }
     }
 }

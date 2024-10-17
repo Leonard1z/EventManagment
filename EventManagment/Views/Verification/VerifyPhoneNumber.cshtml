@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Creator Role</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.19/css/intlTelInput.css" integrity="sha512-MqSNU3ahHjuMbcLdeu1dngxB4OaOS7vnnLjnADs9E+0OhS0qk8CZ8nxvA+xyiU+Qy12+0vl2ove9F9ssWZpeuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.19/js/intlTelInput.min.js" integrity="sha512-IxRltlh4EpT/il+hOEpD3g4jlXswVbSyH5vbqw6aF40CUsJTRAnr/7MxmPlKRsv9dYgBPcDSVNrf1P/keoBx+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="~/css/verifyPhoneNumber.css" />
+</head>
+
+<body>
+
+    <div class="container">
+        <div>
+            <form id="verificationForm">
+                <p>Enter your phone number:</p>
+                <input id="phone" type="tel" name="phone">
+                <input type="submit" id="btn" class="btn" value="Send Code" />
+                <span id="error-msg" class="hide"></span>
+            </form>
+        </div>
+        </div>
+</body>
+
+</html>
+
+@section Scripts{
+    @{
+        <script src="~/js/verifyPhoneNumber.js"></script>
+    }
+    }

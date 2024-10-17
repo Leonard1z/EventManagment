@@ -14,7 +14,7 @@
     height: 100%;
     background: #2a3042;
     transition: 0.5s;
-    overflow: hidden;
+    z-index:11111;
 }
 
 .navigation.active{
@@ -47,6 +47,7 @@
 
 .list-item:hover {
     background: #525970;
+    width:250px;
 }
 
 .list-item a:hover{
@@ -84,7 +85,9 @@
     text-align: start;
     white-space: nowrap;
 }
-
+.list-item:hover .title {
+    visibility: visible !important;
+}
 
 .main-content {
     margin-left: 250px;
@@ -200,4 +203,216 @@
 .toggle-fullscreen i{
     font-size: 15px;
     color: #7c7f89;
+}
+
+.admin-notification-icon {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 0;
+    right: 132px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-notification-icon i {
+    font-size: 18px;
+    color: #7c7c7c;
+    cursor: pointer;
+}
+
+.admin-notification-count {
+    position: absolute;
+    top: 9px;
+    right: 13px;
+    background-color: #f15050;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.hide-dropdown {
+    display: none;
+}
+
+.show-dropdown {
+    position: absolute;
+    display: block;
+    top: 45px;
+    right: 23px;
+    width: 276px;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 11111111;
+}
+
+#admin-notification-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#admin-notification-list li {
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-bottom: 6px;
+}
+
+#admin-notification-list li:last-child {
+    border-bottom: none;
+}
+
+
+#admin-notification-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+#admin-notification-dropdown::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    border-radius: 4px;
+}
+
+#admin-notification-dropdown::-webkit-scrollbar-track {
+    background-color: #D5D5D5;
+}
+
+
+/* Extra Small (XS) Screens */
+@media (max-width: 480px) {
+    .navigation{
+        width:45px;
+    }
+    .menu-title {
+        padding: 12px 12px !important;
+        font-size:16px !important; 
+    }
+    .toggle-menu{
+        visibility:hidden;
+    }
+    .list-item a .icon {
+        min-width: 45px;
+    }
+    .list-item a .icon i {
+        font-size: 16px;
+    }
+    .list-item a .title{
+        font-size:12px;
+    }
+    .toggle-menu{
+        width:45px;
+        height:45px;
+    }
+    .toggle-menu i{
+        font-size:20px;
+    }
+    .admin-notification-icon{
+        width:45px;
+        height:45px;
+    }
+    .admin-notification-icon i{
+        font-size:16px;
+    }
+    .toggle-fullscreen{
+        width:45px;
+        height:45px;
+    }
+    .toggle-dropdown{
+        width:45px;
+        height:45px;
+    }
+    .show-dropdown{
+        top:37px;
+        right:16px;
+        width:200px;
+    }
+    #admin-notification-list li{
+        font-size:12px;
+    }
+}
+
+/* Small (SM) Screens */
+@media (min-width: 481px) and (max-width: 767px) {
+    .navigation {
+        width: 55px;
+    }
+    .menu-title {
+        padding: 12px 14px !important;
+        font-size: 18px !important;
+    }
+    .toggle-menu{
+        visibility:hidden;
+    }
+    .list-item a .icon {
+        min-width: 55px;
+    }
+
+    .list-item a .icon i {
+        font-size: 18px;
+    }
+
+    .list-item a .title {
+        font-size: 13px;
+    }
+
+    .toggle-menu {
+        width: 50px;
+        height: 50px;
+    }
+
+    .toggle-menu i {
+        font-size: 22px;
+    }
+
+    .admin-notification-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .admin-notification-icon i {
+        font-size: 17px;
+    }
+
+    .toggle-fullscreen {
+        width: 50px;
+        height: 50px;
+    }
+
+    .toggle-dropdown {
+        width: 50px;
+        height: 50px;
+    }
+
+    .show-dropdown {
+        top: 37px;
+        right: 20px;
+        width: 250px;
+    }
+
+    #admin-notification-list li {
+        font-size: 12px;
+    }
+}
+
+/* Medium (MD) Screens */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+/* Large (LG) Screens */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Extra Large (XL) Screens */
+@media (min-width: 1200px) {
 }

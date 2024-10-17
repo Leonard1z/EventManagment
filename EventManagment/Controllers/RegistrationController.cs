@@ -1,4 +1,7 @@
 ﻿using Domain._DTO.Event;
+using Domain.Entities;
+using Domain.ViewModels;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -6,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Security;
 using Services.Events;
 using Services.Registration;
+using Services.Tickets;
 using System.Security.Claims;
 
 namespace EventManagment.Controllers
@@ -15,12 +19,14 @@ namespace EventManagment.Controllers
 
         private readonly IRegistrationService _registrationService;
         private readonly IEventService _eventService;
+        private readonly ITicketTypeService _ticketTypeService;
         private readonly IDataProtector _protector;
         private readonly IStringLocalizer<RegistrationController> _localizer;
         private readonly ILogger<RegistrationController> _logger;
 
         public RegistrationController(IRegistrationService registrationService,
             IEventService eventService,
+            ITicketTypeService ticketTypeService,
              IDataProtectionProvider provider,
             DataProtectionPurposeStrings purposeStrings,
             IStringLocalizer<RegistrationController> localizer,
@@ -29,60 +35,69 @@ namespace EventManagment.Controllers
         {
             _registrationService = registrationService;
             _eventService = eventService;
+            _ticketTypeService = ticketTypeService;
             _protector = provider.CreateProtector(purpose: purposeStrings.HomeControllerPs);
             _localizer = localizer;
             _logger = logger;
         }
 
-        public async Task<IActionResult> RegisterToEvent(string encryptedEventId)
+        [Authorize]
+        [HttpPost]
+        [Route("Registration/RegisterForFreeTickets")]
+        public async Task<IActionResult> RegisterForFreeTickets([FromBody]FreeTicketsRegistrationViewModel request)
         {
             try
             {
-                if (!User.Identity.IsAuthenticated)
-                {
-                    return RedirectToAction("Login", "UserAccount");
-                }
-
-
-                var eventId = int.Parse(_protector.Unprotect(encryptedEventId));
-
-                var events = await _eventService.GetById(eventId);
-
-                if (events == null)
-                {
-                    return NotFound();
-                }
-
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = claim.Value != null ? int.Parse(claim.Value) : 0;
 
-                //bool isRegistered = await _registrationService.CheckIfUserExist(userId, eventId);
+                bool isUserRegistered = await _registrationService.IsUserRegisteredAsync(userId, request.EventId, request.TicketId);
+                if (isUserRegistered)
+                {
+                    return Json(new {success = false, Message = "You are already registered for this event." });
+                }
 
-                //if (isRegistered)
-                //{
-                //    TempData["message"] = "Error";
-                //    TempData["entity"] = "You are already registered for this event.";
-                //    return RedirectToAction("Index", "Home");
-                //}
+                if (request.Quantity <= 0)
+                {
+                    return Json(new { success = false, Message = "Quantity must be greater than 0." });
+                }
+                var maxAllowedQuantity = 7;
+                if (request.Quantity > maxAllowedQuantity)
+                {
+                    return Json(new { success = false, message = $"You cannot exceed the limit of {maxAllowedQuantity} tickets." });
+                }
+                var ticket = await _ticketTypeService.GetTicketForEditByIdAsync(request.TicketId);
+                if (ticket == null)
+                {
+                    return Json(new { success = false, Message = "Ticket Not Found" });
+                }
 
-                //await _registrationService.RegisterUserForEvent(userId, eventId);
+                if (ticket.Quantity < request.Quantity)
+                {
+                    return Json(new { success = false, Message = "Not enought tickets available" });
+                }
+                var registration = new Registration
+                {
+                    RegistrationDate = DateTime.Now,
+                    IsAssigned = false,
+                    Quantity = request.Quantity,
+                    UserAccountId = userId,
+                    EventId=request.EventId,
+                    TicketTypeId = request.TicketId
+                };
 
-                TempData["message"] = "Success";
-                TempData["entity"] = "You have been registered successfully";
-
-                return RedirectToAction("Index", "Home");
+                ticket.Quantity -= request.Quantity;
+                await _ticketTypeService.UpdateAsync(ticket);
+                await _registrationService.RegisterUserForEventAsync(registration);
+                return Ok(new { success = true, Message = "You have been registered successfully, Please check your ticket page." });
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "An error ocurred during reservation");
 
-                TempData["message"] = "Error";
-                TempData["entity"] = _localizer["An error occurred, try again"].ToString();
-
-
-                return RedirectToAction("Index", "Home");
+                return StatusCode(500, new { Message = "An error occurred during reservation. Please try again" });
             }
         }
     }

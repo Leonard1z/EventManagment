@@ -5,52 +5,100 @@
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
-<div class="conatiner p-3">
-	<div class="row pt-4">
-		<div class="col-6">
-			<h2 class="text-primary">Event List</h2>
+<link rel="stylesheet" href="~/css/eventIndex.css" />
+
+<div class="events-secion">
+	<div class="events-container">
+		<div class="event-tittle">
+			<h1>Events</h1>
 		</div>
-		<div class="col-6 text-end">
-			<a asp-controller="Event" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New Event</a>
-		</div>
-	</div>
-
-	<br />
-
-	<table id="tblData" class="table table-bordered table-striped">
-		<thead>
-			<tr>
-				<th>Name</th>
-				 <th>Description</th>
-				  <th>State</th>
-				   <th>City</th>
-					<th>Category</th>
-					<th>Actions</th>
-				<th></th>
-			</tr>
-		</thead>
-
-	</table>
-</div>
-
-<div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="ticketModalLabel">@Localizer["Ticket Information"]</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div class="row" id="ticketDetails">
+		<div class="event-wrapper">
+			<div class="event-header">
+				<div class="events-controls">
+					<div class="create-event-button">
+						<a asp-controller="Event" asp-action="Create" class=""><i class="fa-solid fa-plus"></i> Create Event</a>
+					</div>
+					<div class="list-tab">
+						<a asp-controller="Event" asp-action="Index">
+							<i class="fa-solid fa-list-ul"></i>
+							List
+						</a>
+					</div>
+					<div class="event-status">
+						<div class="status-tab" data-status="All">
+							All Events
+							<i class="fa-solid fa-chevron-down"></i>
+						</div>
+						<ul id="statusDropdown" class="dropdown-content hide">
+							<li data-status="All">All Events</li>
+							<li data-status="Draft">Draft</li>
+							<li data-status="Published">Published</li>
+						</ul>
+					</div>
+				</div>
+				<div class="search-form">
+					<input type="text" id="searchInput" placeholder="Search events">
+					<i class="search-icon fa-solid fa-search"></i>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+			<div class="event-body-wrapper">
+				<div class="event-data-header-wrapper">
+					<div class="event-data-header">
+						<div class="event-header-title">
+							<h1>Event</h1>
+						</div>
+						<div class="event-header-metric">
+							<div class="metric-sold-label">
+								Sold
+							</div>
+							<div class="metric-gross-label">
+								Gross
+							</div>
+							<div class="event-status-label">
+								Status
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="event-data-body-wrapper">
+					<div class="event-data-body">
+						@*<div class="event-data-items">
+							<div class="event-image">
+							</div>
+							<div class="event-details">
+							</div>
+						</div>	*@
+					</div>
+					<div class="event-body-metrics">
+						@*<div class="event-metrics-data">
+							<div class="metrics-sold">
+								<p>10</p>
+							</div>
+							<div class="metric-gross">
+								<p>100</p>
+							</div>
+							<div class="event-status">
+								<p>Draft</p>
+							</div>
+						</div>*@
+					</div>
+					<div class="event-body-actions">
+						@*<div class="event-actions">
+							<div class="actions">
+								<i class="fa-solid fa-ellipsis-vertical"></i>
+							</div>
+						</div>*@
+					</div>
+				</div>
 			</div>
+		</div>
+		<div class="pagination">
+			<button id="prevPage">Previous</button>
+			<span id="currentPage"></span>
+			<button id="nextPage">Next</button>
 		</div>
 	</div>
 </div>
-
 
 @section Scripts{
 

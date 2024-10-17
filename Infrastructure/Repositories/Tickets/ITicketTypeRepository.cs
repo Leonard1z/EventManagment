@@ -12,5 +12,8 @@ namespace Infrastructure.Repositories.Tickets
         Task<List<TicketType>> GetTicketsByEventId(int eventId);
         Task<TicketType> GetTicketByIdAsync(int ticketId);
         Task<int> GetAvailableQuantity(int ticketId);
+        bool HasRegistrations(int ticketId);
+        bool HasReservations(int ticketId);
+
     }
 }

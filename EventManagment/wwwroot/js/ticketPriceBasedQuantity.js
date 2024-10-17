@@ -13,14 +13,19 @@
             var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
             var overlay = document.getElementById('overlay');
             overlay.style.display = 'flex';
+            var ticket = getTicketById(ticketId);
 
             if (currentQuantity > 0) {
-                quantityErrorMessage.textContent = '';
-                var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
-                var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
-
-                //console.log(currentTotalPrice);
-                sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
+                if (!ticket.isFree) {
+                    quantityErrorMessage.textContent = '';
+                    var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
+                    var ticketTotalPrice = parseFloat(totalPrice.textContent.replace('$', ''));
+                    //console.log(currentTotalPrice);
+                    sendReservationRequest(ticketId, currentQuantity, ticketTotalPrice, eventId);
+                } else {
+                    registerUserForFreeTickets(ticketId, currentQuantity, eventId);
+                }
+              
             } else {
                 quantityErrorMessage.textContent = 'Quantity cannot be 0. Please select a valid value.';
                 overlay.style.display = 'none';
@@ -29,6 +34,33 @@
         });
     });
 
+    async function registerUserForFreeTickets(ticketId, quantity, eventId) {
+        try {
+            const response = await fetch('/Registration/RegisterForFreeTickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticketId, quantity, eventId }),
+            });
+            if (!response.ok) {
+                throw new Error('User registration failed: ' + response.statusText);
+            }
+            const data = await response.json()
+            //console.log('After fetch', data);
+
+            if (data && data.success) {
+                updateDOMAfterReservation(ticketId);
+                toastr.success(data.message);
+            } else {
+                //console.error('Reservation failed:', data.message);
+                toastr.error(data.message);
+                updateDOMAfterReservation(ticketId);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     async function sendReservationRequest(ticketId, quantity, ticketTotalPrice,eventId) {
         try {
@@ -74,7 +106,7 @@
 
                         var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
                         var totalPrice = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]')
-                        if (quantityInput && totalPrice) {
+                        if (quantityInput || totalPrice) {
                             quantityInput.value = 0;
                             totalPrice.value = 0;
                         }
@@ -95,16 +127,23 @@
         plusButton.addEventListener('click', function () {
             var ticketId = this.getAttribute('data-ticket-id');
             var quantityInput = document.querySelector('.quantity-input[data-ticket-id="' + ticketId + '"]');
+            var quantityElement = document.getElementById('quantity-' + ticketId);
             var currentQuantity = parseInt(quantityInput.value);
             var maxQuantity = parseInt(quantityInput.getAttribute('max'));
+            //console.log(quantityElement.textContent);
+            var availableQuantity = parseInt(quantityElement.textContent.replace('Available: ', ''));
+            //console.log(availableQuantity);
 
-            if (currentQuantity < maxQuantity) {
+            if (currentQuantity < maxQuantity && currentQuantity < availableQuantity) {
                 currentQuantity++;
                 quantityInput.value = currentQuantity;
                 updateTotalPrice(ticketId, currentQuantity)
                 updateQuantityDisplay(ticketId, currentQuantity);
                 //console.log('ticketId  ' + ticketId + ' quantityInput  ' + quantityInput + '  current Quantity  ' + currentQuantity + '  maxQuantity ' +
                 //    maxQuantity);
+            } else if (currentQuantity >= availableQuantity) {
+                var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
+                quantityErrorMessage.textContent = 'You cannot exceed the available tickets limit.';
             } else {
 
                 var quantityErrorMessage = document.querySelector('.quantityErrorMessage[data-ticket-id="' + ticketId + '"]');
@@ -130,19 +169,18 @@
     });
 
     function updateTotalPrice(ticketId, quantity) {
-        // Find the ticket in the tickets array by its ID
-        var ticket = tickets.find(function (t) {
-            return t.ticketId === parseInt(ticketId);
-        });
+        var ticket = getTicketById(ticketId);
 
         if (ticket) {
-            var price = ticket.price;
-            //console.log(ticket);
+            if (!ticket.isFree) {
+                var price = ticket.price;
+                //console.log(ticket);
 
-            var totalPrice = (price * quantity).toFixed(2);
+                var totalPrice = (price * quantity).toFixed(2);
 
-            var totalPriceElement = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]');
-            totalPriceElement.textContent = '$' + totalPrice;
+                var totalPriceElement = document.querySelector('.total-price[data-ticket-id="' + ticketId + '"]');
+                totalPriceElement.textContent = '$' + totalPrice;
+            }
         }
     }
 
@@ -163,6 +201,14 @@
         } else {
             quantityParagraph.style.display = 'block';
         }
+    }
+
+     // Find the ticket in the tickets array by its ID
+    function getTicketById(ticketId) {
+        var ticket = tickets.find(function (t) {
+            return t.ticketId === parseInt(ticketId);
+        });
+        return ticket;
     }
 
 });

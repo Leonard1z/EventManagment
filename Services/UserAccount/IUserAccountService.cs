@@ -28,6 +28,8 @@ namespace Services.UserAccount
         Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto);
         bool VerifyPassword(string oldPassword, string password, string salt);
         Task ChangePassword(int userId, string newPassword);
+        Task<Domain.Entities.UserAccount> GetById(int userId);
+        Task<Domain.Entities.UserAccount> UpdateAsync(Domain.Entities.UserAccount userAccount);
 
     }
 }

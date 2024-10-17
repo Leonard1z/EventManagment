@@ -32,6 +32,9 @@ namespace Services.Mapping
 
             CreateMap<Event, EventEditDto>();
             CreateMap<EventEditDto, Event>();
+
+            CreateMap<Event, EventWithMetricsDto>();
+            CreateMap<EventWithMetricsDto, Event>();
             #endregion
 
             #region
@@ -62,6 +65,9 @@ namespace Services.Mapping
             #region
             CreateMap<TicketType, TicketTypeDto>();
             CreateMap<TicketTypeDto, TicketType>();
+
+            CreateMap<TicketType, TicketTypeEditDto>();
+            CreateMap<TicketTypeEditDto, TicketType>();
             #endregion
 
             #region

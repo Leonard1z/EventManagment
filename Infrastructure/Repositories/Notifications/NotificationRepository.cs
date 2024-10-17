@@ -15,6 +15,34 @@ namespace Infrastructure.Repositories.Notifications
 
         }
 
+        public async Task<IList<Notification>> GetAdminNotifications()
+        {
+            try
+            {
+                var adminNotifications = await DbSet
+                    .Where(n => n.Type == "AdminNotification")
+                    .ToListAsync();
+
+                return adminNotifications;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<int> GetAdminUnreadNotificationCount()
+        {
+            return await DbSet.CountAsync(n => n.Type == "AdminNotification" && !n.IsRead);
+        }
+
+        public async Task<IList<Notification>> GetAllAdminNotifications()
+        {
+            var adminNotifications = await DbSet.Where(n => n.Type == "AdminNotification" && !n.IsRead)
+                .ToListAsync();
+
+            return adminNotifications;
+        }
+
         public async Task<IList<Notification>> GetNotificationDataByUserId(int userId)
         {
             return await DbSet.Where(n => n.UserId == userId)
