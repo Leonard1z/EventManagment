@@ -20,20 +20,25 @@ using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load environment variables from .env file
 DotEnv.Load();
 
 builder.Services.AddControllersWithViews();
 
+// Get connection string from environment variables
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__EVENTMANAGEMENT");
 
-
+// Configure Entity Framework with SQL Server
 builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(connectionString));
 
+// Configure Hangfire
 builder.Services.AddHangfire(configuration => configuration
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(connectionString));
+// Register Hangfire server
+builder.Services.AddHangfireServer(); 
 
 var stripeSettings = new StripeSettings();
 builder.Services.AddSingleton(stripeSettings);
@@ -130,6 +135,7 @@ SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard();
 
 app.UseEndpoints(endpoints =>
 {
@@ -140,18 +146,38 @@ app.UseEndpoints(endpoints =>
 });
 
 
-app.UseHangfireDashboard();
 //Add's The Schedule To HangFireServer
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Hourly);
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.UpdateTicketAvailability(), Cron.Minutely);
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.CheckAndUpdateExpiredReservation(), Cron.Minutely);
-//Executes the Background Schedule
-app.UseHangfireServer();
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "DeleteExpiredEvents",
+    methodCall: x => x.DeleteExpiredEvents(),
+    cronExpression: Cron.Hourly,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "UpdateTicketAvailability",
+    methodCall: x => x.UpdateTicketAvailability(),
+    cronExpression: Cron.Minutely,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
+
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "CheckAndUpdateExpiredReservation", 
+    methodCall: x => x.CheckAndUpdateExpiredReservation(),
+    cronExpression: Cron.Minutely,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
 
 
 app.Run();
-
-
 
 
 void SeedDatabase()

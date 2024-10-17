@@ -143,11 +143,18 @@ namespace Services.Reservation
 
         private string GeneratePaymentToken()
         {
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                string combinedInput = $"{DateTime.Now.Ticks}The1Best2Strong*Easiest%Secret9Key/In|The[World]?YES:NO";
+            string secretKey = Environment.GetEnvironmentVariable("PAYMENT_SECRET_KEY");
 
-                byte[] hashBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(combinedInput));
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                throw new ArgumentNullException("Secret key not found");
+            }
+
+            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey)))
+            {
+                string combinedInput = $"{DateTime.Now.Ticks}";
+
+                byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(combinedInput));
 
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (byte b in hashBytes)

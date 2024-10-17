@@ -1,6 +1,8 @@
 ﻿using Domain._DTO.Verification;
 using Domain.Entities;
 using EventManagment.Hubs;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -79,6 +81,7 @@ namespace EventManagment.ApiControllers
                     user.PhoneNumber = request.PhoneNumber;
                     user.RoleId = role.Id;
                     await _userAccountService.UpdateAsync(user);
+                    await UpdatedUserRoleClaimAsync(user);
                     var adminMessage = $"User with ID {userId} has updated their role";
                     try
                     {
@@ -139,6 +142,20 @@ namespace EventManagment.ApiControllers
             var savedCode = await _distributedCache.GetStringAsync(cacheKey);
 
             return savedCode;
+        }
+
+        private async Task UpdatedUserRoleClaimAsync(UserAccount userAccount)
+        {
+            var identity = (ClaimsIdentity)HttpContext.User.Identity;
+
+            var oldRoleClaim = identity.FindFirst(ClaimTypes.Role);
+            if (oldRoleClaim != null) 
+            {
+                identity.RemoveClaim(oldRoleClaim); 
+            }
+
+            identity.AddClaim(new Claim(ClaimTypes.Role, userAccount.Role.Name));
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
         }
     }
 }
