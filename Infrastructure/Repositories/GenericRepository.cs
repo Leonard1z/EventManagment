@@ -144,11 +144,11 @@ namespace Infrastructure.Repositories
 
             if (existingEntity != null)
             {
-                // Detach existing entity
-                Context.Entry(existingEntity).State = EntityState.Detached; 
+                // Detach existing entity to avoid duplicate tracking conflicts
+                Context.Entry(existingEntity).State = EntityState.Detached;
             }
-            // Attach updated entity
-            Context.Entry(entity).State = EntityState.Modified; 
+            // Attach the updated entity to the context
+            Context.Entry(entity).State = EntityState.Modified;
             await SaveAsync();
 
             return entity;

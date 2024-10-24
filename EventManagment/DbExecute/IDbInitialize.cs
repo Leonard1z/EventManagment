@@ -8,7 +8,7 @@ namespace Infrastructure.DbExecute
 {
     public interface IDbInitialize
     {
-        void DbExecute();
+        Task DbExecute();
         Task CreateAdmin();
         void DeleteExpiredEvents();
         Task UpdateTicketAvailability();

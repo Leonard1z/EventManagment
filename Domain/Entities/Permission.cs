@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Roles
+    public class Permission
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public ICollection<Roles> Roles { get; set; }
         public ICollection<UserAccount> UserAccounts { get; set; }
-        public ICollection<Permission> Permissions { get; set; }
     }
 }

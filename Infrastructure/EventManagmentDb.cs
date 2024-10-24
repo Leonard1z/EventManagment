@@ -24,6 +24,7 @@ namespace Infrastructure
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<AssignedTicket> AssignetTickets { get; set; }
+        public DbSet<Permission> Permission { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventManagmentDb).Assembly);

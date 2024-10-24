@@ -29,7 +29,10 @@ builder.Services.AddControllersWithViews();
 var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__EVENTMANAGEMENT");
 
 // Configure Entity Framework with SQL Server
-builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<EventManagmentDb>(options => options
+    .UseSqlServer(connectionString)
+    .EnableSensitiveDataLogging()
+    .LogTo(Console.WriteLine));
 
 // Configure Hangfire
 builder.Services.AddHangfire(configuration => configuration
@@ -185,7 +188,7 @@ void SeedDatabase()
     using (var scope = app.Services.CreateScope())
     {
         var dbInitialize = scope.ServiceProvider.GetRequiredService<IDbInitialize>();
-        dbInitialize.DbExecute();
+        dbInitialize.DbExecute().GetAwaiter().GetResult();
         dbInitialize.CreateAdmin().GetAwaiter().GetResult();
     }
 }

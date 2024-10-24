@@ -77,7 +77,7 @@ namespace EventManagment.Controllers
                 }
 
                 var totalCount = await qry.CountAsync();
-                //get totalpages by dividing the totalcount and pagesize 20 / 7 = 2.857, then rounds it to (3)
+                //get totalpages by dividing the totalcount and pagesize 20 / 7 = 2.857, then rounds it to highest value (3)
                 var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
                 ViewBag.Filter = filter;

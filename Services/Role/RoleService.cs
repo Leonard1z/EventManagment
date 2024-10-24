@@ -61,5 +61,12 @@ namespace Services.Role
 
             return _mapper.Map<RoleDto>(result);
         }
+
+        public async Task<IEnumerable<RoleDto>> GetAllRolesAsync()
+        {
+            var result = await _roleRepository.GetAll();
+
+            return _mapper.Map<List<RoleDto>>(result.ToList());
+        }
     }
 }

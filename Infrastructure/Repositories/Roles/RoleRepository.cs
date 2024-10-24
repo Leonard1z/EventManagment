@@ -25,21 +25,22 @@ namespace Infrastructure.Repositories.Roles
 
             return result;
         }
-        public async Task CreateRolesIfNotExists()
+
+        public async Task SeedRoles()
         {
-            var roleExists = await DbSet.AnyAsync();
+            var existingRoles = await DbSet.Select(r => r.Name).ToListAsync();
 
-            if (!roleExists)
+            var rolesToSeed = new List<string> { "Admin", "User", "EventCreator", "Manager" };
+
+
+            foreach (var roleName in rolesToSeed)
             {
-                var roles = new List<Domain.Entities.Roles>
+                if (!existingRoles.Contains(roleName))
                 {
-                    new Domain.Entities.Roles { Name = "Admin" },
-                    new Domain.Entities.Roles { Name = "User" }
-                };
-
-                await DbSet.AddRangeAsync(roles);
-                await SaveAsync();
+                    DbSet.Add(new Domain.Entities.Roles { Name = roleName });
+                }
             }
+            await SaveAsync();
         }
 
         public async Task<Domain.Entities.Roles> GetRoleByName(string roleName)

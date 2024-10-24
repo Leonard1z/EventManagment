@@ -2,6 +2,7 @@
 using Domain._DTO.AssignedTickets;
 using Domain._DTO.Category;
 using Domain._DTO.Event;
+using Domain._DTO.Permission;
 using Domain._DTO.Registration;
 using Domain._DTO.Reservation;
 using Domain._DTO.Role;
@@ -60,6 +61,11 @@ namespace Services.Mapping
             #region
             CreateMap<Roles, RoleDto>();
             CreateMap<RoleDto, Roles>();
+            #endregion
+
+            #region
+            CreateMap<Permission, PermissionDto>();
+            CreateMap<PermissionDto, Permission>();
             #endregion
 
             #region
