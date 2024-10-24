@@ -10,6 +10,7 @@ using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
 using iText.Commons.Actions.Contexts;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -130,8 +131,13 @@ namespace Infrastructure.DbExecute
 
                     if (trackedPermission != null)
                     {
-                        Console.WriteLine($"Adding Permission: {trackedPermission.Name} to Role: {role.Name}");
-                        role.Permissions.Add(trackedPermission);
+                        var count = await GetRolePermissionCount(role.Id, permission.Id, dbContext);
+
+                        if (count == 0)
+                        {
+                            Console.WriteLine($"Adding Permission: {trackedPermission.Name} to Role: {role.Name}");
+                            role.Permissions.Add(trackedPermission);
+                        }
                     }
                 }
 
@@ -147,12 +153,33 @@ namespace Infrastructure.DbExecute
                     dbContext.Entry(permission).State = EntityState.Modified;
                 }
 
+                var existingRole = await dbContext.Roles.FindAsync(updatedRole.Id);
+                if (existingRole != null)
+                {
+                    dbContext.Entry(existingRole).State = EntityState.Detached;
+                }
 
-                dbContext.Entry(updatedRole).State = EntityState.Detached;
                 dbContext.Entry(updatedRole).State = EntityState.Modified;
                 await dbContext.SaveChangesAsync();
             }
 
+        }
+
+        private async Task<int> GetRolePermissionCount(int roleId, int permissionId, EventManagmentDb dbContext)
+        {
+            var connection = dbContext.Database.GetDbConnection();
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT COUNT(*) FROM RolePermission WHERE RolesId = @roleId AND PermissionsId = @permissionId";
+                command.Parameters.Add(new SqlParameter("@roleId", roleId));
+                command.Parameters.Add(new SqlParameter("@permissionId", permissionId));
+
+                var result = await command.ExecuteScalarAsync();
+                await connection.CloseAsync();
+
+                return Convert.ToInt32(result);
+            }
         }
 
         public async Task CreateAdmin()
