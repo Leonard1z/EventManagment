@@ -27,6 +27,7 @@ namespace Domain.Entities
         public DateTime? PasswordResetTokenExpiry { get; set; }
         public int RoleId { get; set; }
         public Roles Role { get; set; }
+        public ICollection<Permission> Permissions { get; set; }
         public ICollection<Event> Events { get; set; }
         public ICollection<Registration> Registrations { get; set; }
         public ICollection<Reservation> Reservations { get; set; }

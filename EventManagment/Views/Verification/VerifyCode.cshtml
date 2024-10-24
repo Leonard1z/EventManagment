@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Verification";
+}
+
+<link rel="stylesheet" href="~/css/verificationCode.css" />
+
+
+<div id="wrapper">
+    <div id="dialog">
+        <div id="phoneNumber" style="display: none;">@ViewBag.PhoneNumber</div>
+        <h3>Please enter the 6-digit verification code sent to @ViewBag.PhoneNumber</h3>
+        <span>(we want to make sure it's you before we contact our movers)</span>
+        <div id="form">
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+            <button id="verifyBtn" class="btn btn-primary btn-embossed">Verify</button>
+        </div>
+
+        <div>
+            Didn't receive the code?<br />
+            <a href="#">Send code again</a><br />
+            <a href="#">Change phone number</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+       <script src="~/js/verificationCode.js"></script>
+    }
+    }

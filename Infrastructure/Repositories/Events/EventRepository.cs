@@ -1,4 +1,7 @@
-﻿using Domain.Entities;
+﻿using Domain._DTO.Category;
+using Domain._DTO.Event;
+using Domain._DTO.UserAccount;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -123,6 +126,38 @@ namespace Infrastructure.Repositories.Events
         public async Task<IList<Event>> GetUpcomingEventsWithinOneWeek(DateTime currentDate, DateTime oneWeekLater,int userId)
         {
             return await DbSet.Where(e => e.UserAccountId == userId && e.StartDate >= currentDate && e.StartDate <= oneWeekLater).ToListAsync();
+        }
+
+        public async Task<IList<Event>> GetAllEventsWithSoldAndGross()
+        {
+            var result = await DbSet
+                .Include(x => x.Category)
+                .Include(u => u.UserAccount)
+                .Include(x => x.Registrations)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IList<Event>> GetActiveEventsWithSoldAndGrossForEventCreator(int userId)
+        {
+            var result = await DbSet
+                .Include(x => x.Category)
+                .Include(u => u.UserAccount)
+                .Include(x => x.Registrations)
+                .Where(x=>x.UserAccountId == userId && x.IsActive)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<Event> GetByIdEditForEditStatus(int id)
+        {
+
+            return await DbSet.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

@@ -26,6 +26,24 @@ namespace Infrastructure.EntityFramework.Configurations
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(u => u.Events)
+                .WithOne(e => e.UserAccount)
+                .HasForeignKey(e => e.UserAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(u => u.Reservations)
+                .WithOne(r => r.UserAccount)
+                .HasForeignKey(r => r.UserAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(u => u.Notifications)
+              .WithOne(n => n.UserAccount)
+              .HasForeignKey(n => n.UserId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(u => u.Permissions)
+               .WithMany(p => p.UserAccounts)
+               .UsingEntity(j => j.ToTable("UserPermissions"));
         }
     }
 }

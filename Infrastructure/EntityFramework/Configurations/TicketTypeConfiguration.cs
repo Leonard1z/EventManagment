@@ -24,6 +24,16 @@ namespace Infrastructure.EntityFramework.Configurations
                 .WithMany(x => x.TicketTypes)
                 .HasForeignKey(x => x.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(t => t.Reservations)
+                .WithOne(r => r.TicketTypes)
+                .HasForeignKey(r => r.TicketTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(t => t.Registrations)
+                .WithOne(r => r.TicketType)
+                .HasForeignKey(r => r.TicketTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

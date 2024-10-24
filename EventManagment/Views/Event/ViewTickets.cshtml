@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/ticketIndex.css" />
+
+<div id="encryptedId" style="display: none;">@ViewBag.EncryptedId</div>
+
+<div class="ticketSection">
+	<div class="ticketContainer">
+		<div class="ticketTittle">
+			<h1>Tickets</h1>
+		</div>
+		<div class="ticketWrapper">
+			<div class="actionsWrapper">
+				<div class="ticketControls">
+					<div class="createTicketBtn">
+						<button type="button" id="addTicketBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectTicketTypeModal">Add Ticket Option</button>
+					</div>
+					<div class="ticketSearchForm">
+						<input type="text" id="searchInput" placeholder="Search ticket">
+						<i class="search-icon fa-solid fa-search"></i>
+					</div>
+				</div>
+			</div>
+			<div class="layoutWrapper">
+				<div class="ticketDataHeaderWrapper">
+					<div class="ticketDataHeader">
+						<div class="ticketHeaderTitle">
+							<div class="ticketTitle">
+								<h1>Ticket</h1>
+							</div>
+							<div class="ticketTotalQuantity">
+								<h1>TotalTickets</h1>
+							</div>
+						</div>
+						<div class="ticketHeaderDetails">
+							<div class="ticketQuantity">
+								<h1>AvailableTickets</h1>
+							</div>
+							<div class="ticketPrice">
+								<h1>Price</h1>
+							</div>
+							<div class="ticketStatus">
+								<h1>Status</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ticketDataBodyWrapper">
+					<div class="ticketBodyDataItems">
+						@*<div class=" ticketBodyData">
+							<div class="ticketBodyTitle">
+								<div class="ticketName">
+
+								</div>
+								<div class="ticketDate">
+								</div>
+							</div>
+							<div class="ticketBodyTotalQuantity">
+								<div class="totalTickets">
+								</div>
+							</div>
+						</div>*@
+					</div>
+					<div class="ticketBodyDataDetails">
+						@*<div class="ticketDataDetails">
+							<div class="ticketQuantity">
+								46
+							</div>
+							<div class="ticketPrice">
+								20
+							</div>
+							<div class="ticketStatus">
+								Available
+							</div>
+						</div>*@
+					</div>
+					<div class="ticketBodyActions">
+						@*<div class="ticketActions">
+							<div class="actions">
+								<i class="fa-solid fa-ellipsis-vertical"></i>
+							</div>
+						</div>*@
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="selectTicketTypeModal" tabindex="-1" aria-labelledby="selectTicketTypeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Select an Option</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+			</div>
+			<div class="modal-body">
+				<div class="option" id="freeOption">
+					<div class="icon">
+						<i class="fas fa-lock-open"></i>
+					</div>
+					<div class="details">
+						<h1>Free</h1>
+						<span>A ticket that no one has to pay</span>
+					</div>
+				</div>
+				<div class="option" id="paidOption">
+					<div class="icon">
+						<i class="fas fa-tag"></i>
+					</div>
+					<div class="details">
+						<h1>Paid</h1>
+						<span>A ticket that requires payment</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts{
+
+	<script src="~/js/viewTicket.js"></script>
+
+}

@@ -1,4 +1,5 @@
-﻿using Domain._DTO.UserAccount;
+﻿using Domain._DTO.Permission;
+using Domain._DTO.UserAccount;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,6 @@ namespace Domain._DTO.Role
         public string? EncryptedId { get; set; }
         public string Name { get; set; }
         public ICollection<UserAccountDto>? UserAccounts { get; set; }
+        public ICollection<PermissionDto> Permissions { get; set; }
     }
 }

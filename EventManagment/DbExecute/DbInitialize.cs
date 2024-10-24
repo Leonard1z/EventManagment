@@ -1,16 +1,21 @@
-﻿using Domain._DTO.UserAccount;
+﻿using AutoMapper;
+using Domain._DTO.Permission;
+using Domain._DTO.UserAccount;
 using Domain.Entities;
 using EventManagment.Hubs;
 using Hangfire;
+using Infrastructure.Repositories.Permissions;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.UserAccounts;
+using iText.Commons.Actions.Contexts;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services.Events;
 using Services.Notification;
+using Services.Permissions;
 using Services.Registration;
 using Services.Reservation;
 using Services.Role;
@@ -29,39 +34,124 @@ namespace Infrastructure.DbExecute
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IRoleService _roleService;
+        private readonly IPermissionService _permissionService;
         private readonly IUserAccountService _userAccountService;
         public readonly IEventService _eventService;
         private readonly ITicketTypeRepository _ticketTypeRepository;
         private readonly IReservationService _reservationService;
         private readonly INotificationService _notificationService;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IMapper _mapper;
 
         public DbInitialize(IServiceProvider serviceProvider,
             IRoleService roleService,
+            IPermissionService permissionService,
             IUserAccountService userAccountService,
             IEventService eventService,
             ITicketTypeRepository ticketTypeRepository,
             IReservationService reservationService,
             INotificationService notificationService,
-            IHubContext<NotificationHub> hubContext
+            IHubContext<NotificationHub> hubContext,
+            IMapper mapper
         )
         {
             _serviceProvider = serviceProvider;
             _userAccountService = userAccountService;
             _roleService = roleService;
+            _permissionService = permissionService;
             _eventService = eventService;
             _ticketTypeRepository = ticketTypeRepository;
             _reservationService = reservationService;
             _notificationService = notificationService;
             _hubContext = hubContext;
+            _mapper = mapper;
         }
-        public void DbExecute()
+        public async Task DbExecute()
         {
             var dbContext = _serviceProvider.GetService<EventManagmentDb>();
             dbContext.Database.Migrate();
 
+            var permissionRepository = _serviceProvider.GetService<IPermissionRepository>();
+            permissionRepository.SeedPermissionsAsync().GetAwaiter().GetResult();
+
             var roleRepository = _serviceProvider.GetService<IRoleRepository>();
-            roleRepository.CreateRolesIfNotExists().GetAwaiter().GetResult();
+            roleRepository.SeedRoles().GetAwaiter().GetResult();
+            await AssignPermissionsToRoles();
+        }
+
+        private async Task AssignPermissionsToRoles()
+        {
+            var roles = await _roleService.GetAllRolesAsync();
+            var allPermissions = await _permissionService.GetAllPermissionsAsync();
+            var dbContext = _serviceProvider.GetService<EventManagmentDb>();
+
+            foreach (var role in roles)
+            {
+                if (role.Permissions == null)
+                {
+                    role.Permissions = new List<PermissionDto>();
+                }
+
+                List<PermissionDto> rolePermissions = new();
+
+                switch (role.Name)
+                {
+                    case "Admin":
+                        rolePermissions = allPermissions;
+                        break;
+
+                    case "User":
+                        rolePermissions = allPermissions
+                            .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
+                            p.Name == PermissionType.ViewAllEvents.ToString()).ToList();
+                        break;
+                    case "Manager":
+                        rolePermissions = allPermissions
+                            .Where(p => p.Name == PermissionType.UpdateEvent.ToString() ||
+                            p.Name == PermissionType.CreateEvent.ToString()).ToList();
+                        break;
+
+                    case "EventCreator":
+                        rolePermissions = allPermissions
+                            .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
+                            p.Name == PermissionType.UpdateEvent.ToString()).ToList();
+                        break;
+                    default:
+                        rolePermissions = new List<PermissionDto>();
+                        break;
+                }
+
+                Console.WriteLine($"Processing Role: {role.Name}");
+                role.Permissions.Clear();
+
+                foreach (var permission in rolePermissions)
+                {
+                    var trackedPermission = await _permissionService.GetByIdAsync(permission.Id);
+
+                    if (trackedPermission != null)
+                    {
+                        Console.WriteLine($"Adding Permission: {trackedPermission.Name} to Role: {role.Name}");
+                        role.Permissions.Add(trackedPermission);
+                    }
+                }
+
+                var updatedRole = _mapper.Map<Roles>(role);
+
+                foreach (var permission in updatedRole.Permissions)
+                {
+                    var existingPermissionEntity = await dbContext.Permission.FindAsync(permission.Id);
+                    if (existingPermissionEntity != null)
+                    {
+                        dbContext.Entry(existingPermissionEntity).State = EntityState.Detached;
+                    }
+                    dbContext.Entry(permission).State = EntityState.Modified;
+                }
+
+
+                dbContext.Entry(updatedRole).State = EntityState.Detached;
+                dbContext.Entry(updatedRole).State = EntityState.Modified;
+                await dbContext.SaveChangesAsync();
+            }
 
         }
 

@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/addTicket.css" />
+
+<div class="section">
+	<div class="container">
+		<form id="addTicketForm" action="@Url.Action("AddTicket","Event")" method="post">
+			<div id="encryptedId" style="display: none;">@ViewBag.EncryptedEventId</div>
+			<div id="ticketOption" style="display: none;">@ViewBag.Option</div>
+
+			<div class="input-wrapper">
+				<label for="Name" class="input-label">Ticket Name</label>
+				<input type="text" id="Name" name="Name" class="name-input" placeholder="Please enter ticket name..." />
+				<span id="nameError" class="error-message"></span>
+			</div>
+
+			<div class="input-wrapper">
+				<label for="Description" class="input-label">Description</label>
+				<textarea id="Description" name="Description" class="description-area" rows="1" placeholder="Enter ticket description..."></textarea>
+				<span id="descriptionError" class="error-message"></span>
+			</div>
+
+			<div class="input-wrapper">
+				<label for="Price" class="input-label">Price</label>
+				<div class="price-container">
+					<span class="currency-symbol">$</span>
+					<input type="number" id="Price" name="Price" placeholder="Enter ticket price..." class="price-input" />
+				</div>
+				<span id="priceError" class="error-message"></span>
+			</div>
+
+			<div class="input-wrapper">
+				<label for="Quantity" class="input-label">Quantity</label>
+				<input type="number" id="Quantity" name="Quantity" placeholder="Please enter ticket quantity..." class="quantity-input" />
+				<span id="quantityError" class="error-message"></span>
+			</div>
+
+			<div class="input-wrapper">
+				<label for="SaleStartDate" class="input-label">Sale Start Date</label>
+				<input type="datetime-local" id="SaleStartDate" name="SaleStartDate" class="start-date-input" />
+				<span id="salestartdateError" class="error-message"></span>
+			</div>
+
+			<div class="input-wrapper">
+				<label for="SaleEndDate" class="input-label">Sale End Date</label>
+				<input type="datetime-local" id="SaleEndDate" name="SaleEndDate" class="end-date-input" />
+				<span id="saleenddateError" class="error-message"></span>
+			</div>
+		</form>
+		<div class="button-wrapper">
+			<button id="createButton" class="create-button">Add Ticket</button>
+		</div>
+	</div>
+</div>
+
+
+
+@section Scripts{
+	<script src="~/js/Ticket.js"></script>
+}

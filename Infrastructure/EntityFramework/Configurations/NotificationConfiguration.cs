@@ -18,12 +18,14 @@ namespace Infrastructure.EntityFramework.Configurations
             builder.HasOne(n => n.UserAccount)
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             builder.HasOne(n=>n.Reservation)
                 .WithMany(r=>r.Notifications)
                 .HasForeignKey(n=>n.ReservationId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

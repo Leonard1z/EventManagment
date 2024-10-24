@@ -77,7 +77,7 @@ namespace EventManagment.Controllers
                 }
 
                 var totalCount = await qry.CountAsync();
-                //get totalpages by dividing the totalcount and pagesize 20 / 7 = 2.857, then rounds it to (3)
+                //get totalpages by dividing the totalcount and pagesize 20 / 7 = 2.857, then rounds it to highest value (3)
                 var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
                 ViewBag.Filter = filter;
@@ -327,7 +327,7 @@ namespace EventManagment.Controllers
         private async Task<string> GenerateJwtToken(UserAccountDto userDto)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtSecretKey = _configuration.GetSection("JwtSettings:SecretKey").Value;
+            var jwtSecretKey = Environment.GetEnvironmentVariable("JWTSETTINGS__SECRETKEY");
             var key = Encoding.ASCII.GetBytes(jwtSecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -594,7 +594,7 @@ namespace EventManagment.Controllers
 
                 var role = await _roleService.GetById(profileUpdateDto.RoleId);
 
-                _userAccountService.UpdateUserProfile(profileUpdateDto);
+                await _userAccountService.UpdateUserProfile(profileUpdateDto);
 
                 TempData["message"] = "Success";
                 TempData["entity"] = "Profile updated successfully.";

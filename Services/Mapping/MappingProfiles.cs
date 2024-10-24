@@ -2,6 +2,7 @@
 using Domain._DTO.AssignedTickets;
 using Domain._DTO.Category;
 using Domain._DTO.Event;
+using Domain._DTO.Permission;
 using Domain._DTO.Registration;
 using Domain._DTO.Reservation;
 using Domain._DTO.Role;
@@ -32,6 +33,9 @@ namespace Services.Mapping
 
             CreateMap<Event, EventEditDto>();
             CreateMap<EventEditDto, Event>();
+
+            CreateMap<Event, EventWithMetricsDto>();
+            CreateMap<EventWithMetricsDto, Event>();
             #endregion
 
             #region
@@ -60,8 +64,16 @@ namespace Services.Mapping
             #endregion
 
             #region
+            CreateMap<Permission, PermissionDto>();
+            CreateMap<PermissionDto, Permission>();
+            #endregion
+
+            #region
             CreateMap<TicketType, TicketTypeDto>();
             CreateMap<TicketTypeDto, TicketType>();
+
+            CreateMap<TicketType, TicketTypeEditDto>();
+            CreateMap<TicketTypeEditDto, TicketType>();
             #endregion
 
             #region

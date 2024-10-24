@@ -16,23 +16,35 @@ using Microsoft.AspNet.SignalR.Hosting;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load environment variables from .env file
+DotEnv.Load();
+
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<EventManagmentDb>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("EventManagment")
-    ));
+// Get connection string from environment variables
+var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__EVENTMANAGEMENT");
 
+// Configure Entity Framework with SQL Server
+builder.Services.AddDbContext<EventManagmentDb>(options => options
+    .UseSqlServer(connectionString)
+    .EnableSensitiveDataLogging()
+    .LogTo(Console.WriteLine));
+
+// Configure Hangfire
 builder.Services.AddHangfire(configuration => configuration
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("EventManagment")));
+    .UseSqlServerStorage(connectionString));
+// Register Hangfire server
+builder.Services.AddHangfireServer(); 
 
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-var jwtSecretKey = builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
+var stripeSettings = new StripeSettings();
+builder.Services.AddSingleton(stripeSettings);
 
 builder.Services.AddScoped<IDbInitialize, DbInitialize>();
 builder.Services.AddTransient<IRoleService, RoleService>();
@@ -44,10 +56,10 @@ builder.Services.AddSignalR(o =>
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    string redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+    string redisConnectionString = Environment.GetEnvironmentVariable("REDIS");
 
     options.Configuration = redisConnectionString;
-    options.InstanceName = "leonard";   
+    options.InstanceName = "EventManagement";   
 });
 
 #region
@@ -76,6 +88,7 @@ builder.Services.AddDataProtection();
 builder.Services.AddSingleton<DataProtectionPurposeStrings>();
 #endregion
 
+var jwtSecretKey = Environment.GetEnvironmentVariable("JWTSETTINGS__SECRETKEY");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -125,6 +138,7 @@ SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard();
 
 app.UseEndpoints(endpoints =>
 {
@@ -135,18 +149,38 @@ app.UseEndpoints(endpoints =>
 });
 
 
-app.UseHangfireDashboard();
 //Add's The Schedule To HangFireServer
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.DeleteExpiredEvents(), Cron.Hourly);
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.UpdateTicketAvailability(), Cron.Minutely);
-RecurringJob.AddOrUpdate<IDbInitialize>(x => x.CheckAndUpdateExpiredReservation(), Cron.Minutely);
-//Executes the Background Schedule
-app.UseHangfireServer();
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "DeleteExpiredEvents",
+    methodCall: x => x.DeleteExpiredEvents(),
+    cronExpression: Cron.Hourly,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "UpdateTicketAvailability",
+    methodCall: x => x.UpdateTicketAvailability(),
+    cronExpression: Cron.Minutely,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
+
+RecurringJob.AddOrUpdate<IDbInitialize>(
+    recurringJobId: "CheckAndUpdateExpiredReservation", 
+    methodCall: x => x.CheckAndUpdateExpiredReservation(),
+    cronExpression: Cron.Minutely,
+    options: new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local,
+    }
+);
 
 
 app.Run();
-
-
 
 
 void SeedDatabase()
@@ -154,7 +188,7 @@ void SeedDatabase()
     using (var scope = app.Services.CreateScope())
     {
         var dbInitialize = scope.ServiceProvider.GetRequiredService<IDbInitialize>();
-        dbInitialize.DbExecute();
+        dbInitialize.DbExecute().GetAwaiter().GetResult();
         dbInitialize.CreateAdmin().GetAwaiter().GetResult();
     }
 }

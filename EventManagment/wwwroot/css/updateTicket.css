@@ -1,0 +1,158 @@
+﻿.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#updateTicketForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 62px;
+    width: 100%;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom:20px;
+    width:50%;
+}
+.input-label {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+.name-input {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    outline: none;
+}
+
+.name-input:focus {
+    border-bottom: 1px solid #d6d6d6;
+}
+
+.name-input:focus::placeholder {
+    color: transparent;
+}
+
+.description-area {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    resize: none;
+    overflow-y: hidden;
+}
+
+.description-area:focus {
+    border: none;
+    border-bottom: 1px solid #d6d6d6;
+    outline:none;
+}
+.description-area:focus::placeholder {
+    color: transparent;
+}
+
+.price-container {
+    display: flex;
+    align-items: center;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 2px 8px;
+}
+
+.currency-symbol {
+    margin-right: 5px;
+}
+
+.price-input {
+    border: none;
+    background: none;
+    width: 100%;
+    outline: none;
+}
+.price-container:focus {
+    border-bottom: 1px solid #d6d6d6;
+}
+.price-container .price-input:focus::placeholder {
+    color:transparent;
+}
+.price-input::-webkit-inner-spin-button,
+.price-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.price-input {
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-input {
+    -moz-appearance: textfield;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.quantity-input:focus {
+    border: none;
+    border-bottom: 1px solid #d6d6d6;
+    outline: none;
+}
+.quantity-input:focus::placeholder{
+    color:transparent;
+}
+
+.start-date-input,
+.end-date-input {
+    border: 1px solid #ced4da; 
+    border-radius: 4px; 
+    padding: 8px;
+    font-size: 16px;
+    width: 100%; 
+    box-sizing: border-box; 
+    margin-top: 5px; 
+    outline: none;
+}
+
+.button-wrapper {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.update-button,
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-button:hover,
+.back-button:hover {
+    background-color: #0056b3;
+    color:#fff;
+}
+.error-message {
+    color: red; 
+    font-size: 12px; 
+    margin-top: 5px;
+}

@@ -22,7 +22,7 @@ namespace Domain.Entities
         public bool IsInsideEvent { get; set; }
         public string Venue { get; set; }
         public string TicketType { get; set; }
-        public double TicketPrice { get; set; }
+        public double? TicketPrice { get; set; }
         public string QrCodeData { get; set; }
         public int TicketNumber { get; set; }
         public int RegistrationId { get; set; }

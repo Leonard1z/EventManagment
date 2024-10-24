@@ -13,11 +13,11 @@
     <div class="row">
         <div class="col-12 border p-3 row-container">
             <form action="@Url.Action("Index", "UserAccount")">
-                <div class="row" style="justify-content:space-between;">
-                    <div class="col-4">
+                <div class="row actions-container" style="justify-content:space-between;">
+                    <div class="col-4 grid-column">
                         <a href="@Url.Action("Index", "UserAccount")" class="list-btn">User List <i class="bi bi-list-ul"></i></a>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4 grid-column">
                         <div class="input-group">
                             <input type="search" name="filter" value="@ViewBag.Filter" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         </div>
@@ -25,7 +25,7 @@
                 </div>
             </form>
             <hr />
-            <table class="table table-bordered">
+            <table>
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -43,15 +43,15 @@
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.Username</td>
-                            <td>@user.Email</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>@user.Address</td>
-                            <td>@user.Gender</td>
-                            <td>@user.Role.Name</td>
-                            <td class="actions">
+                            <td data-cell="Name">@user.FirstName</td>
+                            <td data-cell="LastName">@user.LastName</td>
+                            <td data-cell="Username">@user.Username</td>
+                            <td data-cell="Email">@user.Email</td>
+                            <td data-cell="PhoneNumber">@user.PhoneNumber</td>
+                            <td data-cell="Address">@user.Address</td>
+                            <td data-cell="Gender">@user.Gender</td>
+                            <td data-cell="Role">@user.Role.Name</td>
+                            <td data-cell="Actions" class="actions">
                                 <a class="icon edit" href="@Url.Action("Edit", "UserAccount", new { encryptedId = user.EncryptedId })">
                                     <div class="toltip">Edit</div>
                                     <span><i class="fa-regular fa-pen-to-square" style="color:#2a3042;"></i></span>

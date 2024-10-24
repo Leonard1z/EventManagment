@@ -47,11 +47,11 @@ namespace Services.AssigneTicket
                     var registration = await _registrationRepository.GetById(ticket.RegistrationId);
                     if (registration != null)
                     {
-                        registration.IsAssigned = true;
-                        await _registrationRepository.UpdateAsync(registration);
                         _qrCodeGeneratorService.GenerateQrCode(ticket);
                         var result = await _assigneeTicketRepository.CreateAsync(ticket);
                         await SendEmailAsync(result);
+                        registration.IsAssigned = true;
+                        await _registrationRepository.UpdateAsync(registration);
                     }
                     else
                     {
@@ -84,9 +84,9 @@ namespace Services.AssigneTicket
            + Path.DirectorySeparatorChar.ToString() + "TicketTemplate.html";
 
 
-            string subject = "Ticket";
-            string tittle = "Confirm Ticket";
-            string message = "Your Ticket";
+            string subject = "Your Event Ticket";
+            string tittle = "Your Event Ticket";
+            string message = "";
             string body = "";
 
             using (StreamReader streamReader = System.IO.File.OpenText(pathToFile))

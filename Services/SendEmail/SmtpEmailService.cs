@@ -10,10 +10,10 @@ namespace Services.SendEmail
         private readonly string _email;
         private readonly string _password;
 
-        public SmtpEmailService(IConfiguration configuration)
+        public SmtpEmailService()
         {
-            _email = configuration["SmtpEmail"];
-            _password = configuration["SmtpPassword"];
+            _email = Environment.GetEnvironmentVariable("SMTP_EMAIL");
+            _password = Environment.GetEnvironmentVariable("SMTP_PASSWORD");
 
             _smtpClient = new SmtpClient("smtp.gmail.com", 587);
             _smtpClient.Credentials = new NetworkCredential(_email, _password);

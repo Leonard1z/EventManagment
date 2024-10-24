@@ -1,11 +1,47 @@
-﻿function saveTicketType() {
+﻿document.addEventListener("DOMContentLoaded", function () {
+    var freeOption = document.getElementById("freeOption");
+    var paidOption = document.getElementById("paidOption");
+    var ticketPriceInput = document.getElementById("Price");
+
+    freeOption.addEventListener('click', function () {
+        ticketPriceInput.disabled = true;
+        ticketPriceInput.type = "text";
+        ticketPriceInput.value = "Free";
+        $('#selectTicketTypeModal').modal('hide');
+        $('#addTicketModal').modal('show');
+    });
+
+    paidOption.addEventListener('click', function () {
+        ticketPriceInput.type = "number";
+        ticketPriceInput.disabled = false;
+        ticketPriceInput.value = "";
+        $('#selectTicketTypeModal').modal('hide');
+        $('#addTicketModal').modal('show');
+    });
+});
+
+function saveTicketType() {
     const name = document.getElementById('TicketName').value;
     const description = document.getElementById('TicketDescription').value;
-    const price = parseFloat(document.getElementById('Price').value);
+    const priceInput = document.getElementById('Price');
     const quantity = parseInt(document.getElementById('Quantity').value);
     const saleStartDate = document.getElementById('SaleStartDate').value;
     const saleEndDate = document.getElementById('SaleEndDate').value;
     const imageInput = document.getElementById('ticketImage');
+
+    let price;
+    let isFree;
+
+    if (priceInput.value.toLowerCase() === "free") {
+        price = 0;
+        isFree = true;
+        //console.log('isfree');
+    } else {
+        price = parseFloat(priceInput.value);
+        isFree = false;
+/*        console.log('paid');*/
+    }
+
 
     if (!name || !description || isNaN(price) || price < 0 || isNaN(quantity) || quantity < 0 || !saleStartDate || !saleEndDate) {
         Swal.fire({
@@ -50,7 +86,8 @@
         Quantity: quantity,
         SaleStartDate: saleStartDate,
         SaleEndDate: saleEndDate,
-        IsAvailable: isAvailable
+        IsAvailable: isAvailable,
+        IsFree: isFree 
     };
 
 
@@ -68,6 +105,7 @@ function updateTicketList() {
 
     ticketTypes.forEach(ticketType => {
         const isAvailable = ticketType.IsAvailable ? 'Yes' : 'No';
+        const isTicketFree = ticketType.IsFree ? 'Free' : 'Paid'; 
         const ticketRow = `
                     <tr>
                         <td>${ticketType.Name}</td>
@@ -75,6 +113,7 @@ function updateTicketList() {
                         <td>${ticketType.Price}</td>
                         <td>${ticketType.Quantity}</td>
                         <td>${isAvailable}</td>
+                        <td>${isTicketFree}</td>
                         <td>${ticketType.SaleStartDate}</td>
                         <td>${ticketType.SaleEndDate}</td>
                     </tr>

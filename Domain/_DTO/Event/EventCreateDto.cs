@@ -19,10 +19,12 @@ namespace Domain._DTO.Event
         public string State { get; set; }
         public string? City { get; set; }
         public string? StreetName { get; set; }
+        public string Place { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public bool IsActive { get; set; }
         public bool IsFree { get; set; }
+        public string Status { get; set; }
         public int UserAccountId { get; set; }
         public UserAccountDto? UserAccount { get; set; }
         public int CategoryId { get; set; }

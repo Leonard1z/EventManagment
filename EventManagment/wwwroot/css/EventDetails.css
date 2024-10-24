@@ -2,13 +2,120 @@
     margin:0;
     padding:0;
 }
-
-.event-img{
-    object-fit:fill;
-    width:950px;
-    height:350px;
+.event-container{
+    border:none;
+}
+.event-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+.event-img {
+    width: 1000px;
+    height: 400px; 
+    border-radius: 18px;
+    transition: transform 0.3s ease-in-out;
+}
+.event-title {
+    margin-bottom: 25px;
+}
+.event-title h1 {
+    font-size: 3.5rem;
+    color: #002240;
+    font-weight: bold;
+    text-transform: capitalize;
+    padding: 0px 0 0 25px;
+}
+.event-date {
+    height: 15vh;
+}
+.event-date h2 {
+    color:#182d3f;
+}
+.date-info i {
+    color: #002240;
+    padding: 0 10px;
+}
+.date-info span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #002240;
+}
+.event-location {
+    height: 15vh;
+}
+.location-info {
+    display: flex;
+}
+.location-icon {
+    width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.location-icon i {
+    color:#002240;
+}
+.location-place {
+    padding: 0 0 0 15px;
+}
+.location-place h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #002240;
+}
+.location-place span {
+    font-size: 13px;
+    color: #746b6b;
+}
+.event-duration{
+    height:15vh;
+}
+.duration-info {
+    display: flex;
+}
+.duration-icon {
+    width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.duration-icon i {
+    color: #002240;
+    font-size: 14px;
+}
+.duration-details span {
+    font-size: 15px;
+    color: #6f757b;
+    font-weight: 500;
+}
+.quantity-container {
+    display: flex;
+    align-items: center;
+}
+.minus-button,
+.plus-button {
+    border: none;
+    padding: 0 15px 0 15px;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #898585;
+}
+.quantity-input {
+    border: none;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #929699;
+}
+.buy-button {
+    margin: 20px 0;
+}
 .countdown-container {
     display: flex;
     justify-content: center;

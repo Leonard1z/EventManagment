@@ -14,6 +14,9 @@ namespace Infrastructure.EntityFramework.Configurations
         public void Configure(EntityTypeBuilder<AssignedTicket> builder)
         {
             builder.HasKey(x => x.Id);
+
+            RelationShips(builder);
+            
         }
 
         private void RelationShips(EntityTypeBuilder<AssignedTicket> builder)
