@@ -55,9 +55,9 @@ namespace EventManagment.Controllers
             _configuration = configuration;
         }
 
-        [Authorize(Policy ="AdminOnly")]
         [HttpGet]
         [Route("UsersData")]
+        [Authorize(Policy = "ViewAllUsers")]
         public async Task<IActionResult> Index(string filter,string encryptedId,int pageSize=7,int page=1, string sortExpression = "Id")
         {
             try
@@ -308,9 +308,15 @@ namespace EventManagment.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
                 new Claim(ClaimTypes.Name, userDto.FirstName),
-                new Claim(ClaimTypes.Email, userDto.Email),
-                new Claim(ClaimTypes.Role, userDto.Role.Name)
+                new Claim(ClaimTypes.Role, userDto.Role.Name.ToString())
             };
+
+            var permissions = await _roleService.GetPermissionsForRoleAsync(userDto.RoleId);
+
+            foreach(var permission in permissions)
+            {
+                claims.Add(new Claim("Permission",permission.Name));
+            }
 
             //Represents the user
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -319,8 +325,7 @@ namespace EventManagment.Controllers
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties
                 {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTime.UtcNow.AddDays(7)
+                    IsPersistent = true
                 });
         }
 
@@ -484,6 +489,7 @@ namespace EventManagment.Controllers
             }
         }
 
+        [Authorize(Policy = "UpdateUser")]
         [HttpGet]
         [Route("User/Edit")]
         public async Task<ActionResult> Edit(string encryptedId)
@@ -508,16 +514,29 @@ namespace EventManagment.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        [Authorize(Policy = "UpdateUser")]
         [HttpPost]
         [Route("User/Edit")]
         public ActionResult Edit(UserAccountEditDto userAccountEditDto)
         {
             try
             {
-                userAccountEditDto.RoleId = userAccountEditDto.EncryptedRoleId != null ? int.Parse(_protector.Unprotect(userAccountEditDto.EncryptedRoleId)) : 0;
                 userAccountEditDto.Id = int.Parse(_protector.Unprotect(userAccountEditDto.EncryptedId));
 
-                var result = _userAccountService.UpdateWithRole(userAccountEditDto);
+                if(User.HasClaim("Permission", "ManageUserRoles"))
+                {
+                    if (!string.IsNullOrEmpty(userAccountEditDto.EncryptedRoleId))
+                    {
+                        userAccountEditDto.RoleId = userAccountEditDto.EncryptedRoleId != null ? int.Parse(_protector.Unprotect(userAccountEditDto.EncryptedRoleId)) : 0;
+                    }
+                   var result = _userAccountService.UpdateWithRole(userAccountEditDto);
+                }
+                else
+                {
+                    var result = _userAccountService.UpdateWithOutRole(userAccountEditDto);
+                }
+
 
                 TempData["message"] = "Updated";
                 TempData["entity"] = _localizer["UserAccount "].ToString();

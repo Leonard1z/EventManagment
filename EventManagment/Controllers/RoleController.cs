@@ -8,7 +8,7 @@ using Services.Role;
 
 namespace EventManagment.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "ManageRoles")]
     public class RoleController : Controller
     {
 
@@ -30,6 +30,7 @@ namespace EventManagment.Controllers
         }
 
         [Route("RoleData")]
+        [Authorize(Policy = "ViewRoles")]
         public async Task<ActionResult> Index()
         {
             try
@@ -57,6 +58,7 @@ namespace EventManagment.Controllers
 
         [HttpGet]
         [Route("Role/Create")]
+        [Authorize(Policy = "CreateRole")]
         public ActionResult Create()
         {
 
@@ -66,6 +68,7 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("Role/Create")]
+        [Authorize(Policy = "CreateRole")]
         public ActionResult Create(RoleDto roleDto)
         {
             try
@@ -93,6 +96,7 @@ namespace EventManagment.Controllers
         }
 
         [Route("Role/Edit")]
+        [Authorize(Policy ="EditRole")]
         public async Task<ActionResult> Edit(string encryptedId)
         {
             try
@@ -118,6 +122,7 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("Role/Edit")]
+        [Authorize(Policy = "EditRole")]
         public ActionResult Edit(RoleDto roleDto)
         {
             try
@@ -147,6 +152,7 @@ namespace EventManagment.Controllers
         }
 
         [Route("Role/Delete")]
+        [Authorize(Policy ="DeleteRole")]
         public ActionResult Delete(string encryptedId)
         {
             try

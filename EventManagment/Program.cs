@@ -17,6 +17,8 @@ using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using dotenv.net;
+using System.Security.Claims;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +101,9 @@ builder.Services.AddAuthentication(options =>
 {
     options.LoginPath = "/Login";
     options.AccessDeniedPath = "/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.SlidingExpiration = true;
+
 })
 .AddJwtBearer(options =>
 {
@@ -115,10 +120,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy =>
+    foreach(var permission in Enum.GetValues(typeof(PermissionType)))
     {
-        policy.RequireRole("Admin");
-    });
+        options.AddPolicy(permission.ToString(),policy =>
+        {
+            policy.RequireClaim("Permission",permission.ToString());
+        });
+    }
 });
 
 var app = builder.Build();
@@ -138,6 +146,31 @@ SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var _roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
+            var claim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = claim.Value !=null ? int.Parse(claim.Value) : 0;
+            var roles = await _roleService.GetRolesForUserAsync(userId);
+            foreach (var role in roles)
+            {
+                var permissions = await _roleService.GetPermissionsForRoleAsync(role.Id);
+                foreach (var permission in permissions)
+                {
+                    ((ClaimsIdentity)context.User.Identity).AddClaim(new Claim("Permission", permission.Name));
+                }
+            }
+        }
+    }
+    await next();
+});
+
+
 app.UseHangfireDashboard();
 
 app.UseEndpoints(endpoints =>

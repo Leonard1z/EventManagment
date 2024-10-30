@@ -168,7 +168,7 @@ namespace EventManagment.ApiControllers
                 }
                 await _ticketTypeService.UpdateAsync(formData);
 
-                return Ok(new { success = true, Message = "Ticket updated succesfully." });
+                return Ok(new { success = true, Message = "Ticket updated successfully." });
 
             }
             catch (Exception ex)

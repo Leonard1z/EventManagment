@@ -9,10 +9,11 @@ using ReflectionIT.Mvc.Paging;
 using Security;
 using Services.Categories;
 using System.Security.Claims;
+using Twilio.Jwt.Taskrouter;
 
 namespace Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy ="ManageCategories")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -42,8 +43,9 @@ namespace Controllers
         /// <param name="page"> Numri i faqes</param>
         /// <param name="sortExpression"> Parametri i cili ben sortimin</param>
         /// <returns> Index faqen </returns>
-
+        /// 
         [Route("CategoryData")]
+        [Authorize(Policy = "ViewCategories")]
         public async Task<ActionResult> Index(string filter, string encryptedId, int pageSize = 7, int page = 1, string sortExpression = "Name")
         {
             try
@@ -88,8 +90,8 @@ namespace Controllers
             }
         }
 
-
         [Route("Category/Create")]
+        [Authorize(Policy = "CreateCategory")]
         public ActionResult Create()
         {
 
@@ -106,6 +108,7 @@ namespace Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Category/Create")]
+        [Authorize(Policy = "CreateCategory")]
         public ActionResult Create(CategoryCreateDto categoryCreateDto)
         {
             try
@@ -137,6 +140,7 @@ namespace Controllers
         /// <returns>Faqen</returns>
 
         [Route("Category/Edit")]
+        [Authorize(Policy = "EditCategory")]
         public async Task<ActionResult> Edit(string encryptedId)
         {
             try
@@ -169,6 +173,7 @@ namespace Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Category/Edit")]
+        [Authorize(Policy = "EditCategory")]
         public ActionResult Edit(CategoryDto categoryEditDto)
         {
             try
@@ -202,6 +207,7 @@ namespace Controllers
         /// <returns>Index</returns>
 
         [Route("Category/Delete")]
+        [Authorize(Policy = "DeleteCategory")]
         public ActionResult Delete(string encryptedId)
         {
             try

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain._DTO.Permission;
 using Domain._DTO.Role;
 using Domain.Entities;
 using Infrastructure.Repositories.Roles;
@@ -67,6 +68,20 @@ namespace Services.Role
             var result = await _roleRepository.GetAll();
 
             return _mapper.Map<List<RoleDto>>(result.ToList());
+        }
+
+        public async Task<List<PermissionDto>> GetPermissionsForRoleAsync(int id)
+        {
+            var result = await _roleRepository.GetPermissionsForRoleAsync(id);
+
+            return _mapper.Map<List<PermissionDto>>(result.ToList());
+        }
+
+        public async Task<List<RoleDto>> GetRolesForUserAsync(int userId)
+        {
+            var roles = await _roleRepository.GetRolesForUserAsync(userId);
+
+            return _mapper.Map<List<RoleDto>>(roles);
         }
     }
 }
