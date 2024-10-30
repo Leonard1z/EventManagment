@@ -88,7 +88,7 @@ namespace Infrastructure.DbExecute
 
             foreach (var role in roles)
             {
-                if (role.Permissions == null)
+                if(role.Permissions == null)
                 {
                     role.Permissions = new List<PermissionDto>();
                 }
@@ -101,21 +101,50 @@ namespace Infrastructure.DbExecute
                         rolePermissions = allPermissions;
                         break;
 
-                    case "User":
-                        rolePermissions = allPermissions
-                            .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
-                            p.Name == PermissionType.ViewAllEvents.ToString()).ToList();
+                    case "Standard User":
+                        rolePermissions = new List<PermissionDto>();
                         break;
-                    case "Manager":
-                        rolePermissions = allPermissions
-                            .Where(p => p.Name == PermissionType.UpdateEvent.ToString() ||
-                            p.Name == PermissionType.CreateEvent.ToString()).ToList();
-                        break;
-
                     case "EventCreator":
                         rolePermissions = allPermissions
-                            .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
-                            p.Name == PermissionType.UpdateEvent.ToString()).ToList();
+                           .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
+                                p.Name == PermissionType.UpdateEvent.ToString() ||
+                                p.Name == PermissionType.DeleteEvent.ToString() ||
+                                p.Name == PermissionType.ViewAllEvents.ToString() ||
+                                p.Name == PermissionType.CreateTicket.ToString() ||
+                                p.Name == PermissionType.UpdateTicket.ToString() ||
+                                p.Name == PermissionType.DeleteTicket.ToString() ||
+                                p.Name == PermissionType.ViewAllTickets.ToString()).ToList();
+                        break;
+                    case "EventManager":
+                        rolePermissions = allPermissions
+                           .Where(p => p.Name == PermissionType.CreateEvent.ToString() ||
+                                p.Name == PermissionType.UpdateEvent.ToString() ||
+                                p.Name == PermissionType.DeleteEvent.ToString() ||
+                                p.Name == PermissionType.ViewAllEvents.ToString() ||
+                                p.Name == PermissionType.ApproveEvent.ToString() ||
+                                p.Name == PermissionType.CreateTicket.ToString() ||
+                                p.Name == PermissionType.UpdateTicket.ToString() ||
+                                p.Name == PermissionType.DeleteTicket.ToString() ||
+                                p.Name == PermissionType.ViewAllTickets.ToString() ||
+                                p.Name == PermissionType.ManageNotifications.ToString()).ToList();
+                        break;
+                    case "UserManager":
+                        rolePermissions = allPermissions
+                            .Where(p => p.Name == PermissionType.CreateUser.ToString() ||
+                                        p.Name == PermissionType.UpdateUser.ToString() ||
+                                        p.Name == PermissionType.DeleteUser.ToString() ||
+                                        p.Name == PermissionType.ViewAllUsers.ToString() ||
+                                        p.Name == PermissionType.ManageUserRoles.ToString()).ToList();
+                        break;
+                    case "SystemAdmin":
+                        rolePermissions = allPermissions
+                            .Where(p => p.Name == PermissionType.ManageRoles.ToString() ||
+                                        p.Name == PermissionType.ManagePermissions.ToString() ||
+                                        p.Name == PermissionType.ConfigureSystem.ToString() ||
+                                        p.Name == PermissionType.EditSettings.ToString() ||
+                                        p.Name == PermissionType.AccessReports.ToString() ||
+                                        p.Name == PermissionType.ViewReports.ToString() ||
+                                        p.Name == PermissionType.GenerateReports.ToString()).ToList();
                         break;
                     default:
                         rolePermissions = new List<PermissionDto>();

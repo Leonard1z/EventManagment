@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
-    [Authorize]
+    [Authorize(Policy ="ManageEvents")]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
@@ -49,6 +49,7 @@ namespace EventManagment.Controllers
 
 
         [Route("EventData")]
+        [Authorize(Policy ="ViewAllEvents")]
         public ActionResult Index()
         {
             return View();
@@ -56,6 +57,7 @@ namespace EventManagment.Controllers
 
         //GET Method
         [Route("Event/Create")]
+        [Authorize(Policy ="CreateEvent")]
         public ActionResult Create()
         {
             try
@@ -84,6 +86,7 @@ namespace EventManagment.Controllers
         [HttpPost]
         [RequestSizeLimit(100_000_000)]
         [Route("Event/Create")]
+        [Authorize(Policy ="CreateEvent")]
         public ActionResult Create(EventCreateDto eventCreateDto, IFormFile file, string ticketData)
         {
             try
@@ -173,6 +176,7 @@ namespace EventManagment.Controllers
 
         //GET Method
         [Route("EventDetails")]
+        [Authorize(Policy ="UpdateEvent")]
         public async Task<ActionResult> Details(string encryptedId)
         {
             try
@@ -198,6 +202,7 @@ namespace EventManagment.Controllers
 
         [HttpGet]
         [Route("Event/Edit")]
+        [Authorize(Policy ="UpdateEvent")]
         public async Task<ActionResult> Edit(string encryptedId)
         {
             try
@@ -223,6 +228,7 @@ namespace EventManagment.Controllers
 
         [HttpPost]
         [Route("Event/Edit")]
+        [Authorize(Policy ="UpdateEvent")]
         public ActionResult Edit(EventEditDto eventEditDto, IFormFile file)
         {
             try
@@ -279,6 +285,7 @@ namespace EventManagment.Controllers
         }
         [HttpGet]
         [Route("Event/ViewTickets")]
+        [Authorize(Policy ="ViewAllTickets")]
         public ActionResult ViewTickets(string encryptedId)
         {
             ViewBag.EncryptedId = encryptedId;
@@ -286,6 +293,7 @@ namespace EventManagment.Controllers
         }
         [HttpGet]
         [Route("Event/AddTicket")]
+        [Authorize(Policy ="CreateTickets")]
         public ActionResult AddTicket([FromQuery] string encryptedEventId, [FromQuery] string option)
         {
             ViewBag.EncryptedEventId = encryptedEventId;
@@ -293,6 +301,7 @@ namespace EventManagment.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Policy ="CreateTickets")]
         public async Task<IActionResult> AddTicket([FromBody]TicketTypeDto formData)
         {
             try
@@ -340,6 +349,7 @@ namespace EventManagment.Controllers
         }
         [HttpPost]
         [Route("Event/UpdateEventStatus")]
+        [Authorize(Policy ="UpdateEvent")]
         public async Task<IActionResult> UpdateEventStatus(string encryptedId)
         {
             try
@@ -491,6 +501,7 @@ namespace EventManagment.Controllers
 
         [HttpDelete]
         [Route("Event/Delete")]
+        [Authorize(Policy ="DeleteEvent")]
         public ActionResult Delete(string encryptedId)
         {
             try

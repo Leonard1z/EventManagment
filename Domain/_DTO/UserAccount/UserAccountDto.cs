@@ -20,6 +20,7 @@ namespace Domain._DTO.UserAccount
         public string Email { get; set; }
         [DataType("Password")]
         public string Password { get; set; }
+        public string? Salt { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public char Gender { get; set; }
@@ -30,10 +31,5 @@ namespace Domain._DTO.UserAccount
         public DateTime? PasswordResetTokenExpiry { get; set; }
         public int RoleId { get; set; }
         public RoleDto Role { get; set; }
-        public IList<PermissionDto> Permissions { get; set; }
-        public ICollection<EventDto> Events { get; set; }
-        public ICollection<RegistrationDto> Registrations { get; set; }
-        public ICollection<ReservationDto> Reservations { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
     }
 }

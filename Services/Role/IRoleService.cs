@@ -1,4 +1,5 @@
-﻿using Domain._DTO.Role;
+﻿using Domain._DTO.Permission;
+using Domain._DTO.Role;
 using Domain.Entities;
 using Services.Common;
 
@@ -14,5 +15,8 @@ namespace Services.Role
         RoleDto Update(RoleDto roleDto);
         RoleDto GetDefaultRole();
         Task<RoleDto> GetRoleByName(string roleName);
+        Task<List<PermissionDto>> GetPermissionsForRoleAsync(int id);
+        Task<List<RoleDto>> GetRolesForUserAsync(int userId);
+
     }
 }

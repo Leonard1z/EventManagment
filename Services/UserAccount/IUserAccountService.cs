@@ -24,6 +24,7 @@ namespace Services.UserAccount
         IQueryable<UserAccountDto> GetAllForPagination(string filter, string? encryptedId);
         Task<UserAccountEditDto> GetByIdEdit(int id);
         UserAccountEditDto UpdateWithRole(UserAccountEditDto userAccountEditDto);
+        UserAccountEditDto UpdateWithOutRole(UserAccountEditDto userAccountEditDto);
         Task<ProfileUpdateDto> GetProfileById(int userId);
         Task<ProfileUpdateDto> UpdateUserProfile(ProfileUpdateDto profileUpdateDto);
         bool VerifyPassword(string oldPassword, string password, string salt);

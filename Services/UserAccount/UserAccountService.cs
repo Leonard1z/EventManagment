@@ -261,6 +261,25 @@ namespace Services.UserAccount
             }
         }
 
+
+        public UserAccountEditDto UpdateWithOutRole(UserAccountEditDto userAccountEditDto)
+        {
+            var result = _userAccountRepository.UpdateExceptProperties(
+                  _mapper.Map<Domain.Entities.UserAccount>(userAccountEditDto),
+                  u => u.Password,
+                  u => u.Gender,
+                  u => u.IsEmailVerified,
+                  u => u.EmailVerificationToken,
+                  u => u.Salt,
+                  u => u.PasswordResetToken,
+                  u => u.PasswordResetTokenExpiry,
+                  u => u.ProfileImage,
+                  u=>u.RoleId
+                  );
+
+            return _mapper.Map<UserAccountEditDto>(result);
+        }
+
         public async Task<ProfileUpdateDto> GetProfileById(int userId)
         {
             var user = await _userAccountRepository.GetById(userId);
