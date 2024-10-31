@@ -138,8 +138,7 @@ namespace Infrastructure.DbExecute
                         break;
                     case "SystemAdmin":
                         rolePermissions = allPermissions
-                            .Where(p => p.Name == PermissionType.ManageRoles.ToString() ||
-                                        p.Name == PermissionType.ManagePermissions.ToString() ||
+                            .Where(p => p.Name == PermissionType.ManagePermissions.ToString() ||
                                         p.Name == PermissionType.ConfigureSystem.ToString() ||
                                         p.Name == PermissionType.EditSettings.ToString() ||
                                         p.Name == PermissionType.AccessReports.ToString() ||

@@ -13,7 +13,7 @@ using Twilio.Jwt.Taskrouter;
 
 namespace Controllers
 {
-    [Authorize(Policy ="ManageCategories")]
+    [Authorize(Policy = "AccessCategories")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -53,11 +53,8 @@ namespace Controllers
                 var decryptedId = string.IsNullOrEmpty(encryptedId) ? null : _protector.Unprotect(encryptedId);
 
                 var qry = _categoryService.GetAllForPagination(filter, decryptedId);
-
                 var defaultSortExpression = "Name DESC";
-
                 var dto = await PagingList.CreateAsync(qry, pageSize, page, sortExpression, defaultSortExpression);
-
                 dto.RouteValue = new RouteValueDictionary { { "filter", filter }, { "pageSize", pageSize } };
 
                 foreach (var item in dto)

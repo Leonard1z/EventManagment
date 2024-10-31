@@ -8,9 +8,11 @@ using Security;
 using Services.Events;
 using Services.Registration;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EventManagment.Controllers
 {
+    [Authorize(Policy = "AccessDashboard")]
     public class DashboardController : Controller
     {
         private readonly IEventService _eventService;
@@ -35,6 +37,7 @@ namespace EventManagment.Controllers
         }
 
         [Route("Dashboard")]
+        [Authorize(Policy = "ViewDashboardData")]
         public IActionResult Index()
         {
             return View();

@@ -8,31 +8,37 @@ namespace Domain.Entities
 {
     public enum PermissionType
     {
-        ManageCategories,
-        ViewCategories,
-        CreateCategory,
-        EditCategory,
-        DeleteCategory,
-        ViewAllEvents,
-        ManageEvents,
-        CreateEvent,
-        UpdateEvent,
-        DeleteEvent,
-        ApproveEvent,
-        ViewAllTickets,
-        CreateTicket,
-        UpdateTicket,
-        DeleteTicket,
-        CreateUser,
-        UpdateUser,
-        DeleteUser,
-        ViewAllUsers,
-        ManageUserRoles,
-        ManageRoles,
-        ViewRoles,
-        CreateRole,
-        EditRole,
-        DeleteRole,
+        AccessDashboard,//-----|
+        AccessCategories,//    |
+        AccessEvents,//        |>These permissions allows users to access specific controller
+        AccessRoles,//---------|
+
+        ViewAllCategories,//-------------
+        CreateCategory,//               |
+        EditCategory,//                 |
+        DeleteCategory,//               |
+        ViewAllEvents,//                |
+        ViewEvent,//                    |
+        CreateEvent,//                  |
+        UpdateEvent,//                  |
+        DeleteEvent,//                  |
+        ApproveEvent,//                 |
+        ViewAllTickets,//               |> Specific action-level permissions within controllers
+        CreateTicket,//                 |
+        UpdateTicket,//                 |
+        DeleteTicket,//                 |
+        ViewAllUsers,//                 |
+        CreateUser,//                   |
+        UpdateUser,//                   |
+        DeleteUser,//                   |
+        ViewRoles,//                    |
+        CreateRole,//                   |
+        EditRole,//                     |
+        DeleteRole,//--------------------
+
+        ManageUserRoles,// > Special permission for managing user roles within the application
+
+        ViewDashboardData,
         ManagePermissions,
         AccessReports,
         ViewReports,

@@ -75,6 +75,7 @@ namespace EventManagment.ApiControllers
         }
         [HttpDelete]
         [Route("DeleteTicket")]
+        [Authorize(Policy ="DeleteTicket")]
         public ActionResult DeleteTicket(string encryptedId)
         {
             try
@@ -105,6 +106,7 @@ namespace EventManagment.ApiControllers
         }
         [HttpGet]
         [Route("UpdateTicket")]
+        [Authorize(Policy = "UpdateTicket")]
         public async Task<ActionResult> EditTicket(string encryptedId)
         {
             try
@@ -137,6 +139,7 @@ namespace EventManagment.ApiControllers
         }
         [HttpPost]
         [Route("EditTicket")]
+        [Authorize(Policy = "UpdateTicket")]
         public async Task<IActionResult> EditTicket([FromBody]TicketTypeEditDto formData)
         {
             try

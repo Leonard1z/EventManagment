@@ -8,7 +8,7 @@ using Services.Role;
 
 namespace EventManagment.Controllers
 {
-    [Authorize(Policy = "ManageRoles")]
+    [Authorize(Policy = "AccessRoles")]
     public class RoleController : Controller
     {
 

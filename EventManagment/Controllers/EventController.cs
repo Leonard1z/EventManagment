@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace EventManagment.Controllers
 {
-    [Authorize(Policy ="ManageEvents")]
+    [Authorize(Policy = "AccessEvents")]
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
@@ -176,7 +176,7 @@ namespace EventManagment.Controllers
 
         //GET Method
         [Route("EventDetails")]
-        [Authorize(Policy ="UpdateEvent")]
+        [Authorize(Policy ="ViewEvent")]
         public async Task<ActionResult> Details(string encryptedId)
         {
             try
@@ -293,7 +293,7 @@ namespace EventManagment.Controllers
         }
         [HttpGet]
         [Route("Event/AddTicket")]
-        [Authorize(Policy ="CreateTickets")]
+        [Authorize(Policy ="CreateTicket")]
         public ActionResult AddTicket([FromQuery] string encryptedEventId, [FromQuery] string option)
         {
             ViewBag.EncryptedEventId = encryptedEventId;
@@ -301,7 +301,7 @@ namespace EventManagment.Controllers
             return View();
         }
         [HttpPost]
-        [Authorize(Policy ="CreateTickets")]
+        [Authorize(Policy ="CreateTicket")]
         public async Task<IActionResult> AddTicket([FromBody]TicketTypeDto formData)
         {
             try
@@ -343,6 +343,7 @@ namespace EventManagment.Controllers
 
         [HttpGet]
         [Route("Ticket/Edit")]
+        [Authorize(Policy = "UpdateTicket")]
         public ActionResult EditTicket()
         {
             return View();
